@@ -4,32 +4,95 @@
 
 ---
 
+## 🚀 Quick Start for Agents
+
+**First time here?** Use these decision tools:
+
+| Tool | Purpose | When to Use |
+|------|---------|-------------|
+| **[DECISION_TREE.md](./DECISION_TREE.md)** | Guided tool discovery | When unsure which tool to use |
+| **[TOOL_CARDS.md](./TOOL_CARDS.md)** | Quick reference cards | For fast scanning and lookup |
+| **[SYSTEM_PROMPT.md](./SYSTEM_PROMPT.md)** | Copy-paste onboarding | For your AI system configuration |
+
+---
+
 ## 🎯 Quick Skill Finder
 
 **I need an agent that can...**
 
-| Task Category | Best Agent | Location |
-|--------------|------------|----------|
-| Reduce LLM costs | Escalation Router | `agents/escalation-engine/` |
-| Remember context | Hierarchical Memory | `agents/hierarchical-memory/` |
-| Make tools reliable | Tool Guardian | `agents/tool-guardian/` |
-| Navigate codebases | Codebase Onboarder | `agents/developer-experience/codebase-onboarder/` |
-| Process documents | Document Processor | `platforms/minimax-experts/document-processor/` |
-| Handle spreadsheets | Spreadsheet Analyst | `platforms/minimax-experts/spreadsheet-analyst/` |
-| Generate images | Image Generator | `platforms/minimax-experts/image-generator/` |
-| Build presentations | Presentation Builder | `platforms/minimax-experts/presentation-builder/` |
-| Analyze security | Security Analyst | `agents/role-based/security-analyst/` |
-| Write code | Code Assistant | `platforms/minimax-experts/code-assistant/` |
-| Create content | Content Writer | `platforms/minimax-experts/content-writer/` |
-| Research web | Web Intelligence | `platforms/minimax-experts/web-intelligence/` |
-| Process PDFs | PDF Toolkit | `platforms/minimax-experts/pdf-toolkit/` |
-| Manage APIs | API Designer | `agents/developer-experience/api-designer/` |
-| Optimize queries | Query Optimizer | `agents/performance/query-optimizer/` |
-| Handle incidents | Incident Responder | `agents/security-ops/incident-responder/` |
-| Analyze markets | Market Analyst | `agents/business-intelligence/market-analyst/` |
-| Monitor threats | Threat Hunter | `agents/security-ops/threat-hunter/` |
-| Manage projects | Project Management Suite | `agents/combined-suites/project-management-suite/` |
-| Support customers | Customer Support Suite | `agents/combined-suites/customer-support-suite/` |
+### Cost & Performance Optimization
+
+| Task | Best Agent | Impact | Location |
+|------|------------|--------|----------|
+| Reduce LLM costs | Escalation Router | **40x reduction** | `agents/escalation-engine/` |
+| Reduce token usage | Context Compressor | **60% savings** | `agents/meta-intelligence/context-compressor/` |
+| Eliminate redundant calls | Cache Manager | **80% hit rate** | `agents/utility/cache-manager/` |
+| Make tools reliable | Tool Guardian | **50% fewer errors** | `agents/tool-guardian/` |
+| Manage memory | Hierarchical Memory | 6-tier system | `agents/hierarchical-memory/` |
+
+### Reasoning & Problem Solving
+
+| Task | Best Agent | Best For | Location |
+|------|------------|----------|----------|
+| Interleave thinking/acting | ReAct Reasoner | Research, debugging | `agents/reasoning-patterns/react-reasoner/` |
+| Plan then execute | Plan-Execute | Known steps | `agents/reasoning-patterns/plan-executor/` |
+| Step-by-step analysis | Chain-of-Thought | Logical reasoning | `agents/reasoning-patterns/chain-thought/` |
+| Explore alternatives | Tree-of-Thought | Creative, strategy | `agents/reasoning-patterns/tree-thought/` |
+| Self-improve quality | Reflection Agent | Quality-critical | `agents/reasoning-patterns/reflection-agent/` |
+
+### Multi-Agent Systems
+
+| Task | Best Agent | Best For | Location |
+|------|------------|----------|----------|
+| Parallel coordination | Swarm Coordinator | Large-scale parallel | `agents/multi-agent-orchestration/swarm-coordinator/` |
+| Top-down control | Hierarchy Manager | Enterprise workflows | `agents/multi-agent-orchestration/hierarchy-manager/` |
+| Find agreement | Consensus Builder | Team decisions | `agents/multi-agent-orchestration/consensus-builder/` |
+| Debate perspectives | Debate Moderator | Complex decisions | `agents/multi-agent-orchestration/debate-moderator/` |
+| Sequential stages | Pipeline Orchestrator | ETL, processing | `agents/multi-agent-orchestration/pipeline-orchestrator/` |
+
+### Conversation & Communication
+
+| Task | Best Agent | Best For | Location |
+|------|------------|----------|----------|
+| Manage dialogue | Dialogue Manager | Multi-turn conversations | `agents/conversation/dialogue-manager/` |
+| Adapt personality | Persona Adaptor | Brand voice | `agents/conversation/persona-adaptor/` |
+| Detect emotions | Emotion Detector | Empathetic responses | `agents/conversation/emotion-detector/` |
+| Translate content | Translator Agent | Multi-language | `agents/communication/translator-agent/` |
+
+### Code & Development
+
+| Task | Best Agent | Best For | Location |
+|------|------------|----------|----------|
+| Design architecture | Code Architect | New projects | `agents/code-generation/code-architect/` |
+| Refactor code | Refactoring Engine | Legacy code | `agents/code-generation/refactoring-engine/` |
+| Generate tests | Test Generator | Coverage | `agents/testing-qa/test-generator/` |
+| Review code | Code Reviewer | Quality assurance | `agents/validation/code-reviewer/` |
+| Design APIs | API Designer | API development | `agents/developer-experience/api-designer/` |
+
+### Data & Knowledge
+
+| Task | Best Agent | Best For | Location |
+|------|------------|----------|----------|
+| Document Q&A | RAG Pipeline | Knowledge bases | `agents/retrieval-augmented/rag-pipeline/` |
+| Entity relationships | Knowledge Graph | Complex connections | `agents/retrieval-augmented/knowledge-graph/` |
+| Optimize context | Context Manager | Token budgets | `agents/retrieval-augmented/context-manager/` |
+| Check data quality | Data Quality | Data pipelines | `agents/data-lifecycle/data-quality/` |
+
+### Operations & Monitoring
+
+| Task | Best Agent | Best For | Location |
+|------|------------|----------|----------|
+| Manage alerts | Alert Manager | IT operations | `agents/monitoring/alert-manager/` |
+| Handle incidents | Incident Responder | Security ops | `agents/security-ops/incident-responder/` |
+| Detect threats | Threat Hunter | Security | `agents/security-ops/threat-hunter/` |
+
+### Experimentation & Improvement
+
+| Task | Best Agent | Best For | Location |
+|------|------------|----------|----------|
+| Run experiments | A/B Tester | Optimization | `agents/experimentation/ab-tester/` |
+| Analyze results | Results Analyzer | Reporting | `agents/experimentation/results-analyzer/` |
+| Process feedback | Feedback Processor | Continuous improvement | `agents/self-improvement/feedback-processor/` |
 
 ---
 
@@ -38,26 +101,24 @@
 ### I want to MONETIZE my agents
 → **Start here**: `strategy/go-to-market.md`
 → **Platform comparison**: `research/market-research.md`
-→ **Revenue projections**: `strategy/go-to-market.md#revenue-projections`
+→ **System prompt**: `SYSTEM_PROMPT.md`
 
 ### I want to BUILD a new agent
+→ **Decision guide**: `DECISION_TREE.md`
 → **Template**: `templates/minimax-expert-template.json`
 → **Schema**: `schemas/agent-schema.json`
-→ **Pattern abstractions**: `schemas/skill-pattern-abstractions.md`
 
 ### I want to DEPLOY to a platform
 | Platform | Best For | Quick Start |
 |----------|----------|-------------|
-| MiniMax Experts | Credit-based marketplace | `platforms/minimax-experts/PLATFORM-README.md` |
-| Claude MCP | Tool integration servers | `platforms/claude-mcp/PLATFORM-README.md` |
+| MiniMax Experts | Credit-based marketplace | `platforms/minimax-experts/` |
+| Claude MCP | Tool integration servers | `platforms/claude-mcp/` |
 | MindStudio | No-code agent builder | `platforms/mindstudio/` |
-| AgentNode | Skill marketplace | `platforms/agentnode/` |
-| OpenAI GPT Store | Custom GPTs | `platforms/openai-gpt-store/PLATFORM-README.md` |
+| Skills.sh | Skill directory | `platforms/skills-sh/` |
 | Zapier AI | Workflow automation | `platforms/zapier-ai/` |
 | Dify | Open-source workflows | `platforms/dify/` |
 | AutoGen | Multi-agent systems | `platforms/autogen/` |
 | ClawHub | Skill marketplace | `platforms/clawhub/` |
-| Skills.sh | Agent skills directory | `platforms/skills-sh/` |
 
 ### I want to UNDERSTAND skill patterns
 → **Pattern guide**: `schemas/skill-pattern-abstractions.md`
@@ -66,7 +127,7 @@
 
 ---
 
-## 📊 Agent Categories (Click to Explore)
+## 📊 Complete Agent Directory
 
 ### 🚀 High-Value Agents (Revenue Leaders)
 
@@ -108,6 +169,80 @@ agents/quick-tasks/
 └── whois-lookup/            # WHOIS lookups
 ```
 
+### 🧠 Reasoning Pattern Agents
+
+```
+agents/reasoning-patterns/
+├── react-reasoner/          # ReAct: Interleave thinking and acting
+├── plan-executor/           # Plan-and-Execute: Two-phase execution
+├── chain-thought/           # Chain-of-Thought: Step-by-step
+├── tree-thought/            # Tree-of-Thought: Multi-path exploration
+└── reflection-agent/        # Self-evaluation and improvement
+```
+
+### 🤝 Multi-Agent Orchestration
+
+```
+agents/multi-agent-orchestration/
+├── swarm-coordinator/       # Distributed parallel coordination
+├── debate-moderator/        # Multi-perspective debates
+├── consensus-builder/       # Agreement seeking
+├── hierarchy-manager/       # Top-down management
+└── pipeline-orchestrator/   # Sequential stage execution
+```
+
+### 💬 Conversation Agents
+
+```
+agents/conversation/
+├── dialogue-manager/        # Multi-turn conversation management
+├── persona-adaptor/         # Personality and tone adaptation
+└── emotion-detector/        # Real-time emotion detection
+```
+
+### 🔄 Self-Improvement Agents
+
+```
+agents/self-improvement/
+├── feedback-processor/      # Collect and act on feedback
+├── performance-tracker/     # Monitor agent metrics
+└── skill-updater/           # Dynamic skill enhancement
+```
+
+### 🧪 Experimentation Agents
+
+```
+agents/experimentation/
+├── ab-tester/               # Statistical experiment analysis
+├── variant-generator/       # Create test variants
+└── results-analyzer/        # Deep experiment insights
+```
+
+### 📚 Retrieval-Augmented Agents
+
+```
+agents/retrieval-augmented/
+├── rag-pipeline/            # Document-based Q&A
+├── knowledge-graph/         # Entity relationship reasoning
+└── context-manager/         # Token budget optimization
+```
+
+### 💻 Code Generation Agents
+
+```
+agents/code-generation/
+├── code-architect/          # System architecture design
+└── refactoring-engine/      # Automated code improvement
+```
+
+### 🧪 Testing & QA Agents
+
+```
+agents/testing-qa/
+├── test-generator/          # Automatic test creation
+└── bug-reproducer/          # Reproduce issues from descriptions
+```
+
 ### 👤 Role-Based Agents
 
 ```
@@ -129,64 +264,26 @@ agents/vertical/
 ├── gaming-entertainment/    # Gaming industry
 ├── healthcare-compliance/   # Healthcare sector
 └── ecommerce-retail/        # E-commerce
-```
 
-### 🧠 Reasoning Pattern Agents (NEW)
-
-```
-agents/reasoning-patterns/
-├── react-reasoner/          # ReAct pattern
-├── plan-executor/           # Plan-and-Execute
-├── chain-thought/           # Chain-of-Thought
-├── tree-thought/            # Tree-of-Thought
-└── reflection-agent/        # Self-reflection
-```
-
-### 🤝 Multi-Agent Orchestration (NEW)
-
-```
-agents/multi-agent-orchestration/
-├── swarm-coordinator/       # Swarm intelligence
-├── debate-moderator/        # Multi-perspective debate
-├── consensus-builder/       # Agreement seeking
-├── hierarchy-manager/       # Hierarchical teams
-└── pipeline-orchestrator/   # Sequential pipelines
-```
-
-### 🔄 Transformation Agents
-
-```
-agents/transformation/
-├── api-migrator/            # API version migration
-└── data-transformer/        # Data format conversion
-```
-
-### ✅ Validation Agents
-
-```
-agents/validation/
-├── code-reviewer/           # Code review
-├── compliance-checker/      # Compliance checking
-├── contract-validator/      # Contract validation
-└── structured-data-validator/ # Data validation
-```
-
-### 🎨 Creative Agents
-
-```
-agents/creative/
-├── audio-producer/          # Audio production
-├── fiction-writer/          # Fiction writing
-├── presentation-designer/   # Presentation design
-└── world-builder/           # World building
+agents/specialized-domains/
+├── manufacturing/           # Manufacturing operations
+├── agriculture/             # Precision farming
+├── real-estate/             # Real estate
+├── hospitality/             # Hospitality industry
+├── blockchain-web3/         # Blockchain/Web3
+├── climate-tech/            # Climate technology
+├── fintech-regtech/         # Fintech/Regtech
+├── ocean-tech/              # Ocean technology
+├── robotics-automation/     # Robotics
+└── space-tech/              # Space technology
 ```
 
 ### 📦 Combined Suites (Enterprise)
 
 ```
 agents/combined-suites/
-├── customer-support-suite/  # Complete support
-├── data-science-suite/      # Data analysis
+├── customer-support-suite/  # Complete support solution
+├── data-science-suite/      # Data analysis tools
 ├── developer-productivity-suite/ # Developer tools
 ├── financial-analysis-suite/ # Financial analysis
 ├── legal-document-suite/    # Legal documents
@@ -196,30 +293,28 @@ agents/combined-suites/
 └── security-suite/          # Security tools
 ```
 
----
+### 📊 Monitoring & Operations
 
-## 🌍 Global Platform Coverage
+```
+agents/monitoring/
+└── alert-manager/           # Intelligent alert management
 
-### China (中国)
-- Zhipu AI (智谱AI) - `global-platforms/china/`
-- Baidu Wenxin (百度文心)
-- Alibaba Tongyi (阿里通义)
-- Tencent Yuanqi (腾讯元器)
-- ByteDance
+agents/security-ops/
+├── incident-responder/      # Incident response
+└── threat-hunter/           # Threat hunting
+```
 
-### Japan (日本)
-- JAPAN AI AGENT - `global-platforms/japan/`
-- miibo - Multi-agent platform
-- Microsoft Japan
+### 📋 Data Lifecycle
 
-### Europe
-- Mistral AI
-- DeepMind
-- Various EU platforms
+```
+agents/data-lifecycle/
+├── data-anonymizer/         # Data anonymization
+├── data-quality/            # Data quality monitoring
+├── data-lineage/            # Data lineage tracking
+└── pii-scanner/             # PII detection
+```
 
----
-
-## 🔧 Utility & Infrastructure
+### 🔧 Utility & Infrastructure
 
 ```
 agents/
@@ -236,122 +331,77 @@ agents/
     └── qa-orchestrator/     # QA orchestration
 ```
 
----
-
-## 🔐 Security & Compliance
+### 🧠 Meta-Intelligence
 
 ```
-agents/
-├── security-ops/
-│   ├── incident-responder/  # Incident response
-│   └── threat-hunter/       # Threat hunting
-├── data-lifecycle/
-│   ├── data-anonymizer/     # Data anonymization
-│   └── pii-scanner/         # PII detection
-└── accessibility/
-    ├── screen-reader-optimizer/ # Accessibility
-    ├── wcag-auditor/        # WCAG compliance
-    └── accessibility-statement-generator/
+agents/meta-intelligence/
+├── context-compressor/      # Compress context
+├── prompt-evolver/          # Evolve prompts
+└── skill-learner/           # Learn new skills
 ```
 
 ---
 
-## 📈 Business Intelligence
+## 🌍 Global Platform Coverage
 
-```
-agents/
-├── business-intelligence/
-│   ├── competitive-intel/   # Competitive analysis
-│   └── market-analyst/      # Market analysis
-└── collaboration/
-    ├── knowledge-base-builder/ # Knowledge management
-    └── meeting-facilitator/ # Meeting facilitation
-```
+### China (中国)
+- Zhipu AI (智谱AI) - AutoGLM, GLM-PC
+- Baidu Wenxin (百度文心)
+- Alibaba Tongyi (阿里通义)
+- Tencent Yuanqi (腾讯元器)
+- ByteDance Coze (扣子)
+- MiniMax China
 
----
+### Japan (日本)
+- JAPAN AI AGENT
+- miibo
+- Microsoft Japan
 
-## 🚀 Emerging Tech
-
-```
-agents/
-├── emerging-tech/
-│   ├── ar-vr-content/       # AR/VR content
-│   └── voice-interface-designer/ # Voice UI
-├── specialized-domains/
-│   ├── blockchain-web3/     # Blockchain/Web3
-│   ├── climate-tech/        # Climate technology
-│   ├── fintech-regtech/     # Fintech/Regtech
-│   ├── ocean-tech/          # Ocean technology
-│   ├── robotics-automation/ # Robotics
-│   └── space-tech/          # Space technology
-└── sustainability/
-    ├── carbon-footprint-calculator/
-    └── green-cloud-advisor/
-```
+### Europe
+- Mistral AI
+- DeepMind
+- Aleph Alpha
+- Hugging Face
 
 ---
 
-## 🧠 Meta-Intelligence
+## 📋 Decision Quick Reference
 
-```
-agents/
-├── meta-intelligence/
-│   ├── context-compressor/  # Compress context
-│   ├── prompt-evolver/      # Evolve prompts
-│   └── skill-learner/       # Learn new skills
-└── automation-novice/
-    └── workflow-automator/  # Workflow automation
-```
+### By Complexity
 
----
+| Score | Level | Tool Category |
+|-------|-------|---------------|
+| 0-2 | Simple | Quick Tasks |
+| 3-4 | Moderate | Reasoning Patterns |
+| 5-6 | Complex | Multi-Agent Orchestration |
+| 7-10 | Enterprise | Combined Suites |
 
-## 📋 Quick Reference Cards
+### By Problem
 
-### Skill Creation Checklist
-- [ ] Define purpose (one sentence)
-- [ ] List required inputs
-- [ ] List expected outputs
-- [ ] Define error handling
-- [ ] Add examples (3-5)
-- [ ] Set pricing tier
-- [ ] Create README.md
-- [ ] Create schema.json
-- [ ] Create config files
-
-### Platform Compatibility Matrix
-
-| Agent Type | MiniMax | Claude MCP | MindStudio | GPT Store | n8n |
-|-----------|---------|------------|------------|-----------|-----|
-| Quick Task | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Role-Based | ✅ | ✅ | ✅ | ✅ | ⚠️ |
-| Vertical | ✅ | ⚠️ | ✅ | ✅ | ⚠️ |
-| Suite | ✅ | ✅ | ✅ | ⚠️ | ✅ |
-| MCP Server | ❌ | ✅ | ❌ | ❌ | ⚠️ |
-
-✅ = Native support | ⚠️ = Possible with adaptation | ❌ = Not applicable
+| Problem | Solution |
+|---------|----------|
+| "Too expensive" | Escalation Router, Cache Manager |
+| "Context too long" | Context Compressor, Hierarchical Memory |
+| "Tools failing" | Tool Guardian, Reflection Agent |
+| "Need multiple agents" | Swarm Coordinator, Hierarchy Manager |
+| "Quality issues" | Reflection Agent, Feedback Processor |
+| "Slow decisions" | Plan-Execute, Pipeline Orchestrator |
+| "No documentation" | RAG Pipeline, Knowledge Graph |
+| "Testing gaps" | Test Generator, A/B Tester |
 
 ---
 
-## 🎓 Learning Paths
+## 🔗 Related Resources
 
-### Beginner: Build Your First Agent
-1. Start with `agents/quick-tasks/password-generator/`
-2. Study `templates/minimax-expert-template.json`
-3. Read `schemas/skill-pattern-abstractions.md`
-
-### Intermediate: Create a Suite
-1. Study `agents/combined-suites/customer-support-suite/`
-2. Combine 3-5 complementary agents
-3. Add orchestration logic
-
-### Advanced: Platform Integration
-1. Study `platforms/claude-mcp/escalation-router/`
-2. Create MCP server implementation
-3. Add monetization strategy
+| Resource | Purpose |
+|----------|---------|
+| [DECISION_TREE.md](./DECISION_TREE.md) | Guided tool discovery |
+| [TOOL_CARDS.md](./TOOL_CARDS.md) | Quick reference cards |
+| [SYSTEM_PROMPT.md](./SYSTEM_PROMPT.md) | AI system configuration |
 
 ---
 
 *Last Updated: March 2026*
-*Total Agents: 200+*
-*Total Platforms: 12+*
-*Total Skills: 400+*
+*Total Agents: 300+*
+*Total Platforms: 15+*
+*Total Skills: 600+*
