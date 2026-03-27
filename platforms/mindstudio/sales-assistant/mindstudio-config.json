@@ -1,0 +1,217 @@
+{
+  "agent_name": "Sales Assistant Agent",
+  "agent_id": "sales-assistant-v1",
+  "version": "1.0.0",
+  "description": "AI-powered lead qualification and sales automation for B2B and B2C organizations",
+  "model_selection": {
+    "primary_model": "gpt-4-turbo",
+    "fallback_model": "gpt-3.5-turbo",
+    "embedding_model": "text-embedding-3-small",
+    "model_parameters": {
+      "temperature": 0.4,
+      "max_tokens": 2000,
+      "top_p": 0.9,
+      "frequency_penalty": 0.3,
+      "presence_penalty": 0.2
+    }
+  },
+  "system_prompt": "You are a highly skilled sales development representative with deep expertise in consultative selling, lead qualification, and relationship building. Your primary goals are:\n\n1. Identify and qualify high-potential leads efficiently\n2. Engage prospects with personalized, value-focused conversations\n3. Guide prospects through the sales funnel with appropriate urgency\n4. Book meetings for qualified prospects with the right sales representatives\n5. Nurture leads that need more time or information\n\nSelling Methodology: Consultative, value-based selling focused on solving customer problems.\n\nQualification Framework (BANT):\n- Budget: Determine if they have allocated funds\n- Authority: Identify decision-makers and influencers\n- Need: Understand pain points and use cases\n- Timeline: Establish decision timeline\n\nCommunication Style:\n- Professional yet conversational\n- Value-focused, not pushy\n- Ask open-ended questions to understand needs\n- Listen actively and respond thoughtfully\n- Provide relevant insights and social proof\n\nObjection Handling:\n- Acknowledge concerns genuinely\n- Provide evidence and case studies\n- Reframe objections as opportunities\n- Ask clarifying questions\n- Offer alternatives when appropriate\n\nEscalation Triggers:\n- High-value opportunity ($50K+ potential)\n- Competitive situation detected\n- Complex enterprise requirements\n- Request to speak with sales representative\n- Technical questions beyond scope\n\nAlways:\n- Maintain accurate CRM records\n- Follow up consistently without being annoying\n- Provide value in every interaction\n- Respect prospect's time and preferences",
+  "workflow_nodes": [
+    {
+      "node_id": "lead_ingestion",
+      "node_type": "trigger",
+      "label": "Lead Received",
+      "description": "Entry point for new or existing leads"
+    },
+    {
+      "node_id": "enrichment_node",
+      "node_type": "api_call",
+      "label": "Lead Enrichment",
+      "description": "Enrich lead data with firmographic information"
+    },
+    {
+      "node_id": "scoring_node",
+      "node_type": "ml_model",
+      "label": "Lead Scoring",
+      "description": "Calculate lead quality score"
+    },
+    {
+      "node_id": "intent_analysis",
+      "node_type": "analysis",
+      "label": "Intent Signal Detection",
+      "description": "Identify buying signals"
+    },
+    {
+      "node_id": "qualification_node",
+      "node_type": "llm_classification",
+      "label": "Qualification Assessment",
+      "description": "Evaluate BANT criteria"
+    },
+    {
+      "node_id": "routing_decision",
+      "node_type": "decision",
+      "label": "Lead Routing Decision",
+      "description": "Determine next action for lead"
+    },
+    {
+      "node_id": "engagement_node",
+      "node_type": "llm_generation",
+      "label": "Generate Response",
+      "description": "Create personalized outreach"
+    },
+    {
+      "node_id": "scheduling_node",
+      "node_type": "api_call",
+      "label": "Meeting Scheduling",
+      "description": "Book meeting with calendar integration"
+    },
+    {
+      "node_id": "crm_update_node",
+      "node_type": "api_call",
+      "label": "Update CRM",
+      "description": "Sync data to CRM system"
+    },
+    {
+      "node_id": "nurture_node",
+      "node_type": "automation",
+      "label": "Nurture Sequence",
+      "description": "Enroll in nurture campaign"
+    },
+    {
+      "node_id": "handoff_node",
+      "node_type": "action",
+      "label": "Sales Handoff",
+      "description": "Transfer to human sales rep"
+    },
+    {
+      "node_id": "notification_node",
+      "node_type": "notification",
+      "label": "Team Notification",
+      "description": "Alert sales team of hot leads"
+    }
+  ],
+  "integrations": [
+    {
+      "name": "Salesforce",
+      "type": "crm",
+      "api_endpoint": "https://api.salesforce.com",
+      "authentication": "oauth2",
+      "features": ["lead_management", "opportunity_tracking", "activity_logging"],
+      "required_scopes": ["api", "refresh_token"]
+    },
+    {
+      "name": "HubSpot",
+      "type": "crm",
+      "api_endpoint": "https://api.hubapi.com",
+      "authentication": "api_key",
+      "features": ["contact_management", "deal_pipeline", "workflow_triggers"],
+      "required_scopes": ["contacts", "deals"]
+    },
+    {
+      "name": "Clearbit",
+      "type": "enrichment",
+      "api_endpoint": "https://company.clearbit.com",
+      "authentication": "api_key",
+      "features": ["company_enrichment", "contact_enrichment", "intent_data"],
+      "required_scopes": ["enrichment"]
+    },
+    {
+      "name": "Calendly",
+      "type": "scheduling",
+      "api_endpoint": "https://api.calendly.com",
+      "authentication": "oauth2",
+      "features": ["meeting_scheduling", "availability_check", "calendar_sync"],
+      "required_scopes": ["read", "write"]
+    },
+    {
+      "name": "LinkedIn",
+      "type": "social",
+      "api_endpoint": "https://api.linkedin.com",
+      "authentication": "oauth2",
+      "features": ["profile_access", "messaging"],
+      "required_scopes": ["r_basicprofile", "w_member_social"]
+    },
+    {
+      "name": "Slack",
+      "type": "notification",
+      "api_endpoint": "https://slack.com/api",
+      "authentication": "bot_token",
+      "features": ["notifications", "lead_alerts"],
+      "required_scopes": ["chat:write", "channels:read"]
+    }
+  ],
+  "output_formats": [
+    {
+      "format": "email",
+      "description": "Sales email format with personalization",
+      "template": "sales_email_template"
+    },
+    {
+      "format": "chat",
+      "description": "Real-time chat response",
+      "max_length": 500
+    },
+    {
+      "format": "linkedin_message",
+      "description": "LinkedIn connection/message format",
+      "max_length": 300
+    },
+    {
+      "format": "crm_record",
+      "description": "CRM update format",
+      "fields": ["lead_score", "status", "notes", "next_action"]
+    }
+  ],
+  "pricing_model": {
+    "type": "tiered",
+    "tiers": [
+      {
+        "name": "Starter",
+        "monthly_price": 149,
+        "included_leads": 500,
+        "overage_price": 0.30,
+        "features": ["Lead scoring", "Basic enrichment", "Email outreach", "CRM sync"]
+      },
+      {
+        "name": "Professional",
+        "monthly_price": 399,
+        "included_leads": 2000,
+        "overage_price": 0.25,
+        "features": ["All Starter features", "Advanced scoring", "Full enrichment", "Meeting scheduling", "Multi-channel outreach", "A/B testing"]
+      },
+      {
+        "name": "Enterprise",
+        "monthly_price": 999,
+        "included_leads": 10000,
+        "overage_price": 0.15,
+        "features": ["All Professional features", "Custom scoring models", "Intent data integration", "Dedicated success manager", "Custom integrations", "SLA guarantee"]
+      }
+    ],
+    "annual_discount": 0.20,
+    "setup_fee": {
+      "Starter": 0,
+      "Professional": 299,
+      "Enterprise": 999
+    },
+    "revenue_share_eligible": true
+  },
+  "rate_limits": {
+    "requests_per_minute": 60,
+    "emails_per_hour": 100,
+    "linkedin_requests_per_day": 50
+  },
+  "security": {
+    "data_encryption": "AES-256",
+    "transit_encryption": "TLS 1.3",
+    "pii_handling": "encrypt_and_mask",
+    "data_retention_days": 365,
+    "gdpr_compliant": true,
+    "ccpa_compliant": true
+  },
+  "compliance": {
+    "can_spam_compliant": true,
+    "gdpr_compliant": true,
+    "casl_compliant": true,
+    "unsubscribe_handling": "automatic"
+  }
+}

@@ -1,0 +1,257 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Tool Guardian MCP Server",
+  "description": "JSON Schema for the Tool Guardian MCP Server capabilities and configurations",
+  "type": "object",
+  "properties": {
+    "server": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "const": "tool-guardian",
+          "description": "Server identifier"
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$"
+        },
+        "description": {
+          "type": "string"
+        }
+      },
+      "required": ["name", "version", "description"]
+    },
+    "tools": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": [
+              "register_tool",
+              "unregister_tool",
+              "execute_tool",
+              "validate_parameters",
+              "get_tool_status",
+              "list_tools",
+              "get_retry_stats",
+              "reset_circuit_breaker",
+              "configure_retry",
+              "configure_rate_limit"
+            ]
+          },
+          "description": { "type": "string" },
+          "inputSchema": { "type": "object" }
+        },
+        "required": ["name", "description", "inputSchema"]
+      }
+    },
+    "toolSchemas": {
+      "register_tool": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Unique tool identifier",
+            "pattern": "^[a-zA-Z][a-zA-Z0-9_-]*$"
+          },
+          "description": {
+            "type": "string",
+            "description": "Human-readable tool description"
+          },
+          "inputSchema": {
+            "type": "object",
+            "description": "JSON Schema for tool parameters",
+            "$ref": "http://json-schema.org/draft-07/schema#"
+          },
+          "endpoint": {
+            "type": "string",
+            "format": "uri",
+            "description": "HTTP endpoint for the tool"
+          },
+          "method": {
+            "type": "string",
+            "enum": ["GET", "POST", "PUT", "DELETE", "PATCH"],
+            "default": "POST"
+          },
+          "authentication": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": ["bearer", "api_key", "basic", "oauth2"]
+              },
+              "key": { "type": "string" },
+              "header": { "type": "string" }
+            }
+          },
+          "retry": {
+            "type": "object",
+            "properties": {
+              "maxAttempts": { "type": "integer", "minimum": 1, "maximum": 10, "default": 3 },
+              "backoff": { "type": "string", "enum": ["fixed", "linear", "exponential"], "default": "exponential" },
+              "baseDelay": { "type": "integer", "minimum": 100, "default": 1000 },
+              "maxDelay": { "type": "integer", "default": 30000 },
+              "jitter": { "type": "boolean", "default": true },
+              "retryableErrors": {
+                "type": "array",
+                "items": { "type": "integer" },
+                "default": [408, 429, 500, 502, 503, 504]
+              }
+            }
+          },
+          "rateLimit": {
+            "type": "object",
+            "properties": {
+              "requestsPerSecond": { "type": "number" },
+              "requestsPerMinute": { "type": "integer" },
+              "requestsPerHour": { "type": "integer" },
+              "burstSize": { "type": "integer" }
+            }
+          },
+          "timeout": {
+            "type": "integer",
+            "description": "Request timeout in milliseconds",
+            "default": 30000
+          },
+          "circuitBreaker": {
+            "type": "object",
+            "properties": {
+              "enabled": { "type": "boolean", "default": true },
+              "failureThreshold": { "type": "integer", "default": 5 },
+              "resetTimeout": { "type": "integer", "default": 60000 }
+            }
+          },
+          "validation": {
+            "type": "object",
+            "properties": {
+              "coerceTypes": { "type": "boolean", "default": true },
+              "applyDefaults": { "type": "boolean", "default": true },
+              "strict": { "type": "boolean", "default": false }
+            }
+          }
+        },
+        "required": ["name", "description", "inputSchema", "endpoint"]
+      },
+      "execute_tool": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of the registered tool"
+          },
+          "parameters": {
+            "type": "object",
+            "description": "Parameters to pass to the tool"
+          },
+          "options": {
+            "type": "object",
+            "properties": {
+              "timeout": { "type": "integer" },
+              "skipValidation": { "type": "boolean" },
+              "skipRetry": { "type": "boolean" },
+              "metadata": { "type": "object" }
+            }
+          }
+        },
+        "required": ["name"]
+      },
+      "validate_parameters": {
+        "type": "object",
+        "properties": {
+          "toolName": {
+            "type": "string",
+            "description": "Name of the tool to validate against"
+          },
+          "parameters": {
+            "type": "object",
+            "description": "Parameters to validate"
+          },
+          "coerce": {
+            "type": "boolean",
+            "default": true,
+            "description": "Attempt type coercion"
+          }
+        },
+        "required": ["toolName", "parameters"]
+      },
+      "get_tool_status": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Tool name to check status"
+          },
+          "includeMetrics": {
+            "type": "boolean",
+            "default": true
+          }
+        },
+        "required": ["name"]
+      },
+      "reset_circuit_breaker": {
+        "type": "object",
+        "properties": {
+          "toolName": {
+            "type": "string",
+            "description": "Tool name to reset circuit breaker for"
+          },
+          "force": {
+            "type": "boolean",
+            "default": false,
+            "description": "Force reset even if failures persist"
+          }
+        },
+        "required": ["toolName"]
+      }
+    },
+    "circuitBreakerStates": {
+      "type": "string",
+      "enum": ["closed", "open", "half-open"],
+      "description": "Possible circuit breaker states"
+    },
+    "retryStrategies": {
+      "type": "object",
+      "properties": {
+        "fixed": {
+          "type": "object",
+          "description": "Fixed delay between retries"
+        },
+        "linear": {
+          "type": "object",
+          "description": "Linear increasing delay"
+        },
+        "exponential": {
+          "type": "object",
+          "description": "Exponential backoff with optional jitter"
+        }
+      }
+    },
+    "events": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": [
+              "tool_registered",
+              "tool_executed",
+              "validation_failed",
+              "retry_attempted",
+              "retry_exhausted",
+              "circuit_opened",
+              "circuit_closed",
+              "rate_limit_hit",
+              "timeout_exceeded"
+            ]
+          },
+          "payload": { "type": "object" }
+        }
+      }
+    }
+  },
+  "required": ["server", "tools"]
+}

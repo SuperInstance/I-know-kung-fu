@@ -1,0 +1,300 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Memory Hierarchy MCP Server",
+  "description": "JSON Schema for the Memory Hierarchy MCP Server capabilities",
+  "type": "object",
+  "properties": {
+    "server": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "const": "memory-hierarchy"
+        },
+        "version": { "type": "string" },
+        "description": { "type": "string" }
+      },
+      "required": ["name", "version", "description"]
+    },
+    "tools": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": [
+              "store_memory",
+              "retrieve_memory",
+              "update_memory",
+              "forget_memory",
+              "consolidate_memories",
+              "summarize_memories",
+              "get_memory_stats",
+              "promote_memory",
+              "demote_memory",
+              "search_memories",
+              "get_memory_context",
+              "clear_tier"
+            ]
+          },
+          "description": { "type": "string" },
+          "inputSchema": { "type": "object" }
+        }
+      }
+    },
+    "toolSchemas": {
+      "store_memory": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "string",
+            "description": "The memory content to store"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["fact", "preference", "event", "conversation", "document", "instruction", "insight"],
+            "description": "Type of memory"
+          },
+          "importance": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "description": "Importance score (0-1)"
+          },
+          "tier": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 5,
+            "description": "Target tier (auto-determined if not specified)"
+          },
+          "tags": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Tags for categorization"
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Additional metadata"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Optional expiration time"
+          },
+          "associations": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "IDs of related memories"
+          }
+        },
+        "required": ["content"]
+      },
+      "retrieve_memory": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Memory ID to retrieve"
+          },
+          "query": {
+            "type": "string",
+            "description": "Semantic search query"
+          },
+          "topK": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100,
+            "default": 10
+          },
+          "tiers": {
+            "type": "array",
+            "items": { "type": "integer", "minimum": 0, "maximum": 5 },
+            "description": "Tiers to search"
+          },
+          "timeRange": {
+            "type": "object",
+            "properties": {
+              "start": { "type": "string", "format": "date-time" },
+              "end": { "type": "string", "format": "date-time" }
+            }
+          },
+          "tags": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "type": {
+            "type": "string",
+            "description": "Filter by memory type"
+          },
+          "includeMetadata": {
+            "type": "boolean",
+            "default": true
+          }
+        }
+      },
+      "update_memory": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "content": { "type": "string" },
+          "importance": { "type": "number" },
+          "tags": { "type": "array", "items": { "type": "string" } },
+          "metadata": { "type": "object" },
+          "append": {
+            "type": "boolean",
+            "default": false,
+            "description": "Append to existing content instead of replacing"
+          }
+        },
+        "required": ["id"]
+      },
+      "forget_memory": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Memory ID to forget"
+          },
+          "soft": {
+            "type": "boolean",
+            "default": true,
+            "description": "Soft delete (can be recovered)"
+          },
+          "cascade": {
+            "type": "boolean",
+            "default": false,
+            "description": "Also forget associated memories"
+          }
+        },
+        "required": ["id"]
+      },
+      "consolidate_memories": {
+        "type": "object",
+        "properties": {
+          "ids": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Memory IDs to consolidate"
+          },
+          "strategy": {
+            "type": "string",
+            "enum": ["merge", "summarize", "deduplicate"],
+            "description": "Consolidation strategy"
+          },
+          "keepOriginals": {
+            "type": "boolean",
+            "default": false
+          }
+        },
+        "required": ["ids"]
+      },
+      "search_memories": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "Semantic search query"
+          },
+          "filters": {
+            "type": "object",
+            "properties": {
+              "types": { "type": "array", "items": { "type": "string" } },
+              "tags": { "type": "array", "items": { "type": "string" } },
+              "tiers": { "type": "array", "items": { "type": "integer" } },
+              "minImportance": { "type": "number" },
+              "timeRange": {
+                "type": "object",
+                "properties": {
+                  "start": { "type": "string" },
+                  "end": { "type": "string" }
+                }
+              }
+            }
+          },
+          "topK": { "type": "integer", "default": 10 },
+          "includeScores": { "type": "boolean", "default": true }
+        },
+        "required": ["query"]
+      },
+      "get_memory_context": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "Context query"
+          },
+          "maxTokens": {
+            "type": "integer",
+            "default": 4000,
+            "description": "Maximum context size in tokens"
+          },
+          "strategy": {
+            "type": "string",
+            "enum": ["relevance", "recency", "importance", "balanced"],
+            "default": "balanced"
+          }
+        },
+        "required": ["query"]
+      }
+    },
+    "memoryTiers": {
+      "type": "object",
+      "properties": {
+        "tier0": {
+          "type": "object",
+          "description": "Working Memory - Current context",
+          "properties": {
+            "name": { "type": "string" },
+            "duration": { "type": "string" },
+            "capacity": { "type": "string" },
+            "accessTime": { "type": "string" }
+          }
+        },
+        "tier1": {
+          "type": "object",
+          "description": "Ephemeral Cache - Session level"
+        },
+        "tier2": {
+          "type": "object",
+          "description": "Short-Term Memory - Hours"
+        },
+        "tier3": {
+          "type": "object",
+          "description": "Working Storage - Days"
+        },
+        "tier4": {
+          "type": "object",
+          "description": "Long-Term Memory - Months"
+        },
+        "tier5": {
+          "type": "object",
+          "description": "Archival Storage - Years"
+        }
+      }
+    },
+    "events": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": [
+              "memory_stored",
+              "memory_retrieved",
+              "memory_updated",
+              "memory_forgotten",
+              "memory_promoted",
+              "memory_demoted",
+              "memories_consolidated",
+              "tier_overflow",
+              "compression_applied"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "required": ["server", "tools"]
+}

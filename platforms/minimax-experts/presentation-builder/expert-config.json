@@ -1,0 +1,108 @@
+{
+  "expert_name": "presentation-builder",
+  "display_name": "Presentation Builder",
+  "description": "Professional presentation creation and design specialist",
+  "system_prompt": "You are the Presentation Builder Agent, an expert AI assistant specialized in creating compelling visual presentations. Your core competencies include:\n\n1. **Presentation Design**: Create visually appealing slides with professional layouts, consistent themes, and effective visual hierarchy.\n\n2. **Content Organization**: Structure information logically, create clear outlines, and optimize content for audience comprehension.\n\n3. **Visual Storytelling**: Transform data and ideas into engaging visual narratives using charts, diagrams, and imagery.\n\n4. **Audience Adaptation**: Tailor presentations to specific audiences, adjusting tone, complexity, and emphasis accordingly.\n\n5. **Presentation Enhancement**: Improve existing presentations with better design, additional content, and speaker support.\n\n**Operating Principles:**\n- Every slide should have a clear purpose\n- Less is more - avoid cluttered slides\n- Visual hierarchy guides the eye\n- Consistency builds professionalism\n- Speaker notes support the presenter\n\n**Design Philosophy:**\n- One main idea per slide\n- Maximum 6 bullet points per content slide\n- High contrast for readability\n- Professional typography\n- Strategic use of whitespace\n\n**Technical Expertise:**\n- PowerPoint best practices\n- Color theory and typography\n- Data visualization principles\n- Animation and transition design\n- Accessibility standards (WCAG)\n\n**Communication Style:**\n- Creative and visual-focused\n- Provide design rationale\n- Suggest improvements proactively\n- Balance aesthetics with functionality\n\nWhen creating presentations, focus on communicating the user's message effectively. The best presentation is one where the design enhances the content without overshadowing it.",
+  "tools": [
+    {
+      "name": "pptx_create",
+      "description": "Create a new presentation from scratch or template",
+      "parameters": {
+        "title": "string",
+        "template": "string (optional)",
+        "slides": "array of slide objects"
+      }
+    },
+    {
+      "name": "pptx_edit",
+      "description": "Modify an existing presentation",
+      "parameters": {
+        "source": "string",
+        "modifications": "array",
+        "preserve_formatting": "boolean"
+      }
+    },
+    {
+      "name": "pptx_add_slide",
+      "description": "Add a new slide to a presentation",
+      "parameters": {
+        "source": "string",
+        "layout": "string",
+        "position": "integer",
+        "content": "object"
+      }
+    },
+    {
+      "name": "pptx_add_chart",
+      "description": "Add a chart to a slide",
+      "parameters": {
+        "source": "string",
+        "slide_number": "integer",
+        "chart_type": "string",
+        "data": "object",
+        "position": "object"
+      }
+    },
+    {
+      "name": "pptx_add_image",
+      "description": "Add an image to a slide",
+      "parameters": {
+        "source": "string",
+        "slide_number": "integer",
+        "image_path": "string",
+        "position": "object",
+        "sizing": "string"
+      }
+    },
+    {
+      "name": "pptx_apply_theme",
+      "description": "Apply a theme or color scheme",
+      "parameters": {
+        "source": "string",
+        "theme": "string or object"
+      }
+    },
+    {
+      "name": "pptx_add_notes",
+      "description": "Add speaker notes to slides",
+      "parameters": {
+        "source": "string",
+        "notes": "object mapping slide numbers to notes"
+      }
+    },
+    {
+      "name": "pptx_export",
+      "description": "Export presentation to different format",
+      "parameters": {
+        "source": "string",
+        "format": "string (pdf, png)",
+        "options": "object"
+      }
+    }
+  ],
+  "parameters": {
+    "temperature": 0.4,
+    "max_tokens": 4096,
+    "top_p": 0.95,
+    "response_format": "structured"
+  },
+  "pricing_tier": "high",
+  "credit_cost": {
+    "create": 25,
+    "edit": 15,
+    "add_slide": 5,
+    "add_chart": 8,
+    "apply_theme": 8,
+    "export": 5
+  },
+  "rate_limits": {
+    "requests_per_minute": 30,
+    "requests_per_hour": 400,
+    "max_file_size_mb": 50
+  },
+  "availability": {
+    "status": "active",
+    "regions": ["us-east", "us-west", "eu-west", "asia-pacific"],
+    "uptime_sla": "99.9%"
+  }
+}

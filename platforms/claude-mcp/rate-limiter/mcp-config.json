@@ -1,0 +1,140 @@
+{
+  "name": "rate-limiter",
+  "version": "1.0.0",
+  "description": "Distributed rate limiting MCP server for AI agents with multiple algorithms and smart quota management",
+  "tools": [
+    {
+      "name": "check_rate_limit",
+      "description": "Check if an action is allowed under rate limits",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "key": { "type": "string", "description": "Unique identifier for rate limit check" },
+          "limit": { "type": "integer", "description": "Maximum allowed requests" },
+          "window": { "type": "integer", "description": "Time window in seconds" },
+          "algorithm": { "type": "string", "enum": ["token_bucket", "sliding_window", "leaky_bucket", "fixed_window"], "default": "sliding_window" },
+          "cost": { "type": "integer", "default": 1, "description": "Cost of this request" }
+        },
+        "required": ["key", "limit", "window"]
+      }
+    },
+    {
+      "name": "create_quota",
+      "description": "Create a named quota with specific limits",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "limits": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "window": { "type": "string", "enum": ["second", "minute", "hour", "day"] },
+                "maxRequests": { "type": "integer" }
+              }
+            }
+          },
+          "priority": { "type": "integer", "default": 0 },
+          "metadata": { "type": "object" }
+        },
+        "required": ["name", "limits"]
+      }
+    },
+    {
+      "name": "apply_quota",
+      "description": "Apply a named quota to a key",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "quotaName": { "type": "string" },
+          "key": { "type": "string" },
+          "cost": { "type": "integer", "default": 1 }
+        },
+        "required": ["quotaName", "key"]
+      }
+    },
+    {
+      "name": "get_usage",
+      "description": "Get current usage for a key",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "key": { "type": "string" }
+        },
+        "required": ["key"]
+      }
+    },
+    {
+      "name": "reset_limit",
+      "description": "Reset rate limit for a key",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "key": { "type": "string" }
+        },
+        "required": ["key"]
+      }
+    },
+    {
+      "name": "set_priority",
+      "description": "Set priority level for a key (higher = more likely to succeed)",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "key": { "type": "string" },
+          "priority": { "type": "integer", "minimum": 0, "maximum": 10 }
+        },
+        "required": ["key", "priority"]
+      }
+    },
+    {
+      "name": "get_stats",
+      "description": "Get rate limiting statistics",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "period": { "type": "string", "enum": ["1h", "24h", "7d"] }
+        }
+      }
+    },
+    {
+      "name": "configure_backoff",
+      "description": "Configure automatic backoff when approaching limits",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "key": { "type": "string" },
+          "enabled": { "type": "boolean", "default": true },
+          "thresholdPercent": { "type": "number", "default": 80 }
+        },
+        "required": ["key"]
+      }
+    }
+  ],
+  "resources": [
+    {
+      "uri": "rate-limiter://quotas",
+      "name": "Defined Quotas",
+      "description": "List of all configured quotas",
+      "mimeType": "application/json"
+    },
+    {
+      "uri": "rate-limiter://stats",
+      "name": "Rate Limit Statistics",
+      "description": "Overall rate limiting statistics",
+      "mimeType": "application/json"
+    }
+  ],
+  "config": {
+    "defaultAlgorithm": "sliding_window",
+    "redis": {
+      "enabled": true,
+      "keyPrefix": "rate_limit:"
+    },
+    "alerts": {
+      "enabled": true,
+      "thresholdPercent": 90
+    }
+  }
+}

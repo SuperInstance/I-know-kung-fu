@@ -1,0 +1,254 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Web Reader Skill API Schema",
+  "description": "JSON Schema for the Web Reader Skill API endpoints and data structures",
+  "definitions": {
+    "ExtractOptions": {
+      "type": "object",
+      "properties": {
+        "include_images": {
+          "type": "boolean",
+          "default": true,
+          "description": "Include image extraction"
+        },
+        "include_links": {
+          "type": "boolean",
+          "default": true,
+          "description": "Include link extraction"
+        },
+        "include_metadata": {
+          "type": "boolean",
+          "default": true,
+          "description": "Include page metadata"
+        },
+        "render_javascript": {
+          "type": "boolean",
+          "default": false,
+          "description": "Render JavaScript before extraction"
+        },
+        "output_format": {
+          "type": "string",
+          "enum": ["text", "markdown", "html", "json"],
+          "default": "markdown"
+        },
+        "timeout_ms": {
+          "type": "integer",
+          "minimum": 1000,
+          "maximum": 60000,
+          "default": 15000
+        },
+        "user_agent": {
+          "type": "string",
+          "description": "Custom user agent string"
+        },
+        "follow_redirects": {
+          "type": "boolean",
+          "default": true
+        },
+        "max_redirects": {
+          "type": "integer",
+          "default": 5
+        }
+      }
+    },
+    "ExtractedContent": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "format": "uri"
+        },
+        "final_url": {
+          "type": "string",
+          "format": "uri",
+          "description": "Final URL after redirects"
+        },
+        "title": {
+          "type": "string"
+        },
+        "content": {
+          "type": "string",
+          "description": "Main extracted content"
+        },
+        "author": {
+          "type": "string"
+        },
+        "published_date": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "modified_date": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "language": {
+          "type": "string",
+          "description": "ISO 639-1 language code"
+        },
+        "reading_time_minutes": {
+          "type": "integer"
+        },
+        "word_count": {
+          "type": "integer"
+        }
+      }
+    },
+    "ExtractedMetadata": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "keywords": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "og_title": {"type": "string"},
+        "og_description": {"type": "string"},
+        "og_image": {"type": "string", "format": "uri"},
+        "og_type": {"type": "string"},
+        "twitter_card": {"type": "string"},
+        "twitter_site": {"type": "string"},
+        "canonical_url": {"type": "string", "format": "uri"},
+        "favicon": {"type": "string", "format": "uri"},
+        "robots": {"type": "string"},
+        "schema_org": {
+          "type": "array",
+          "items": {"type": "object"}
+        }
+      }
+    },
+    "ExtractedImage": {
+      "type": "object",
+      "properties": {
+        "url": {"type": "string", "format": "uri"},
+        "alt_text": {"type": "string"},
+        "caption": {"type": "string"},
+        "width": {"type": "integer"},
+        "height": {"type": "integer"},
+        "position": {"type": "integer"}
+      }
+    },
+    "ExtractedLink": {
+      "type": "object",
+      "properties": {
+        "url": {"type": "string", "format": "uri"},
+        "text": {"type": "string"},
+        "title": {"type": "string"},
+        "is_internal": {"type": "boolean"},
+        "rel": {"type": "string"}
+      }
+    },
+    "PageInfo": {
+      "type": "object",
+      "properties": {
+        "status_code": {"type": "integer"},
+        "content_type": {"type": "string"},
+        "response_time_ms": {"type": "integer"},
+        "page_size_bytes": {"type": "integer"},
+        "encoding": {"type": "string"},
+        "server": {"type": "string"}
+      }
+    },
+    "BatchRequest": {
+      "type": "object",
+      "properties": {
+        "urls": {
+          "type": "array",
+          "items": {"type": "string", "format": "uri"},
+          "minItems": 1,
+          "maxItems": 100
+        },
+        "options": {"$ref": "#/definitions/ExtractOptions"},
+        "webhook_url": {
+          "type": "string",
+          "format": "uri"
+        }
+      },
+      "required": ["urls"]
+    },
+    "SiteMapRequest": {
+      "type": "object",
+      "properties": {
+        "site_url": {
+          "type": "string",
+          "format": "uri"
+        },
+        "include_subdomains": {
+          "type": "boolean",
+          "default": false
+        },
+        "max_urls": {
+          "type": "integer",
+          "default": 1000
+        },
+        "filter_pattern": {
+          "type": "string",
+          "description": "Regex pattern to filter URLs"
+        }
+      },
+      "required": ["site_url"]
+    },
+    "RSSFeedRequest": {
+      "type": "object",
+      "properties": {
+        "feed_url": {
+          "type": "string",
+          "format": "uri"
+        },
+        "max_items": {
+          "type": "integer",
+          "default": 100
+        },
+        "include_content": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "required": ["feed_url"]
+    },
+    "Error": {
+      "type": "object",
+      "properties": {
+        "code": {"type": "string"},
+        "message": {"type": "string"},
+        "details": {"type": "object"}
+      },
+      "required": ["code", "message"]
+    }
+  },
+  "ExtractRequest": {
+    "type": "object",
+    "properties": {
+      "url": {
+        "type": "string",
+        "format": "uri",
+        "description": "URL to extract content from"
+      },
+      "options": {"$ref": "#/definitions/ExtractOptions"}
+    },
+    "required": ["url"]
+  },
+  "ExtractResponse": {
+    "type": "object",
+    "properties": {
+      "success": {"type": "boolean"},
+      "content": {"$ref": "#/definitions/ExtractedContent"},
+      "metadata": {"$ref": "#/definitions/ExtractedMetadata"},
+      "images": {
+        "type": "array",
+        "items": {"$ref": "#/definitions/ExtractedImage"}
+      },
+      "links": {
+        "type": "array",
+        "items": {"$ref": "#/definitions/ExtractedLink"}
+      },
+      "page_info": {"$ref": "#/definitions/PageInfo"},
+      "quality_score": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 1
+      }
+    }
+  }
+}

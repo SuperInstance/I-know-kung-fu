@@ -1,0 +1,480 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "PDF Skill API Schema",
+  "description": "JSON Schema for the PDF Skill API endpoints and data structures",
+  "definitions": {
+    "PDFOptions": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "PDF document title"
+        },
+        "author": {
+          "type": "string",
+          "description": "PDF document author"
+        },
+        "subject": {
+          "type": "string",
+          "description": "PDF document subject"
+        },
+        "creator": {
+          "type": "string",
+          "description": "Creating application"
+        },
+        "page_size": {
+          "type": "string",
+          "enum": ["A4", "Letter", "Legal", "A3", "Tabloid", "Custom"],
+          "default": "A4"
+        },
+        "orientation": {
+          "type": "string",
+          "enum": ["portrait", "landscape"],
+          "default": "portrait"
+        },
+        "margins": {
+          "type": "object",
+          "properties": {
+            "top": {"type": "number", "default": 25.4},
+            "bottom": {"type": "number", "default": 25.4},
+            "left": {"type": "number", "default": 25.4},
+            "right": {"type": "number", "default": 25.4}
+          }
+        }
+      }
+    },
+    "FormField": {
+      "type": "object",
+      "properties": {
+        "field_name": {
+          "type": "string",
+          "description": "Name of the form field"
+        },
+        "field_type": {
+          "type": "string",
+          "enum": ["text", "checkbox", "radio", "dropdown", "signature", "date"],
+          "description": "Type of form field"
+        },
+        "value": {
+          "type": ["string", "boolean"],
+          "description": "Value to set for the field"
+        },
+        "page": {
+          "type": "integer",
+          "description": "Page number where field is located"
+        },
+        "coordinates": {
+          "type": "object",
+          "properties": {
+            "x": {"type": "number"},
+            "y": {"type": "number"},
+            "width": {"type": "number"},
+            "height": {"type": "number"}
+          }
+        }
+      },
+      "required": ["field_name", "value"]
+    },
+    "TextElement": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string",
+          "description": "Text content"
+        },
+        "font_family": {
+          "type": "string",
+          "default": "Helvetica"
+        },
+        "font_size": {
+          "type": "integer",
+          "minimum": 6,
+          "maximum": 72,
+          "default": 12
+        },
+        "bold": {
+          "type": "boolean",
+          "default": false
+        },
+        "italic": {
+          "type": "boolean",
+          "default": false
+        },
+        "color": {
+          "type": "string",
+          "pattern": "^#[0-9A-Fa-f]{6}$",
+          "default": "#000000"
+        },
+        "alignment": {
+          "type": "string",
+          "enum": ["left", "center", "right", "justify"],
+          "default": "left"
+        },
+        "position": {
+          "type": "object",
+          "properties": {
+            "x": {"type": "number"},
+            "y": {"type": "number"},
+            "width": {"type": "number"}
+          }
+        }
+      },
+      "required": ["text"]
+    },
+    "ImageElement": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "type": "string",
+          "description": "Image URL or base64 data"
+        },
+        "position": {
+          "type": "object",
+          "properties": {
+            "x": {"type": "number"},
+            "y": {"type": "number"},
+            "width": {"type": "number"},
+            "height": {"type": "number"}
+          },
+          "required": ["x", "y"]
+        },
+        "fit": {
+          "type": "string",
+          "enum": ["fill", "contain", "cover", "none"],
+          "default": "contain"
+        },
+        "page": {
+          "type": "integer",
+          "description": "Page number (1-indexed)"
+        }
+      },
+      "required": ["source", "position"]
+    },
+    "Watermark": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["text", "image"]
+        },
+        "content": {
+          "type": "string",
+          "description": "Text content or image URL"
+        },
+        "opacity": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "default": 0.3
+        },
+        "rotation": {
+          "type": "number",
+          "default": -45,
+          "description": "Rotation angle in degrees"
+        },
+        "position": {
+          "type": "string",
+          "enum": ["center", "diagonal", "tile"],
+          "default": "diagonal"
+        },
+        "font_size": {
+          "type": "integer",
+          "default": 48
+        },
+        "color": {
+          "type": "string",
+          "default": "#808080"
+        }
+      },
+      "required": ["type", "content"]
+    },
+    "DigitalSignature": {
+      "type": "object",
+      "properties": {
+        "certificate": {
+          "type": "string",
+          "description": "Base64 encoded certificate"
+        },
+        "password": {
+          "type": "string",
+          "description": "Certificate password"
+        },
+        "reason": {
+          "type": "string",
+          "description": "Reason for signing"
+        },
+        "location": {
+          "type": "string",
+          "description": "Signing location"
+        },
+        "contact_info": {
+          "type": "string",
+          "description": "Contact information"
+        },
+        "signature_appearance": {
+          "type": "object",
+          "properties": {
+            "page": {"type": "integer"},
+            "x": {"type": "number"},
+            "y": {"type": "number"},
+            "width": {"type": "number"},
+            "height": {"type": "number"},
+            "show_date": {"type": "boolean", "default": true},
+            "show_reason": {"type": "boolean", "default": true}
+          }
+        }
+      },
+      "required": ["certificate", "password"]
+    },
+    "OCROptions": {
+      "type": "object",
+      "properties": {
+        "language": {
+          "type": "string",
+          "description": "Primary language for OCR",
+          "default": "eng"
+        },
+        "detect_language": {
+          "type": "boolean",
+          "default": true
+        },
+        "extract_tables": {
+          "type": "boolean",
+          "default": false
+        },
+        "preserve_layout": {
+          "type": "boolean",
+          "default": true
+        },
+        "output_format": {
+          "type": "string",
+          "enum": ["text", "structured", "hocr"],
+          "default": "text"
+        }
+      }
+    },
+    "TableExtraction": {
+      "type": "object",
+      "properties": {
+        "pages": {
+          "type": "array",
+          "items": {"type": "integer"},
+          "description": "Pages to extract tables from"
+        },
+        "output_format": {
+          "type": "string",
+          "enum": ["json", "csv", "xlsx"],
+          "default": "json"
+        },
+        "detect_headers": {
+          "type": "boolean",
+          "default": true
+        },
+        "merge_cells": {
+          "type": "boolean",
+          "default": true
+        }
+      }
+    },
+    "MergeOptions": {
+      "type": "object",
+      "properties": {
+        "documents": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "document_id": {"type": "string"},
+              "document_url": {"type": "string", "format": "uri"},
+              "pages": {
+                "type": "array",
+                "items": {"type": "integer"}
+              }
+            }
+          },
+          "minItems": 2
+        },
+        "add_bookmarks": {
+          "type": "boolean",
+          "default": true
+        },
+        "preserve_links": {
+          "type": "boolean",
+          "default": true
+        }
+      },
+      "required": ["documents"]
+    },
+    "SplitOptions": {
+      "type": "object",
+      "properties": {
+        "split_by": {
+          "type": "string",
+          "enum": ["pages", "size", "bookmarks", "pattern"]
+        },
+        "ranges": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "start": {"type": "integer"},
+              "end": {"type": "integer"},
+              "name": {"type": "string"}
+            }
+          }
+        },
+        "pages_per_split": {
+          "type": "integer"
+        },
+        "max_size_mb": {
+          "type": "number"
+        }
+      }
+    },
+    "EncryptionOptions": {
+      "type": "object",
+      "properties": {
+        "user_password": {
+          "type": "string",
+          "description": "Password required to open document"
+        },
+        "owner_password": {
+          "type": "string",
+          "description": "Password for full access"
+        },
+        "permissions": {
+          "type": "object",
+          "properties": {
+            "print": {"type": "boolean", "default": true},
+            "copy": {"type": "boolean", "default": false},
+            "modify": {"type": "boolean", "default": false},
+            "annotate": {"type": "boolean", "default": false},
+            "fill_forms": {"type": "boolean", "default": false},
+            "extract": {"type": "boolean", "default": false},
+            "assemble": {"type": "boolean", "default": false}
+          }
+        },
+        "encryption_level": {
+          "type": "string",
+          "enum": ["40bit", "128bit", "256bit"],
+          "default": "256bit"
+        }
+      },
+      "required": ["user_password"]
+    },
+    "PDFMetadata": {
+      "type": "object",
+      "properties": {
+        "page_count": {"type": "integer"},
+        "file_size_bytes": {"type": "integer"},
+        "is_encrypted": {"type": "boolean"},
+        "is_linear": {"type": "boolean"},
+        "has_forms": {"type": "boolean"},
+        "pdf_version": {"type": "string"},
+        "title": {"type": "string"},
+        "author": {"type": "string"},
+        "subject": {"type": "string"},
+        "keywords": {"type": "array", "items": {"type": "string"}},
+        "creator": {"type": "string"},
+        "producer": {"type": "string"},
+        "created": {"type": "string", "format": "date-time"},
+        "modified": {"type": "string", "format": "date-time"}
+      }
+    },
+    "Error": {
+      "type": "object",
+      "properties": {
+        "code": {"type": "string"},
+        "message": {"type": "string"},
+        "details": {"type": "object"}
+      },
+      "required": ["code", "message"]
+    }
+  },
+  "CreatePDFRequest": {
+    "type": "object",
+    "properties": {
+      "options": {"$ref": "#/definitions/PDFOptions"},
+      "content": {
+        "type": "array",
+        "items": {
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {
+                "type": {"const": "text"},
+                "element": {"$ref": "#/definitions/TextElement"}
+              }
+            },
+            {
+              "type": "object",
+              "properties": {
+                "type": {"const": "image"},
+                "element": {"$ref": "#/definitions/ImageElement"}
+              }
+            },
+            {
+              "type": "object",
+              "properties": {
+                "type": {"const": "page_break"}
+              }
+            },
+            {
+              "type": "object",
+              "properties": {
+                "type": {"const": "table"},
+                "table": {"type": "object"}
+              }
+            }
+          ]
+        }
+      }
+    },
+    "required": ["content"]
+  },
+  "FillFormRequest": {
+    "type": "object",
+    "properties": {
+      "document_id": {"type": "string"},
+      "document_url": {"type": "string", "format": "uri"},
+      "fields": {
+        "type": "array",
+        "items": {"$ref": "#/definitions/FormField"}
+      },
+      "flatten": {
+        "type": "boolean",
+        "default": false,
+        "description": "Flatten form after filling"
+      }
+    },
+    "oneOf": [
+      {"required": ["document_id"]},
+      {"required": ["document_url"]}
+    ]
+  },
+  "ExtractTextRequest": {
+    "type": "object",
+    "properties": {
+      "document_id": {"type": "string"},
+      "document_url": {"type": "string", "format": "uri"},
+      "pages": {
+        "type": "array",
+        "items": {"type": "integer"}
+      },
+      "preserve_layout": {"type": "boolean", "default": false},
+      "ocr_options": {"$ref": "#/definitions/OCROptions"}
+    }
+  },
+  "ExtractTablesRequest": {
+    "type": "object",
+    "properties": {
+      "document_id": {"type": "string"},
+      "document_url": {"type": "string", "format": "uri"},
+      "pages": {
+        "type": "array",
+        "items": {"type": "integer"}
+      },
+      "options": {"$ref": "#/definitions/TableExtraction"}
+    }
+  }
+}

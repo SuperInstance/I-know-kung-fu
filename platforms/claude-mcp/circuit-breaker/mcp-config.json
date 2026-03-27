@@ -1,0 +1,130 @@
+{
+  "name": "circuit-breaker",
+  "version": "1.0.0",
+  "description": "Fault tolerance MCP server implementing circuit breaker pattern for distributed systems",
+  "tools": [
+    {
+      "name": "create_circuit",
+      "description": "Create a new circuit breaker",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "config": {
+            "type": "object",
+            "properties": {
+              "failureThreshold": { "type": "integer", "default": 5 },
+              "successThreshold": { "type": "integer", "default": 2 },
+              "timeout": { "type": "integer", "default": 30000 },
+              "resetTimeout": { "type": "integer", "default": 60000 }
+            }
+          },
+          "fallback": { "type": "string", "description": "Fallback function name" }
+        },
+        "required": ["name"]
+      }
+    },
+    {
+      "name": "execute",
+      "description": "Execute a function through the circuit breaker",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "circuitName": { "type": "string" },
+          "operation": { "type": "string", "description": "Operation identifier" },
+          "params": { "type": "object" }
+        },
+        "required": ["circuitName", "operation"]
+      }
+    },
+    {
+      "name": "get_circuit_status",
+      "description": "Get current status of a circuit",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" }
+        },
+        "required": ["name"]
+      }
+    },
+    {
+      "name": "reset_circuit",
+      "description": "Manually reset a circuit to closed state",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" }
+        },
+        "required": ["name"]
+      }
+    },
+    {
+      "name": "force_open",
+      "description": "Force a circuit to open state",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" }
+        },
+        "required": ["name"]
+      }
+    },
+    {
+      "name": "list_circuits",
+      "description": "List all circuit breakers",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      }
+    },
+    {
+      "name": "get_metrics",
+      "description": "Get circuit breaker metrics",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "circuitName": { "type": "string" },
+          "period": { "type": "string", "enum": ["1h", "24h", "7d"] }
+        }
+      }
+    },
+    {
+      "name": "configure_fallback",
+      "description": "Configure a fallback function for a circuit",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "circuitName": { "type": "string" },
+          "fallbackType": { "type": "string", "enum": ["cache", "default", "function"] },
+          "fallbackConfig": { "type": "object" }
+        },
+        "required": ["circuitName", "fallbackType"]
+      }
+    }
+  ],
+  "resources": [
+    {
+      "uri": "circuit-breaker://circuits",
+      "name": "Circuit Breakers",
+      "mimeType": "application/json"
+    },
+    {
+      "uri": "circuit-breaker://metrics",
+      "name": "Circuit Metrics",
+      "mimeType": "application/json"
+    }
+  ],
+  "config": {
+    "defaults": {
+      "failureThreshold": 5,
+      "successThreshold": 2,
+      "timeout": 30000,
+      "resetTimeout": 60000
+    },
+    "monitoring": {
+      "enabled": true,
+      "metricsInterval": 60000
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Circuit Breaker MCP Server",
+  "type": "object",
+  "properties": {
+    "server": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "const": "circuit-breaker" },
+        "version": { "type": "string" }
+      }
+    },
+    "tools": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": ["create_circuit", "execute", "get_circuit_status", "reset_circuit", "force_open", "list_circuits", "get_metrics", "configure_fallback"]
+          }
+        }
+      }
+    }
+  }
+}

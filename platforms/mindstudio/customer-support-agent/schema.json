@@ -1,0 +1,196 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Customer Support Agent Workflow Schema",
+  "description": "Defines the workflow structure for the Customer Support Agent",
+  "type": "object",
+  "properties": {
+    "workflow_id": {
+      "type": "string",
+      "description": "Unique identifier for the workflow instance"
+    },
+    "version": {
+      "type": "string",
+      "default": "1.0.0"
+    },
+    "input": {
+      "type": "object",
+      "properties": {
+        "customer_message": {
+          "type": "string",
+          "description": "The incoming customer message or inquiry"
+        },
+        "customer_id": {
+          "type": "string",
+          "description": "Unique identifier for the customer"
+        },
+        "channel": {
+          "type": "string",
+          "enum": ["email", "chat", "social", "phone_transcript", "helpdesk"],
+          "description": "Communication channel used by customer"
+        },
+        "conversation_history": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "role": { "type": "string", "enum": ["customer", "agent", "system"] },
+              "content": { "type": "string" },
+              "timestamp": { "type": "string", "format": "date-time" }
+            }
+          },
+          "description": "Previous messages in the conversation"
+        },
+        "customer_context": {
+          "type": "object",
+          "properties": {
+            "account_type": { "type": "string" },
+            "subscription_level": { "type": "string" },
+            "previous_issues": { "type": "array", "items": { "type": "string" } },
+            "satisfaction_history": { "type": "number" },
+            "lifetime_value": { "type": "number" }
+          }
+        }
+      },
+      "required": ["customer_message", "channel"]
+    },
+    "processing_stages": {
+      "type": "object",
+      "properties": {
+        "intent_classification": {
+          "type": "object",
+          "properties": {
+            "primary_intent": {
+              "type": "string",
+              "enum": ["information_request", "complaint", "technical_issue", "billing", "feedback", "other"]
+            },
+            "secondary_intents": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "confidence_score": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "entities": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "entity_type": { "type": "string" },
+                  "entity_value": { "type": "string" },
+                  "confidence": { "type": "number" }
+                }
+              }
+            }
+          }
+        },
+        "sentiment_analysis": {
+          "type": "object",
+          "properties": {
+            "overall_sentiment": {
+              "type": "string",
+              "enum": ["positive", "neutral", "negative", "mixed"]
+            },
+            "sentiment_score": {
+              "type": "number",
+              "minimum": -1,
+              "maximum": 1
+            },
+            "urgency_level": {
+              "type": "string",
+              "enum": ["low", "medium", "high", "critical"]
+            },
+            "emotion_indicators": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        },
+        "knowledge_retrieval": {
+          "type": "object",
+          "properties": {
+            "relevant_articles": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "article_id": { "type": "string" },
+                  "title": { "type": "string" },
+                  "relevance_score": { "type": "number" },
+                  "content_snippet": { "type": "string" }
+                }
+              }
+            },
+            "faq_matches": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "question": { "type": "string" },
+                  "answer": { "type": "string" },
+                  "match_confidence": { "type": "number" }
+                }
+              }
+            }
+          }
+        },
+        "escalation_check": {
+          "type": "object",
+          "properties": {
+            "requires_escalation": { "type": "boolean" },
+            "escalation_reason": { "type": "string" },
+            "recommended_team": { "type": "string" },
+            "priority_level": {
+              "type": "string",
+              "enum": ["low", "medium", "high", "urgent"]
+            },
+            "context_summary": { "type": "string" }
+          }
+        }
+      }
+    },
+    "output": {
+      "type": "object",
+      "properties": {
+        "response_message": {
+          "type": "string",
+          "description": "The agent's response to the customer"
+        },
+        "response_type": {
+          "type": "string",
+          "enum": ["answer", "clarification_needed", "escalation_notice", "action_taken"]
+        },
+        "actions_taken": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "action_type": { "type": "string" },
+              "action_details": { "type": "object" },
+              "status": { "type": "string", "enum": ["completed", "pending", "failed"] }
+            }
+          }
+        },
+        "follow_up_required": { "type": "boolean" },
+        "suggested_follow_up": { "type": "string" },
+        "confidence_level": {
+          "type": "string",
+          "enum": ["high", "medium", "low"]
+        },
+        "human_review_recommended": { "type": "boolean" }
+      },
+      "required": ["response_message", "response_type"]
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "created_at": { "type": "string", "format": "date-time" },
+        "processing_time_ms": { "type": "integer" },
+        "model_version": { "type": "string" },
+        "tokens_used": { "type": "integer" }
+      }
+    }
+  },
+  "required": ["workflow_id", "input", "output"]
+}

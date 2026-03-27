@@ -1,0 +1,362 @@
+{
+  "workflow_id": "customer-support-v1",
+  "name": "Customer Support Workflow",
+  "description": "End-to-end customer support automation workflow",
+  "version": "1.0.0",
+  "nodes": [
+    {
+      "id": "node_1",
+      "type": "trigger",
+      "label": "Customer Message Received",
+      "position": { "x": 100, "y": 200 },
+      "config": {
+        "trigger_type": "webhook",
+        "supported_channels": ["email", "chat", "api", "social"],
+        "timeout_seconds": 30
+      }
+    },
+    {
+      "id": "node_2",
+      "type": "process",
+      "label": "Message Preprocessing",
+      "position": { "x": 300, "y": 200 },
+      "config": {
+        "operations": [
+          "normalize_whitespace",
+          "extract_email_headers",
+          "detect_language",
+          "remove_signature",
+          "extract_urls"
+        ],
+        "output_variable": "preprocessed_message"
+      }
+    },
+    {
+      "id": "node_3",
+      "type": "llm_classification",
+      "label": "Intent Classification",
+      "position": { "x": 500, "y": 150 },
+      "config": {
+        "model": "gpt-4-turbo",
+        "prompt_template": "classify_intent",
+        "categories": [
+          "information_request",
+          "complaint",
+          "technical_issue",
+          "billing",
+          "account_management",
+          "feedback",
+          "feature_request",
+          "other"
+        ],
+        "output_variable": "classified_intent",
+        "confidence_threshold": 0.7
+      }
+    },
+    {
+      "id": "node_4",
+      "type": "llm_analysis",
+      "label": "Sentiment Analysis",
+      "position": { "x": 500, "y": 300 },
+      "config": {
+        "model": "gpt-4-turbo",
+        "prompt_template": "analyze_sentiment",
+        "output_variable": "sentiment_result",
+        "metrics": ["sentiment_score", "urgency_level", "emotion_indicators"]
+      }
+    },
+    {
+      "id": "node_5",
+      "type": "api_call",
+      "label": "Context Gathering",
+      "position": { "x": 700, "y": 200 },
+      "config": {
+        "api_type": "crm_lookup",
+        "integrations": ["salesforce", "zendesk", "intercom"],
+        "data_to_fetch": [
+          "customer_profile",
+          "account_status",
+          "recent_interactions",
+          "open_tickets",
+          "purchase_history"
+        ],
+        "output_variable": "customer_context",
+        "timeout_seconds": 10
+      }
+    },
+    {
+      "id": "node_6",
+      "type": "vector_search",
+      "label": "Knowledge Base Search",
+      "position": { "x": 900, "y": 150 },
+      "config": {
+        "index": "support-kb",
+        "query_variable": "preprocessed_message",
+        "top_k": 5,
+        "similarity_threshold": 0.75,
+        "output_variable": "kb_results",
+        "filters": {
+          "category": "{{classified_intent.primary_intent}}",
+          "language": "{{detected_language}}"
+        }
+      }
+    },
+    {
+      "id": "node_7",
+      "type": "decision",
+      "label": "Escalation Check",
+      "position": { "x": 1100, "y": 250 },
+      "config": {
+        "conditions": [
+          {
+            "field": "sentiment_result.urgency_level",
+            "operator": "equals",
+            "value": "critical",
+            "output": "escalate"
+          },
+          {
+            "field": "classified_intent.confidence_score",
+            "operator": "less_than",
+            "value": 0.5,
+            "output": "escalate"
+          },
+          {
+            "field": "customer_context.lifetime_value",
+            "operator": "greater_than",
+            "value": 10000,
+            "output": "escalate"
+          },
+          {
+            "field": "customer_context.open_tickets_count",
+            "operator": "greater_than",
+            "value": 3,
+            "output": "escalate"
+          },
+          {
+            "field": "classified_intent.primary_intent",
+            "operator": "equals",
+            "value": "complaint",
+            "output": "priority_response"
+          }
+        ],
+        "default_output": "auto_respond"
+      }
+    },
+    {
+      "id": "node_8",
+      "type": "llm_generation",
+      "label": "Generate Response",
+      "position": { "x": 1300, "y": 150 },
+      "config": {
+        "model": "gpt-4-turbo",
+        "prompt_template": "support_response",
+        "input_variables": [
+          "preprocessed_message",
+          "classified_intent",
+          "sentiment_result",
+          "customer_context",
+          "kb_results"
+        ],
+        "output_variable": "generated_response",
+        "temperature": 0.3,
+        "max_tokens": 1500
+      }
+    },
+    {
+      "id": "node_9",
+      "type": "validation",
+      "label": "Quality Check",
+      "position": { "x": 1500, "y": 150 },
+      "config": {
+        "checks": [
+          "response_length",
+          "tone_appropriateness",
+          "fact_accuracy",
+          "safety_guidelines",
+          "brand_voice_compliance"
+        ],
+        "output_variable": "validation_result",
+        "auto_correct": true
+      }
+    },
+    {
+      "id": "node_10",
+      "type": "output",
+      "label": "Send Response",
+      "position": { "x": 1700, "y": 150 },
+      "config": {
+        "output_channels": ["original_channel"],
+        "format": "{{channel_format}}",
+        "include_satisfaction_survey": true,
+        "log_interaction": true
+      }
+    },
+    {
+      "id": "node_11",
+      "type": "api_call",
+      "label": "Create Escalation Ticket",
+      "position": { "x": 1300, "y": 350 },
+      "config": {
+        "api_type": "ticket_create",
+        "integrations": ["zendesk", "jira"],
+        "ticket_data": {
+          "subject": "Escalated: {{classified_intent.primary_intent}}",
+          "priority": "{{sentiment_result.urgency_level}}",
+          "description": "{{preprocessed_message}}",
+          "customer_id": "{{customer_context.customer_id}}",
+          "context_summary": "{{escalation_summary}}"
+        },
+        "output_variable": "escalation_ticket"
+      }
+    },
+    {
+      "id": "node_12",
+      "type": "llm_generation",
+      "label": "Generate Acknowledgment",
+      "position": { "x": 1500, "y": 350 },
+      "config": {
+        "model": "gpt-4-turbo",
+        "prompt_template": "escalation_acknowledgment",
+        "output_variable": "acknowledgment_message",
+        "temperature": 0.4
+      }
+    },
+    {
+      "id": "node_13",
+      "type": "output",
+      "label": "Send Acknowledgment",
+      "position": { "x": 1700, "y": 350 },
+      "config": {
+        "output_channels": ["original_channel"],
+        "format": "{{channel_format}}",
+        "include_wait_time": true
+      }
+    },
+    {
+      "id": "node_14",
+      "type": "notification",
+      "label": "Alert Support Team",
+      "position": { "x": 1500, "y": 450 },
+      "config": {
+        "channels": ["slack", "email"],
+        "template": "escalation_alert",
+        "recipients": "{{escalation_team}}"
+      }
+    }
+  ],
+  "connections": [
+    { "source": "node_1", "target": "node_2" },
+    { "source": "node_2", "target": "node_3" },
+    { "source": "node_2", "target": "node_4" },
+    { "source": "node_3", "target": "node_5" },
+    { "source": "node_4", "target": "node_5" },
+    { "source": "node_5", "target": "node_6" },
+    { "source": "node_6", "target": "node_7" },
+    { "source": "node_7", "target": "node_8", "label": "auto_respond" },
+    { "source": "node_7", "target": "node_11", "label": "escalate" },
+    { "source": "node_7", "target": "node_8", "label": "priority_response" },
+    { "source": "node_8", "target": "node_9" },
+    { "source": "node_9", "target": "node_10", "label": "passed" },
+    { "source": "node_9", "target": "node_8", "label": "failed" },
+    { "source": "node_11", "target": "node_12" },
+    { "source": "node_11", "target": "node_14" },
+    { "source": "node_12", "target": "node_13" }
+  ],
+  "inputs": {
+    "customer_message": {
+      "type": "string",
+      "required": true,
+      "description": "The customer's message or inquiry"
+    },
+    "customer_id": {
+      "type": "string",
+      "required": false,
+      "description": "Unique customer identifier"
+    },
+    "channel": {
+      "type": "string",
+      "required": true,
+      "enum": ["email", "chat", "social", "api"],
+      "description": "Communication channel"
+    },
+    "conversation_id": {
+      "type": "string",
+      "required": false,
+      "description": "Conversation thread identifier"
+    },
+    "priority_override": {
+      "type": "string",
+      "required": false,
+      "enum": ["low", "medium", "high", "urgent"],
+      "description": "Manual priority override"
+    }
+  },
+  "outputs": {
+    "response": {
+      "type": "string",
+      "description": "Agent response to customer"
+    },
+    "response_type": {
+      "type": "string",
+      "enum": ["answer", "clarification", "escalation", "action_taken"]
+    },
+    "confidence": {
+      "type": "number",
+      "description": "Confidence score for the response"
+    },
+    "actions": {
+      "type": "array",
+      "description": "List of actions taken during processing"
+    },
+    "escalation_id": {
+      "type": "string",
+      "description": "Ticket ID if escalated"
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Processing metadata and analytics"
+    }
+  },
+  "variables": {
+    "brand_voice": {
+      "type": "string",
+      "default": "professional and friendly",
+      "description": "Brand voice for response generation"
+    },
+    "max_response_length": {
+      "type": "number",
+      "default": 2000,
+      "description": "Maximum response character length"
+    },
+    "escalation_team": {
+      "type": "string",
+      "default": "support-escalations",
+      "description": "Team to notify on escalations"
+    },
+    "satisfaction_survey_enabled": {
+      "type": "boolean",
+      "default": true,
+      "description": "Include satisfaction survey in responses"
+    },
+    "business_hours": {
+      "type": "object",
+      "default": {
+        "timezone": "America/New_York",
+        "start": "09:00",
+        "end": "18:00",
+        "days": ["monday", "tuesday", "wednesday", "thursday", "friday"]
+      }
+    }
+  },
+  "error_handling": {
+    "retry_count": 3,
+    "retry_delay_ms": 1000,
+    "fallback_node": "node_11",
+    "error_notifications": true
+  },
+  "performance": {
+    "target_response_time_ms": 5000,
+    "max_execution_time_ms": 30000,
+    "concurrent_executions": 100
+  }
+}

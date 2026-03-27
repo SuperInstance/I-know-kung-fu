@@ -1,0 +1,458 @@
+{
+  "name": "memory-hierarchy",
+  "version": "1.0.0",
+  "description": "6-tier memory system MCP server providing intelligent storage and retrieval for AI agents with automatic tier management",
+  "tools": [
+    {
+      "name": "store_memory",
+      "description": "Store a new memory in the hierarchy. The system automatically determines the appropriate tier based on importance and type.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "string",
+            "description": "The memory content to store"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["fact", "preference", "event", "conversation", "document", "instruction", "insight"],
+            "description": "Type classification for the memory"
+          },
+          "importance": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "description": "Importance score from 0 (trivial) to 1 (critical)"
+          },
+          "tier": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 5,
+            "description": "Target tier (0=working, 5=archival). Auto-determined if not specified."
+          },
+          "tags": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Tags for categorization and retrieval"
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Additional metadata to store with the memory"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Optional expiration timestamp"
+          },
+          "associations": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "IDs of related memories to link"
+          }
+        },
+        "required": ["content"]
+      }
+    },
+    {
+      "name": "retrieve_memory",
+      "description": "Retrieve memories from the hierarchy. Supports direct ID lookup, semantic search, temporal queries, and tag filtering.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Specific memory ID to retrieve"
+          },
+          "query": {
+            "type": "string",
+            "description": "Semantic search query"
+          },
+          "topK": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100,
+            "default": 10,
+            "description": "Maximum number of results"
+          },
+          "tiers": {
+            "type": "array",
+            "items": { "type": "integer", "minimum": 0, "maximum": 5 },
+            "description": "Specific tiers to search"
+          },
+          "timeRange": {
+            "type": "object",
+            "properties": {
+              "start": { "type": "string", "format": "date-time" },
+              "end": { "type": "string", "format": "date-time" }
+            },
+            "description": "Time range filter"
+          },
+          "tags": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Filter by tags"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["fact", "preference", "event", "conversation", "document", "instruction", "insight"],
+            "description": "Filter by memory type"
+          },
+          "includeMetadata": {
+            "type": "boolean",
+            "default": true,
+            "description": "Include metadata in results"
+          }
+        }
+      }
+    },
+    {
+      "name": "update_memory",
+      "description": "Update an existing memory's content, importance, tags, or metadata.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Memory ID to update"
+          },
+          "content": {
+            "type": "string",
+            "description": "New content (replaces existing)"
+          },
+          "importance": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "description": "Update importance score"
+          },
+          "tags": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Replace tags"
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Update metadata (merges with existing)"
+          },
+          "append": {
+            "type": "boolean",
+            "default": false,
+            "description": "Append to content instead of replacing"
+          }
+        },
+        "required": ["id"]
+      }
+    },
+    {
+      "name": "forget_memory",
+      "description": "Remove a memory from the hierarchy. Supports soft delete for recovery.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Memory ID to forget"
+          },
+          "soft": {
+            "type": "boolean",
+            "default": true,
+            "description": "Soft delete - memory can be recovered"
+          },
+          "cascade": {
+            "type": "boolean",
+            "default": false,
+            "description": "Also forget associated memories"
+          }
+        },
+        "required": ["id"]
+      }
+    },
+    {
+      "name": "consolidate_memories",
+      "description": "Merge multiple memories into a single consolidated memory. Useful for summarizing related information.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "ids": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Memory IDs to consolidate"
+          },
+          "strategy": {
+            "type": "string",
+            "enum": ["merge", "summarize", "deduplicate"],
+            "description": "Consolidation strategy"
+          },
+          "keepOriginals": {
+            "type": "boolean",
+            "default": false,
+            "description": "Keep original memories after consolidation"
+          }
+        },
+        "required": ["ids"]
+      }
+    },
+    {
+      "name": "summarize_memories",
+      "description": "Create a summary of memories matching certain criteria. Summary is stored as a new memory.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "Query to find memories to summarize"
+          },
+          "timeRange": {
+            "type": "object",
+            "properties": {
+              "start": { "type": "string" },
+              "end": { "type": "string" }
+            }
+          },
+          "tags": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "type": { "type": "string" },
+          "maxLength": {
+            "type": "integer",
+            "default": 500,
+            "description": "Maximum summary length in words"
+          }
+        },
+        "required": ["query"]
+      }
+    },
+    {
+      "name": "get_memory_stats",
+      "description": "Get statistics about memory usage across all tiers.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "includeTierBreakdown": {
+            "type": "boolean",
+            "default": true
+          },
+          "includeTypeBreakdown": {
+            "type": "boolean",
+            "default": true
+          }
+        }
+      }
+    },
+    {
+      "name": "promote_memory",
+      "description": "Manually promote a memory to a higher (faster) tier.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Memory ID to promote"
+          },
+          "targetTier": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 4,
+            "description": "Target tier (must be lower than current)"
+          }
+        },
+        "required": ["id"]
+      }
+    },
+    {
+      "name": "demote_memory",
+      "description": "Manually demote a memory to a lower (slower) tier.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Memory ID to demote"
+          },
+          "targetTier": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5,
+            "description": "Target tier (must be higher than current)"
+          }
+        },
+        "required": ["id"]
+      }
+    },
+    {
+      "name": "search_memories",
+      "description": "Advanced semantic search across memories with filtering options.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "Semantic search query"
+          },
+          "filters": {
+            "type": "object",
+            "properties": {
+              "types": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "tags": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "tiers": {
+                "type": "array",
+                "items": { "type": "integer" }
+              },
+              "minImportance": { "type": "number" },
+              "timeRange": {
+                "type": "object",
+                "properties": {
+                  "start": { "type": "string" },
+                  "end": { "type": "string" }
+                }
+              }
+            }
+          },
+          "topK": {
+            "type": "integer",
+            "default": 10
+          },
+          "includeScores": {
+            "type": "boolean",
+            "default": true
+          }
+        },
+        "required": ["query"]
+      }
+    },
+    {
+      "name": "get_memory_context",
+      "description": "Get relevant context for a query, optimized for filling LLM context windows.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "Context query"
+          },
+          "maxTokens": {
+            "type": "integer",
+            "default": 4000,
+            "description": "Maximum context size in tokens"
+          },
+          "strategy": {
+            "type": "string",
+            "enum": ["relevance", "recency", "importance", "balanced"],
+            "default": "balanced"
+          }
+        },
+        "required": ["query"]
+      }
+    },
+    {
+      "name": "clear_tier",
+      "description": "Clear all memories from a specific tier. Use with caution.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "tier": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 5,
+            "description": "Tier to clear"
+          },
+          "confirm": {
+            "type": "boolean",
+            "description": "Confirmation required"
+          }
+        },
+        "required": ["tier", "confirm"]
+      }
+    }
+  ],
+  "resources": [
+    {
+      "uri": "memory-hierarchy://stats/overview",
+      "name": "Memory Statistics Overview",
+      "description": "Current memory usage and statistics",
+      "mimeType": "application/json"
+    },
+    {
+      "uri": "memory-hierarchy://tiers/config",
+      "name": "Tier Configuration",
+      "description": "Configuration for all memory tiers",
+      "mimeType": "application/json"
+    },
+    {
+      "uri": "memory-hierarchy://recent",
+      "name": "Recent Memories",
+      "description": "Recently stored or accessed memories",
+      "mimeType": "application/json"
+    }
+  ],
+  "prompts": [
+    {
+      "name": "optimize_memory",
+      "description": "Analyze memory usage and suggest optimizations",
+      "arguments": [
+        {
+          "name": "scope",
+          "description": "Scope of optimization (all, specific-tier, by-type)",
+          "required": false
+        }
+      ]
+    }
+  ],
+  "config": {
+    "tiers": {
+      "tier0": {
+        "name": "Working Memory",
+        "duration": "milliseconds",
+        "maxCapacity": "128K tokens",
+        "storage": "in-memory"
+      },
+      "tier1": {
+        "name": "Ephemeral Cache",
+        "duration": "session",
+        "maxCapacity": "1M tokens",
+        "storage": "in-memory"
+      },
+      "tier2": {
+        "name": "Short-Term Memory",
+        "duration": "24 hours",
+        "maxCapacity": "10M tokens",
+        "storage": "redis"
+      },
+      "tier3": {
+        "name": "Working Storage",
+        "duration": "7 days",
+        "maxCapacity": "100M tokens",
+        "storage": "redis"
+      },
+      "tier4": {
+        "name": "Long-Term Memory",
+        "duration": "unlimited",
+        "maxCapacity": "unlimited",
+        "storage": "vector-db"
+      },
+      "tier5": {
+        "name": "Archival Storage",
+        "duration": "unlimited",
+        "maxCapacity": "unlimited",
+        "storage": "object-storage"
+      }
+    },
+    "autoPromotion": {
+      "enabled": true,
+      "accessThreshold": 3,
+      "timeWindow": "1 hour"
+    },
+    "autoDemotion": {
+      "enabled": true,
+      "accessThreshold": 0,
+      "timeWindow": "24 hours"
+    }
+  }
+}

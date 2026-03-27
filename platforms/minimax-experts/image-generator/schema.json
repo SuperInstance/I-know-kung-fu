@@ -1,0 +1,181 @@
+{
+  "name": "image-generator",
+  "version": "1.0.0",
+  "description": "AI-powered image generation from text descriptions with multiple styles, sizes, and enhancement options",
+  "category": "creative",
+  "inputs": {
+    "type": "object",
+    "properties": {
+      "action": {
+        "type": "string",
+        "enum": ["generate", "enhance", "variate", "upscale", "edit"],
+        "description": "The primary image operation to perform"
+      },
+      "prompt": {
+        "type": "string",
+        "description": "Text description of the image to generate"
+      },
+      "negative_prompt": {
+        "type": "string",
+        "description": "Elements to exclude from the image"
+      },
+      "generation_config": {
+        "type": "object",
+        "properties": {
+          "style": {
+            "type": "string",
+            "enum": ["photorealistic", "illustration", "anime", "digital-art", "oil-painting", "watercolor", "sketch", "3d-render", "minimalist", "abstract", "vintage", "cinematic"],
+            "default": "photorealistic"
+          },
+          "size": {
+            "type": "string",
+            "enum": ["256x256", "512x512", "1024x1024", "1024x768", "768x1024", "1920x1080", "1080x1920", "2048x2048"],
+            "default": "1024x1024"
+          },
+          "quality": {
+            "type": "string",
+            "enum": ["standard", "high", "ultra"],
+            "default": "high"
+          },
+          "num_images": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 4,
+            "default": 1
+          },
+          "seed": {
+            "type": "integer",
+            "description": "Seed for reproducible results"
+          }
+        }
+      },
+      "source_image": {
+        "type": "string",
+        "description": "Base64 encoded image or URL for editing/variation"
+      },
+      "enhancement_config": {
+        "type": "object",
+        "properties": {
+          "upscale_factor": {
+            "type": "integer",
+            "enum": [2, 4],
+            "default": 2
+          },
+          "remove_background": {
+            "type": "boolean",
+            "default": false
+          },
+          "adjustments": {
+            "type": "object",
+            "properties": {
+              "brightness": { "type": "number", "minimum": -100, "maximum": 100 },
+              "contrast": { "type": "number", "minimum": -100, "maximum": 100 },
+              "saturation": { "type": "number", "minimum": -100, "maximum": 100 }
+            }
+          }
+        }
+      },
+      "edit_config": {
+        "type": "object",
+        "properties": {
+          "mask": {
+            "type": "string",
+            "description": "Base64 encoded mask for inpainting"
+          },
+          "edit_prompt": {
+            "type": "string",
+            "description": "Description of what to add/change"
+          }
+        }
+      }
+    },
+    "required": ["action"]
+  },
+  "outputs": {
+    "type": "object",
+    "properties": {
+      "success": {
+        "type": "boolean"
+      },
+      "images": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "url": { "type": "string" },
+            "base64": { "type": "string" },
+            "width": { "type": "integer" },
+            "height": { "type": "integer" },
+            "format": { "type": "string" },
+            "seed": { "type": "integer" }
+          }
+        }
+      },
+      "metadata": {
+        "type": "object",
+        "properties": {
+          "prompt_used": { "type": "string" },
+          "style": { "type": "string" },
+          "generation_time": { "type": "number" }
+        }
+      },
+      "errors": {
+        "type": "array"
+      }
+    }
+  },
+  "capabilities": [
+    "Generate images from text descriptions",
+    "Create images in multiple artistic styles",
+    "Generate multiple variations of an image",
+    "Upscale images to higher resolution",
+    "Remove backgrounds from images",
+    "Edit specific parts of images (inpainting)",
+    "Apply color and lighting adjustments",
+    "Create brand-consistent visuals"
+  ],
+  "limitations": [
+    "Maximum 4 images per batch request",
+    "Some prompts may be filtered for content policy",
+    "Complex scenes may have artifacts",
+    "Text rendering in images may be imperfect",
+    "Face generation may have inconsistencies"
+  ],
+  "examples": [
+    {
+      "input": {
+        "action": "generate",
+        "prompt": "A modern minimalist logo for a tech startup, blue and white colors, clean design",
+        "generation_config": {
+          "style": "minimalist",
+          "size": "1024x1024",
+          "num_images": 3
+        }
+      },
+      "output": {
+        "success": true,
+        "images": [
+          {"url": "https://storage.example.com/img1.png", "width": 1024, "height": 1024},
+          {"url": "https://storage.example.com/img2.png", "width": 1024, "height": 1024},
+          {"url": "https://storage.example.com/img3.png", "width": 1024, "height": 1024}
+        ]
+      }
+    },
+    {
+      "input": {
+        "action": "enhance",
+        "source_image": "https://example.com/low-res.png",
+        "enhancement_config": {
+          "upscale_factor": 4,
+          "remove_background": true
+        }
+      },
+      "output": {
+        "success": true,
+        "images": [
+          {"url": "https://storage.example.com/enhanced.png", "width": 2048, "height": 2048}
+        ]
+      }
+    }
+  ]
+}

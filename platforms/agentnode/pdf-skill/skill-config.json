@@ -1,0 +1,259 @@
+{
+  "skill_name": "pdf",
+  "display_name": "PDF Operations & Form Filling",
+  "version": "1.0.0",
+  "category": "document-processing",
+  "subcategory": "pdf-manipulation",
+  "description": "Comprehensive PDF manipulation toolkit for extracting text and tables, creating new PDFs, merging/splitting documents, and handling forms. Full support for OCR, digital signatures, and enterprise document workflows.",
+  "long_description": "The PDF Skill provides enterprise-grade PDF processing capabilities including creation, editing, form filling, text extraction, and document transformation. With support for OCR in 50+ languages, table extraction, digital signatures, and comprehensive security features, this skill is essential for any document automation workflow.",
+  "author": "AgentNode Team",
+  "license": "commercial",
+  "homepage": "https://agentnode.io/skills/pdf",
+  "documentation": "https://docs.agentnode.io/skills/pdf",
+  "repository": "https://github.com/agentnode/skills/pdf",
+  "tags": [
+    "pdf",
+    "document",
+    "ocr",
+    "forms",
+    "extraction",
+    "signature",
+    "enterprise",
+    "automation"
+  ],
+  "pricing": {
+    "model": "per_use",
+    "currency": "USD",
+    "tiers": [
+      {
+        "name": "create",
+        "description": "Create new PDF document",
+        "amount": 0.05
+      },
+      {
+        "name": "fill_form",
+        "description": "Fill PDF form fields",
+        "amount": 0.04
+      },
+      {
+        "name": "extract_text",
+        "description": "Extract text from PDF",
+        "amount": 0.01
+      },
+      {
+        "name": "extract_tables",
+        "description": "Extract tables from PDF",
+        "amount": 0.03
+      },
+      {
+        "name": "ocr",
+        "description": "OCR processing per page",
+        "amount": 0.02
+      },
+      {
+        "name": "merge",
+        "description": "Merge PDF documents",
+        "amount": 0.06
+      },
+      {
+        "name": "split",
+        "description": "Split PDF document",
+        "amount": 0.04
+      },
+      {
+        "name": "convert",
+        "description": "Convert to/from PDF",
+        "amount": 0.03
+      },
+      {
+        "name": "sign",
+        "description": "Apply digital signature",
+        "amount": 0.10
+      },
+      {
+        "name": "encrypt",
+        "description": "Add encryption/protection",
+        "amount": 0.03
+      },
+      {
+        "name": "watermark",
+        "description": "Add watermark",
+        "amount": 0.02
+      }
+    ],
+    "bulk_discount": {
+      "1000": 0.10,
+      "10000": 0.20,
+      "100000": 0.35
+    }
+  },
+  "subscription_options": [
+    {
+      "name": "starter",
+      "monthly_price": 39,
+      "included_operations": 600,
+      "overage_rate": 0.035
+    },
+    {
+      "name": "professional",
+      "monthly_price": 129,
+      "included_operations": 3000,
+      "overage_rate": 0.025
+    },
+    {
+      "name": "enterprise",
+      "monthly_price": 399,
+      "included_operations": 15000,
+      "overage_rate": 0.015
+    }
+  ],
+  "rate_limits": {
+    "free_tier": {
+      "requests_per_minute": 10,
+      "requests_per_hour": 100,
+      "requests_per_day": 500
+    },
+    "starter": {
+      "requests_per_minute": 30,
+      "requests_per_hour": 500,
+      "requests_per_day": 3000
+    },
+    "professional": {
+      "requests_per_minute": 60,
+      "requests_per_hour": 2000,
+      "requests_per_day": 15000
+    },
+    "enterprise": {
+      "requests_per_minute": 120,
+      "requests_per_hour": 6000,
+      "requests_per_day": 50000
+    }
+  },
+  "auth_required": true,
+  "auth_methods": [
+    "api_key",
+    "oauth2",
+    "jwt"
+  ],
+  "input_formats": [
+    ".pdf",
+    ".pdfa",
+    ".pdfx",
+    ".png",
+    ".jpg",
+    ".jpeg",
+    ".tiff",
+    ".bmp",
+    ".gif",
+    ".html",
+    ".htm"
+  ],
+  "output_formats": [
+    ".pdf",
+    ".pdfa",
+    ".pdfx",
+    ".png",
+    ".jpg",
+    ".tiff",
+    ".txt",
+    ".csv",
+    ".xlsx",
+    ".html"
+  ],
+  "file_limits": {
+    "max_file_size_mb": 200,
+    "max_pages": 5000,
+    "max_form_fields": 1000,
+    "max_ocr_pages_per_request": 100,
+    "max_merge_documents": 100,
+    "max_batch_size": 50
+  },
+  "performance": {
+    "avg_create_time_ms": 4000,
+    "avg_fill_form_time_ms": 2000,
+    "avg_extract_time_ms": 2000,
+    "avg_ocr_time_per_page_ms": 10000,
+    "avg_merge_time_ms": 3000,
+    "concurrent_requests": 100
+  },
+  "ocr": {
+    "supported_languages": [
+      "eng", "spa", "fra", "deu", "ita", "por", "nld",
+      "chi_sim", "chi_tra", "jpn", "kor", "ara", "heb",
+      "rus", "hin", "tur", "pol", "swe", "dan", "nor",
+      "fin", "ces", "hun", "ron", "bul", "ukr", "tha",
+      "vie", "ind", "msa"
+    ],
+    "features": [
+      "language_detection",
+      "handwriting_recognition_beta",
+      "table_detection",
+      "layout_analysis"
+    ]
+  },
+  "integrations": [
+    {
+      "name": "google_drive",
+      "type": "storage",
+      "actions": ["import", "export", "auto_sync"]
+    },
+    {
+      "name": "microsoft_onedrive",
+      "type": "storage",
+      "actions": ["import", "export", "auto_sync"]
+    },
+    {
+      "name": "dropbox",
+      "type": "storage",
+      "actions": ["import", "export"]
+    },
+    {
+      "name": "aws_s3",
+      "type": "storage",
+      "actions": ["import", "export"]
+    },
+    {
+      "name": "azure_blob",
+      "type": "storage",
+      "actions": ["import", "export"]
+    },
+    {
+      "name": "box",
+      "type": "storage",
+      "actions": ["import", "export"]
+    },
+    {
+      "name": "webhook",
+      "type": "notification",
+      "actions": ["completion", "error", "progress"]
+    }
+  ],
+  "compliance": [
+    "SOC2_TYPE_II",
+    "GDPR",
+    "HIPAA_BAA",
+    "CCPA",
+    "PCI_DSS"
+  ],
+  "data_retention": {
+    "default_days": 7,
+    "max_days": 90,
+    "encryption": "AES-256",
+    "transit_encryption": "TLS_1.3"
+  },
+  "support": {
+    "documentation": "https://docs.agentnode.io/skills/pdf",
+    "community": "https://community.agentnode.io",
+    "email": "support@agentnode.io",
+    "enterprise_support": "enterprise@agentnode.io",
+    "status_page": "https://status.agentnode.io",
+    "sla": {
+      "professional": "24h_response",
+      "enterprise": "4h_response"
+    }
+  },
+  "status": "active",
+  "visibility": "public",
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-15T00:00:00Z"
+}

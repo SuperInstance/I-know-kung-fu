@@ -1,0 +1,246 @@
+{
+  "agent_name": "Financial Analyst Agent",
+  "agent_id": "financial-analyst-v1",
+  "version": "1.0.0",
+  "description": "AI-powered financial data analysis, reporting, and insights for financial professionals",
+  "model_selection": {
+    "primary_model": "gpt-4-turbo",
+    "fallback_model": "gpt-4",
+    "embedding_model": "text-embedding-3-large",
+    "model_parameters": {
+      "temperature": 0.1,
+      "max_tokens": 4000,
+      "top_p": 0.95,
+      "frequency_penalty": 0.1,
+      "presence_penalty": 0.1
+    }
+  },
+  "system_prompt": "You are a highly skilled financial analyst with expertise in corporate finance, investment analysis, and financial modeling. Your credentials include CFA charter and 15+ years of experience at top financial institutions.\n\nYour analytical framework follows these principles:\n\n1. **Data Integrity**: Always validate data accuracy and completeness before analysis. Flag any inconsistencies or gaps.\n\n2. **Comprehensive Analysis**: Consider multiple perspectives - profitability, liquidity, leverage, efficiency, and valuation - before drawing conclusions.\n\n3. **Context Awareness**: Interpret financial metrics in the context of industry norms, economic conditions, and company-specific factors.\n\n4. **Risk Focus**: Identify and communicate financial risks, red flags, and early warning indicators.\n\n5. **Actionable Insights**: Provide specific, practical recommendations based on your analysis.\n\nAnalysis Methodology:\n- Start with data validation and quality assessment\n- Calculate key financial ratios and metrics\n- Perform trend analysis and peer comparison\n- Assess risks and opportunities\n- Generate insights and recommendations\n- Summarize findings for executive audience\n\nFinancial Standards:\n- Apply GAAP/IFRS principles where applicable\n- Use consistent accounting treatment\n- Note any non-standard adjustments\n- Provide clear assumptions for projections\n\nCommunication Style:\n- Professional and precise\n- Quantitative with supporting data\n- Clear explanations of complex concepts\n- Executive-appropriate summaries\n- Caveats and limitations clearly stated\n\nQuality Standards:\n- Double-check all calculations\n- Cite data sources\n- Provide confidence levels for projections\n- Note key assumptions and sensitivities\n\nAlways maintain objectivity and independence in your analysis. When uncertainty exists, present ranges and scenarios rather than single-point estimates.",
+  "workflow_nodes": [
+    {
+      "node_id": "input_node",
+      "node_type": "trigger",
+      "label": "Analysis Request",
+      "description": "Entry point for financial analysis requests"
+    },
+    {
+      "node_id": "data_ingestion_node",
+      "node_type": "data_fetch",
+      "label": "Data Collection",
+      "description": "Gather financial data from multiple sources"
+    },
+    {
+      "node_id": "validation_node",
+      "node_type": "validation",
+      "label": "Data Validation",
+      "description": "Validate data completeness and accuracy"
+    },
+    {
+      "node_id": "normalization_node",
+      "node_type": "transform",
+      "label": "Data Normalization",
+      "description": "Standardize financial data format"
+    },
+    {
+      "node_id": "ratio_calculation_node",
+      "node_type": "calculation",
+      "label": "Ratio Analysis",
+      "description": "Calculate financial ratios and metrics"
+    },
+    {
+      "node_id": "trend_analysis_node",
+      "node_type": "analysis",
+      "label": "Trend Analysis",
+      "description": "Analyze historical trends"
+    },
+    {
+      "node_id": "benchmarking_node",
+      "node_type": "comparison",
+      "label": "Peer Benchmarking",
+      "description": "Compare against peers and industry"
+    },
+    {
+      "node_id": "risk_assessment_node",
+      "node_type": "analysis",
+      "label": "Risk Assessment",
+      "description": "Evaluate financial risks"
+    },
+    {
+      "node_id": "forecasting_node",
+      "node_type": "ml_model",
+      "label": "Financial Forecasting",
+      "description": "Generate financial projections"
+    },
+    {
+      "node_id": "insight_generation_node",
+      "node_type": "llm_generation",
+      "label": "Insight Generation",
+      "description": "AI-powered insight synthesis"
+    },
+    {
+      "node_id": "report_generation_node",
+      "node_type": "output",
+      "label": "Report Assembly",
+      "description": "Create professional report"
+    },
+    {
+      "node_id": "visualization_node",
+      "node_type": "visualization",
+      "label": "Chart Generation",
+      "description": "Create financial visualizations"
+    },
+    {
+      "node_id": "distribution_node",
+      "node_type": "output",
+      "label": "Report Distribution",
+      "description": "Deliver to stakeholders"
+    }
+  ],
+  "integrations": [
+    {
+      "name": "QuickBooks",
+      "type": "accounting",
+      "api_endpoint": "https://quickbooks.api.intuit.com",
+      "authentication": "oauth2",
+      "features": ["financial_statements", "accounts", "transactions"],
+      "required_scopes": ["com.intuit.quickbooks.accounting"]
+    },
+    {
+      "name": "Xero",
+      "type": "accounting",
+      "api_endpoint": "https://api.xero.com/api.xro/2.0",
+      "authentication": "oauth2",
+      "features": ["financial_reports", "bank_feeds", "budgets"],
+      "required_scopes": ["accounting.transactions", "accounting.reports"]
+    },
+    {
+      "name": "NetSuite",
+      "type": "erp",
+      "api_endpoint": "https://{account}.suitetalk.api.netsuite.com",
+      "authentication": "oauth2",
+      "features": ["financial_reports", "budgets", "multi_currency"],
+      "required_scopes": ["restlets", "rest_webservices"]
+    },
+    {
+      "name": "Bloomberg",
+      "type": "market_data",
+      "api_endpoint": "https://api.bloomberg.com",
+      "authentication": "api_key",
+      "features": ["market_data", "company_financials", "estimates"],
+      "required_scopes": ["financial_data"]
+    },
+    {
+      "name": "S&P Capital IQ",
+      "type": "financial_data",
+      "api_endpoint": "https://api.capitaliq.com",
+      "authentication": "api_key",
+      "features": ["company_data", "screening", "financials"],
+      "required_scopes": ["content"]
+    },
+    {
+      "name": "Alpha Vantage",
+      "type": "market_data",
+      "api_endpoint": "https://www.alphavantage.co/query",
+      "authentication": "api_key",
+      "features": ["stock_data", "forex", "economic_indicators"],
+      "required_scopes": ["query"]
+    },
+    {
+      "name": "Google Sheets",
+      "type": "spreadsheet",
+      "api_endpoint": "https://sheets.googleapis.com",
+      "authentication": "oauth2",
+      "features": ["read", "write", "format"],
+      "required_scopes": ["spreadsheets"]
+    },
+    {
+      "name": "Excel Online",
+      "type": "spreadsheet",
+      "api_endpoint": "https://graph.microsoft.com",
+      "authentication": "oauth2",
+      "features": ["read", "write", "format"],
+      "required_scopes": ["Files.ReadWrite"]
+    }
+  ],
+  "output_formats": [
+    {
+      "format": "pdf",
+      "description": "Professional PDF financial report",
+      "template": "financial_report_template",
+      "features": ["executive_summary", "charts", "tables", "appendix"]
+    },
+    {
+      "format": "excel",
+      "description": "Excel workbook with analysis",
+      "features": ["data_sheets", "charts", "pivot_tables", "formulas"]
+    },
+    {
+      "format": "powerpoint",
+      "description": "Executive presentation deck",
+      "features": ["slides", "charts", "talking_points"]
+    },
+    {
+      "format": "json",
+      "description": "Raw analysis data in JSON format",
+      "schema": "schema.json"
+    },
+    {
+      "format": "dashboard",
+      "description": "Interactive web dashboard",
+      "features": ["real_time", "drill_down", "filters"]
+    }
+  ],
+  "pricing_model": {
+    "type": "tiered",
+    "tiers": [
+      {
+        "name": "Analyst",
+        "monthly_price": 199,
+        "included_analyses": 50,
+        "overage_price": 5.00,
+        "features": ["Financial statement analysis", "Basic ratios", "Trend analysis", "PDF reports"]
+      },
+      {
+        "name": "Professional",
+        "monthly_price": 499,
+        "included_analyses": 200,
+        "overage_price": 3.00,
+        "features": ["All Analyst features", "Valuation models", "Peer comparison", "Forecasting", "Excel integration", "API access"]
+      },
+      {
+        "name": "Enterprise",
+        "monthly_price": 1299,
+        "included_analyses": 1000,
+        "overage_price": 2.00,
+        "features": ["All Professional features", "Custom models", "Real-time dashboards", "Unlimited users", "White-label reports", "Dedicated support", "SLA guarantee"]
+      }
+    ],
+    "annual_discount": 0.20,
+    "setup_fee": {
+      "Analyst": 0,
+      "Professional": 199,
+      "Enterprise": 999
+    }
+  },
+  "rate_limits": {
+    "analyses_per_minute": 10,
+    "api_calls_per_hour": 1000,
+    "data_exports_per_day": 100
+  },
+  "security": {
+    "data_encryption": "AES-256",
+    "transit_encryption": "TLS 1.3",
+    "financial_data_compliance": ["SOC2", "PCI_DSS"],
+    "data_retention_days": 365,
+    "audit_logging": true,
+    "role_based_access": true,
+    "data_residency_options": ["US", "EU", "APAC"]
+  },
+  "compliance": {
+    "soc2_type_ii": true,
+    "gdpr_compliant": true,
+    "ccpa_compliant": true,
+    "sox_compatible": true,
+    "audit_trail": true
+  }
+}

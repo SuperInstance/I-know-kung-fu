@@ -1,0 +1,175 @@
+{
+  "name": "pdf-server",
+  "version": "1.0.0",
+  "description": "Comprehensive PDF operations MCP server for AI agents with form handling, OCR, and security features",
+  "tools": [
+    {
+      "name": "read_pdf",
+      "description": "Read and extract content from a PDF file",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": { "type": "string" },
+          "options": {
+            "type": "object",
+            "properties": {
+              "pages": { "type": "string", "description": "Page range (e.g., '1-5, 8')" },
+              "extractImages": { "type": "boolean", "default": false },
+              "extractTables": { "type": "boolean", "default": false },
+              "preserveLayout": { "type": "boolean", "default": true }
+            }
+          }
+        },
+        "required": ["path"]
+      }
+    },
+    {
+      "name": "create_pdf",
+      "description": "Create a new PDF document",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": { "type": "string" },
+          "content": { "type": "string", "description": "Text or HTML content" },
+          "options": {
+            "type": "object",
+            "properties": {
+              "pageSize": { "type": "string", "default": "A4" },
+              "margins": { "type": "object" },
+              "header": { "type": "string" },
+              "footer": { "type": "string" }
+            }
+          }
+        },
+        "required": ["path", "content"]
+      }
+    },
+    {
+      "name": "merge_pdfs",
+      "description": "Merge multiple PDF files into one",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "inputPaths": { "type": "array", "items": { "type": "string" } },
+          "outputPath": { "type": "string" }
+        },
+        "required": ["inputPaths", "outputPath"]
+      }
+    },
+    {
+      "name": "split_pdf",
+      "description": "Split a PDF into multiple files",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "inputPath": { "type": "string" },
+          "outputDir": { "type": "string" },
+          "strategy": { "type": "string", "enum": ["page", "range", "bookmark"] },
+          "ranges": { "type": "array", "items": { "type": "string" } }
+        },
+        "required": ["inputPath", "outputDir", "strategy"]
+      }
+    },
+    {
+      "name": "fill_form",
+      "description": "Fill PDF form fields",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "inputPath": { "type": "string" },
+          "outputPath": { "type": "string" },
+          "fields": { "type": "object" },
+          "flatten": { "type": "boolean", "default": false }
+        },
+        "required": ["inputPath", "outputPath", "fields"]
+      }
+    },
+    {
+      "name": "extract_form_data",
+      "description": "Extract form field data from a PDF",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": { "type": "string" }
+        },
+        "required": ["path"]
+      }
+    },
+    {
+      "name": "add_watermark",
+      "description": "Add watermark to PDF pages",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "inputPath": { "type": "string" },
+          "outputPath": { "type": "string" },
+          "text": { "type": "string" },
+          "image": { "type": "string" },
+          "options": {
+            "type": "object",
+            "properties": {
+              "position": { "type": "string", "default": "center" },
+              "opacity": { "type": "number", "default": 0.3 },
+              "pages": { "type": "string" }
+            }
+          }
+        },
+        "required": ["inputPath", "outputPath"]
+      }
+    },
+    {
+      "name": "ocr_pdf",
+      "description": "Perform OCR on scanned PDF",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "inputPath": { "type": "string" },
+          "outputPath": { "type": "string" },
+          "language": { "type": "string", "default": "eng" }
+        },
+        "required": ["inputPath", "outputPath"]
+      }
+    },
+    {
+      "name": "sign_pdf",
+      "description": "Digitally sign a PDF",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "inputPath": { "type": "string" },
+          "outputPath": { "type": "string" },
+          "certificate": { "type": "string" },
+          "password": { "type": "string" },
+          "reason": { "type": "string" }
+        },
+        "required": ["inputPath", "outputPath", "certificate"]
+      }
+    },
+    {
+      "name": "rotate_pages",
+      "description": "Rotate pages in a PDF",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "inputPath": { "type": "string" },
+          "outputPath": { "type": "string" },
+          "rotation": { "type": "integer", "enum": [90, 180, 270] },
+          "pages": { "type": "string" }
+        },
+        "required": ["inputPath", "outputPath", "rotation"]
+      }
+    }
+  ],
+  "resources": [
+    {
+      "uri": "pdf-server://templates",
+      "name": "PDF Templates",
+      "mimeType": "application/json"
+    }
+  ],
+  "config": {
+    "ocrEngine": "tesseract",
+    "maxFileSize": 500000000,
+    "tempDir": "/tmp/pdf-server"
+  }
+}

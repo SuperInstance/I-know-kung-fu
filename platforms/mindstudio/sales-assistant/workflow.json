@@ -1,0 +1,336 @@
+{
+  "workflow_id": "sales-assistant-v1",
+  "name": "Sales Assistant Workflow",
+  "description": "End-to-end lead qualification and sales automation workflow",
+  "version": "1.0.0",
+  "nodes": [
+    {
+      "id": "node_1",
+      "type": "trigger",
+      "label": "Lead Received",
+      "position": { "x": 100, "y": 300 },
+      "config": {
+        "trigger_type": "multi_source",
+        "sources": ["webhook", "crm_import", "form_submission", "email_forward"],
+        "deduplication": true
+      }
+    },
+    {
+      "id": "node_2",
+      "type": "api_call",
+      "label": "Lead Enrichment",
+      "position": { "x": 300, "y": 300 },
+      "config": {
+        "services": ["clearbit", "hunter", "apollo"],
+        "data_to_fetch": [
+          "company_info",
+          "technographics",
+          "contact_verification",
+          "social_profiles"
+        ],
+        "output_variable": "enriched_lead",
+        "timeout_seconds": 15
+      }
+    },
+    {
+      "id": "node_3",
+      "type": "ml_model",
+      "label": "Lead Scoring",
+      "position": { "x": 500, "y": 300 },
+      "config": {
+        "model_type": "lead_scoring",
+        "input_variables": ["lead_data", "enriched_lead", "behavioral_data"],
+        "output_variable": "lead_score",
+        "score_range": [0, 100]
+      }
+    },
+    {
+      "id": "node_4",
+      "type": "analysis",
+      "label": "Intent Detection",
+      "position": { "x": 700, "y": 250 },
+      "config": {
+        "signals": [
+          "pricing_page_visits",
+          "demo_requests",
+          "competitor_comparison",
+          "job_postings",
+          "technology_changes"
+        ],
+        "output_variable": "intent_signals"
+      }
+    },
+    {
+      "id": "node_5",
+      "type": "llm_classification",
+      "label": "Qualification (BANT)",
+      "position": { "x": 700, "y": 400 },
+      "config": {
+        "model": "gpt-4-turbo",
+        "prompt_template": "bant_qualification",
+        "input_variables": ["enriched_lead", "lead_score", "intent_signals"],
+        "output_variable": "qualification_result",
+        "criteria": ["budget", "authority", "need", "timeline"]
+      }
+    },
+    {
+      "id": "node_6",
+      "type": "decision",
+      "label": "Lead Routing",
+      "position": { "x": 900, "y": 325 },
+      "config": {
+        "conditions": [
+          {
+            "field": "lead_score.total_score",
+            "operator": "greater_than",
+            "value": 80,
+            "output": "hot_lead"
+          },
+          {
+            "field": "qualification_result.overall_qualification",
+            "operator": "equals",
+            "value": "qualified",
+            "output": "qualified_lead"
+          },
+          {
+            "field": "lead_score.total_score",
+            "operator": "between",
+            "value": [50, 80],
+            "output": "warm_lead"
+          },
+          {
+            "field": "lead_score.total_score",
+            "operator": "less_than",
+            "value": 30,
+            "output": "cold_lead"
+          }
+        ],
+        "default_output": "nurture"
+      }
+    },
+    {
+      "id": "node_7",
+      "type": "api_call",
+      "label": "Check Calendar",
+      "position": { "x": 1100, "y": 150 },
+      "config": {
+        "integration": "calendly",
+        "action": "get_availability",
+        "event_type": "discovery_call",
+        "output_variable": "available_slots"
+      }
+    },
+    {
+      "id": "node_8",
+      "type": "llm_generation",
+      "label": "Hot Lead Response",
+      "position": { "x": 1300, "y": 150 },
+      "config": {
+        "model": "gpt-4-turbo",
+        "prompt_template": "hot_lead_outreach",
+        "input_variables": ["enriched_lead", "qualification_result", "available_slots"],
+        "output_variable": "hot_lead_message",
+        "temperature": 0.5
+      }
+    },
+    {
+      "id": "node_9",
+      "type": "llm_generation",
+      "label": "Qualification Outreach",
+      "position": { "x": 1100, "y": 300 },
+      "config": {
+        "model": "gpt-4-turbo",
+        "prompt_template": "qualification_outreach",
+        "input_variables": ["enriched_lead", "qualification_result"],
+        "output_variable": "qualification_message"
+      }
+    },
+    {
+      "id": "node_10",
+      "type": "llm_generation",
+      "label": "Warm Lead Response",
+      "position": { "x": 1100, "y": 400 },
+      "config": {
+        "model": "gpt-4-turbo",
+        "prompt_template": "warm_lead_outreach",
+        "input_variables": ["enriched_lead", "lead_score"],
+        "output_variable": "warm_lead_message"
+      }
+    },
+    {
+      "id": "node_11",
+      "type": "automation",
+      "label": "Nurture Enrollment",
+      "position": { "x": 1100, "y": 500 },
+      "config": {
+        "sequence_type": "lead_nurture",
+        "duration_days": 30,
+        "channels": ["email", "linkedin"],
+        "output_variable": "nurture_status"
+      }
+    },
+    {
+      "id": "node_12",
+      "type": "api_call",
+      "label": "CRM Update",
+      "position": { "x": 1500, "y": 300 },
+      "config": {
+        "integrations": ["salesforce", "hubspot"],
+        "actions": ["upsert_lead", "update_score", "log_activity"],
+        "output_variable": "crm_result"
+      }
+    },
+    {
+      "id": "node_13",
+      "type": "action",
+      "label": "Sales Handoff",
+      "position": { "x": 1500, "y": 150 },
+      "config": {
+        "handoff_type": "immediate",
+        "round_robin": true,
+        "context_included": true,
+        "output_variable": "handoff_details"
+      }
+    },
+    {
+      "id": "node_14",
+      "type": "notification",
+      "label": "Team Alert",
+      "position": { "x": 1700, "y": 150 },
+      "config": {
+        "channels": ["slack", "email"],
+        "template": "hot_lead_alert",
+        "include_context": true
+      }
+    },
+    {
+      "id": "node_15",
+      "type": "output",
+      "label": "Send Response",
+      "position": { "x": 1700, "y": 300 },
+      "config": {
+        "channels": "{{preferred_channel}}",
+        "format": "{{channel_format}}",
+        "track_opens": true,
+        "track_clicks": true
+      }
+    }
+  ],
+  "connections": [
+    { "source": "node_1", "target": "node_2" },
+    { "source": "node_2", "target": "node_3" },
+    { "source": "node_3", "target": "node_4" },
+    { "source": "node_3", "target": "node_5" },
+    { "source": "node_4", "target": "node_6" },
+    { "source": "node_5", "target": "node_6" },
+    { "source": "node_6", "target": "node_7", "label": "hot_lead" },
+    { "source": "node_6", "target": "node_9", "label": "qualified_lead" },
+    { "source": "node_6", "target": "node_10", "label": "warm_lead" },
+    { "source": "node_6", "target": "node_11", "label": "nurture" },
+    { "source": "node_7", "target": "node_8" },
+    { "source": "node_8", "target": "node_13" },
+    { "source": "node_9", "target": "node_12" },
+    { "source": "node_10", "target": "node_12" },
+    { "source": "node_12", "target": "node_15" },
+    { "source": "node_13", "target": "node_14" },
+    { "source": "node_13", "target": "node_12" }
+  ],
+  "inputs": {
+    "lead_data": {
+      "type": "object",
+      "required": true,
+      "description": "Lead information including contact details"
+    },
+    "interaction_type": {
+      "type": "string",
+      "required": true,
+      "enum": ["inbound", "outbound", "follow_up", "nurture"],
+      "description": "Type of sales interaction"
+    },
+    "source_campaign": {
+      "type": "string",
+      "required": false,
+      "description": "Marketing campaign attribution"
+    },
+    "preferred_channel": {
+      "type": "string",
+      "required": false,
+      "default": "email",
+      "enum": ["email", "linkedin", "phone", "chat"]
+    }
+  },
+  "outputs": {
+    "response": {
+      "type": "string",
+      "description": "Outreach message to prospect"
+    },
+    "lead_score": {
+      "type": "number",
+      "description": "Calculated lead score (0-100)"
+    },
+    "qualification_status": {
+      "type": "string",
+      "description": "BANT qualification result"
+    },
+    "next_action": {
+      "type": "string",
+      "description": "Recommended next action"
+    },
+    "assigned_rep": {
+      "type": "string",
+      "description": "Sales representative if handed off"
+    },
+    "meeting_scheduled": {
+      "type": "boolean",
+      "description": "Whether a meeting was booked"
+    }
+  },
+  "variables": {
+    "qualification_criteria": {
+      "type": "object",
+      "default": {
+        "min_budget": 10000,
+        "target_industries": ["Technology", "Finance", "Healthcare", "Manufacturing"],
+        "min_company_size": 50,
+        "decision_maker_titles": ["VP", "Director", "C-Level", "Manager"]
+      }
+    },
+    "scoring_weights": {
+      "type": "object",
+      "default": {
+        "demographic": 0.25,
+        "firmographic": 0.25,
+        "behavioral": 0.30,
+        "engagement": 0.20
+      }
+    },
+    "response_templates": {
+      "type": "object",
+      "default": {
+        "hot_lead": "priority_response",
+        "warm_lead": "value_proposition",
+        "cold_lead": "educational_content"
+      }
+    },
+    "working_hours": {
+      "type": "object",
+      "default": {
+        "timezone": "America/New_York",
+        "start": "08:00",
+        "end": "18:00",
+        "days": ["monday", "tuesday", "wednesday", "thursday", "friday"]
+      }
+    }
+  },
+  "error_handling": {
+    "retry_count": 3,
+    "retry_delay_ms": 2000,
+    "fallback_node": "node_12",
+    "error_notifications": true
+  },
+  "performance": {
+    "target_response_time_ms": 10000,
+    "max_execution_time_ms": 60000,
+    "concurrent_executions": 50
+  }
+}

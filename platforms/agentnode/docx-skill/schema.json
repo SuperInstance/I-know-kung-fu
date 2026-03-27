@@ -1,0 +1,472 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DOCX Skill API Schema",
+  "description": "JSON Schema for the DOCX Skill API endpoints and data structures",
+  "definitions": {
+    "DocumentOptions": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "Document title"
+        },
+        "author": {
+          "type": "string",
+          "description": "Document author"
+        },
+        "subject": {
+          "type": "string",
+          "description": "Document subject"
+        },
+        "keywords": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Document keywords"
+        },
+        "template_id": {
+          "type": "string",
+          "description": "ID of template to use for document creation"
+        }
+      }
+    },
+    "ParagraphOptions": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string",
+          "description": "Paragraph text content"
+        },
+        "style": {
+          "type": "string",
+          "enum": ["Normal", "Heading1", "Heading2", "Heading3", "Title", "Subtitle", "Quote", "List"],
+          "description": "Paragraph style"
+        },
+        "alignment": {
+          "type": "string",
+          "enum": ["left", "center", "right", "justify"],
+          "default": "left"
+        },
+        "spacing": {
+          "type": "object",
+          "properties": {
+            "before": {
+              "type": "number",
+              "description": "Space before paragraph in points"
+            },
+            "after": {
+              "type": "number",
+              "description": "Space after paragraph in points"
+            },
+            "line": {
+              "type": "number",
+              "description": "Line spacing multiplier"
+            }
+          }
+        }
+      }
+    },
+    "TextRun": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string",
+          "description": "Text content"
+        },
+        "bold": {
+          "type": "boolean",
+          "default": false
+        },
+        "italic": {
+          "type": "boolean",
+          "default": false
+        },
+        "underline": {
+          "type": "string",
+          "enum": ["none", "single", "double", "dotted"],
+          "default": "none"
+        },
+        "font_size": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 400,
+          "description": "Font size in points"
+        },
+        "font_family": {
+          "type": "string",
+          "description": "Font family name"
+        },
+        "color": {
+          "type": "string",
+          "pattern": "^#[0-9A-Fa-f]{6}$",
+          "description": "Text color in hex format"
+        }
+      },
+      "required": ["text"]
+    },
+    "TableCell": {
+      "type": "object",
+      "properties": {
+        "content": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TextRun"
+          }
+        },
+        "width": {
+          "type": "number",
+          "description": "Cell width in inches"
+        },
+        "vertical_merge": {
+          "type": "string",
+          "enum": ["none", "continue", "restart"]
+        },
+        "horizontal_merge": {
+          "type": "integer",
+          "description": "Number of columns to span"
+        }
+      }
+    },
+    "Table": {
+      "type": "object",
+      "properties": {
+        "rows": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/TableCell"
+            }
+          }
+        },
+        "style": {
+          "type": "string",
+          "description": "Table style name"
+        },
+        "border": {
+          "type": "object",
+          "properties": {
+            "style": {
+              "type": "string",
+              "enum": ["none", "single", "double", "dashed", "dotted"]
+            },
+            "width": {
+              "type": "number"
+            },
+            "color": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "required": ["rows"]
+    },
+    "Image": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "type": "string",
+          "description": "Image URL or base64 encoded data"
+        },
+        "width": {
+          "type": "number",
+          "description": "Width in inches"
+        },
+        "height": {
+          "type": "number",
+          "description": "Height in inches"
+        },
+        "alignment": {
+          "type": "string",
+          "enum": ["left", "center", "right"]
+        },
+        "caption": {
+          "type": "string"
+        }
+      },
+      "required": ["source"]
+    },
+    "Comment": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string",
+          "description": "Comment text"
+        },
+        "author": {
+          "type": "string",
+          "description": "Comment author"
+        },
+        "range_start": {
+          "type": "integer",
+          "description": "Start position for comment range"
+        },
+        "range_end": {
+          "type": "integer",
+          "description": "End position for comment range"
+        }
+      },
+      "required": ["text"]
+    },
+    "TrackedChange": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["insert", "delete"]
+        },
+        "author": {
+          "type": "string"
+        },
+        "date": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "text": {
+          "type": "string"
+        }
+      }
+    },
+    "DocumentMetadata": {
+      "type": "object",
+      "properties": {
+        "page_count": {
+          "type": "integer"
+        },
+        "word_count": {
+          "type": "integer"
+        },
+        "paragraph_count": {
+          "type": "integer"
+        },
+        "author": {
+          "type": "string"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "modified": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "title": {
+          "type": "string"
+        }
+      }
+    },
+    "Error": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "object"
+        }
+      },
+      "required": ["code", "message"]
+    }
+  },
+  "CreateDocumentRequest": {
+    "type": "object",
+    "properties": {
+      "options": {
+        "$ref": "#/definitions/DocumentOptions"
+      },
+      "content": {
+        "type": "array",
+        "items": {
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "const": "paragraph"
+                },
+                "paragraph": {
+                  "$ref": "#/definitions/ParagraphOptions"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "const": "table"
+                },
+                "table": {
+                  "$ref": "#/definitions/Table"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "const": "image"
+                },
+                "image": {
+                  "$ref": "#/definitions/Image"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "const": "page_break"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "required": ["content"]
+  },
+  "CreateDocumentResponse": {
+    "type": "object",
+    "properties": {
+      "document_id": {
+        "type": "string"
+      },
+      "download_url": {
+        "type": "string",
+        "format": "uri"
+      },
+      "metadata": {
+        "$ref": "#/definitions/DocumentMetadata"
+      }
+    }
+  },
+  "EditDocumentRequest": {
+    "type": "object",
+    "properties": {
+      "document_id": {
+        "type": "string",
+        "description": "ID of document to edit"
+      },
+      "document_url": {
+        "type": "string",
+        "format": "uri",
+        "description": "URL of document to edit"
+      },
+      "operations": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "action": {
+              "type": "string",
+              "enum": ["insert", "replace", "delete", "format"]
+            },
+            "position": {
+              "type": "object",
+              "description": "Position specification for the operation"
+            },
+            "content": {
+              "type": "object",
+              "description": "Content for insert/replace operations"
+            }
+          },
+          "required": ["action"]
+        }
+      },
+      "track_changes": {
+        "type": "boolean",
+        "default": false
+      }
+    },
+    "oneOf": [
+      {"required": ["document_id"]},
+      {"required": ["document_url"]}
+    ]
+  },
+  "ExtractTextRequest": {
+    "type": "object",
+    "properties": {
+      "document_id": {
+        "type": "string"
+      },
+      "document_url": {
+        "type": "string",
+        "format": "uri"
+      },
+      "include_formatting": {
+        "type": "boolean",
+        "default": false
+      },
+      "page_range": {
+        "type": "object",
+        "properties": {
+          "start": {
+            "type": "integer"
+          },
+          "end": {
+            "type": "integer"
+          }
+        }
+      }
+    }
+  },
+  "ExtractTextResponse": {
+    "type": "object",
+    "properties": {
+      "text": {
+        "type": "string"
+      },
+      "pages": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "page_number": {
+              "type": "integer"
+            },
+            "text": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "metadata": {
+        "$ref": "#/definitions/DocumentMetadata"
+      }
+    }
+  },
+  "MergeDocumentsRequest": {
+    "type": "object",
+    "properties": {
+      "documents": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "document_id": {
+              "type": "string"
+            },
+            "document_url": {
+              "type": "string",
+              "format": "uri"
+            }
+          }
+        },
+        "minItems": 2
+      },
+      "insert_page_break": {
+        "type": "boolean",
+        "default": true
+      },
+      "preserve_formatting": {
+        "type": "boolean",
+        "default": true
+      }
+    },
+    "required": ["documents"]
+  }
+}

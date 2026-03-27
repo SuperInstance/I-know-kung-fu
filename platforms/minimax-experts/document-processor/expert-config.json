@@ -1,0 +1,138 @@
+{
+  "expert_name": "Document Processor",
+  "expert_id": "document-processor-v1",
+  "version": "1.0.0",
+  "category": "productivity",
+  "subcategory": "document-management",
+
+  "system_prompt": "You are an expert document processor assistant. Your primary function is to help users create, edit, convert, and analyze Word documents (DOCX format). You have comprehensive knowledge of document formatting, templates, business documents, and best practices.\n\nYour capabilities include:\n- Creating professional documents from descriptions\n- Generating documents from templates with data\n- Editing and formatting existing documents\n- Converting between document formats\n- Analyzing document content\n- Merging and splitting documents\n\nAlways ask clarifying questions when the user's request is ambiguous. Provide professional, well-formatted documents. Follow industry best practices for document structure and styling.\n\nWhen creating documents:\n1. Use clear, professional language\n2. Apply appropriate formatting (headings, lists, emphasis)\n3. Include all requested sections\n4. Maintain consistent styling throughout\n5. Add headers/footers when appropriate\n\nSecurity note: Handle all documents with care. Do not store sensitive information. Process documents securely and delete temporary files after completion.",
+
+  "tools": [
+    {
+      "name": "create_document",
+      "description": "Create a new DOCX document from a text description or outline",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "content": { "type": "string", "description": "Description or outline of document content" },
+          "style": { "type": "string", "enum": ["professional", "modern", "minimal", "creative", "academic"], "default": "professional" },
+          "include_toc": { "type": "boolean", "default": false }
+        },
+        "required": ["content"]
+      }
+    },
+    {
+      "name": "create_from_template",
+      "description": "Generate a document from a predefined template with data",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "template_name": { "type": "string", "description": "Name of template to use" },
+          "data": { "type": "object", "description": "Data to populate template placeholders" }
+        },
+        "required": ["template_name", "data"]
+      }
+    },
+    {
+      "name": "edit_document",
+      "description": "Edit an existing document",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "document": { "type": "string", "description": "Document ID or uploaded file reference" },
+          "changes": { "type": "array", "items": { "type": "object" }, "description": "List of changes to apply" }
+        },
+        "required": ["document", "changes"]
+      }
+    },
+    {
+      "name": "convert_document",
+      "description": "Convert document to different format",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "document": { "type": "string", "description": "Document ID or uploaded file reference" },
+          "output_format": { "type": "string", "enum": ["pdf", "docx", "txt", "html"] }
+        },
+        "required": ["document", "output_format"]
+      }
+    },
+    {
+      "name": "analyze_document",
+      "description": "Analyze document content and provide insights",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "document": { "type": "string", "description": "Document ID or uploaded file reference" },
+          "analysis_type": { "type": "string", "enum": ["summary", "extraction", "comparison", "validation"] }
+        },
+        "required": ["document"]
+      }
+    },
+    {
+      "name": "list_templates",
+      "description": "List available document templates",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "category": { "type": "string", "description": "Filter by category" }
+        }
+      }
+    },
+    {
+      "name": "merge_documents",
+      "description": "Merge multiple documents into one",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "documents": { "type": "array", "items": { "type": "string" }, "description": "List of document IDs to merge" },
+          "add_page_breaks": { "type": "boolean", "default": true }
+        },
+        "required": ["documents"]
+      }
+    }
+  ],
+
+  "parameters": {
+    "temperature": 0.3,
+    "max_tokens": 4096,
+    "top_p": 0.9,
+    "response_format": "text"
+  },
+
+  "pricing_tier": "premium",
+  "credit_cost": {
+    "base": 1,
+    "create": 1,
+    "create_from_template": 1,
+    "edit": 1,
+    "convert": 1,
+    "analyze": 2,
+    "merge": 2
+  },
+
+  "rate_limits": {
+    "free": { "requests_per_hour": 5, "requests_per_day": 20 },
+    "pro": { "requests_per_hour": 30, "requests_per_day": 200 },
+    "enterprise": { "requests_per_hour": 100, "requests_per_day": 1000 }
+  },
+
+  "available_templates": [
+    { "name": "business_proposal", "category": "business", "description": "Professional business proposal" },
+    { "name": "employment_contract", "category": "legal", "description": "Standard employment contract" },
+    { "name": "nda", "category": "legal", "description": "Non-disclosure agreement" },
+    { "name": "resume_professional", "category": "personal", "description": "Professional resume template" },
+    { "name": "meeting_minutes", "category": "business", "description": "Meeting minutes template" },
+    { "name": "project_report", "category": "business", "description": "Project status report" },
+    { "name": "invoice", "category": "finance", "description": "Professional invoice template" },
+    { "name": "press_release", "category": "marketing", "description": "Press release template" }
+  ],
+
+  "metadata": {
+    "created_at": "2026-03-28",
+    "updated_at": "2026-03-28",
+    "author": "SuperInstance",
+    "support_email": "support@superinstance.ai",
+    "documentation_url": "https://docs.superinstance.ai/experts/document-processor"
+  }
+}

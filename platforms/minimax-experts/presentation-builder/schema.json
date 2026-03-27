@@ -1,0 +1,221 @@
+{
+  "name": "presentation-builder",
+  "version": "1.0.0",
+  "description": "Professional presentation creation, editing, and analysis with support for layouts, charts, animations, and speaker notes",
+  "category": "productivity",
+  "inputs": {
+    "type": "object",
+    "properties": {
+      "action": {
+        "type": "string",
+        "enum": ["create", "edit", "analyze", "convert", "extract", "enhance"],
+        "description": "The primary presentation operation to perform"
+      },
+      "source": {
+        "type": "string",
+        "description": "File path or URL to the presentation file"
+      },
+      "creation_params": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Presentation title"
+          },
+          "topic": {
+            "type": "string",
+            "description": "Main topic or subject matter"
+          },
+          "audience": {
+            "type": "string",
+            "description": "Target audience description"
+          },
+          "slide_count": {
+            "type": "integer",
+            "default": 10,
+            "description": "Target number of slides"
+          },
+          "template": {
+            "type": "string",
+            "description": "Template name or style reference"
+          },
+          "content_outline": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "title": { "type": "string" },
+                "bullets": { "type": "array" },
+                "type": { "type": "string", "enum": ["title", "content", "image", "chart", "table"] }
+              }
+            }
+          }
+        }
+      },
+      "design_config": {
+        "type": "object",
+        "properties": {
+          "theme": {
+            "type": "string",
+            "description": "Theme name (corporate, modern, minimal, creative)"
+          },
+          "color_scheme": {
+            "type": "object",
+            "properties": {
+              "primary": { "type": "string" },
+              "secondary": { "type": "string" },
+              "accent": { "type": "string" },
+              "background": { "type": "string" }
+            }
+          },
+          "font_config": {
+            "type": "object",
+            "properties": {
+              "title_font": { "type": "string" },
+              "body_font": { "type": "string" },
+              "title_size": { "type": "integer" },
+              "body_size": { "type": "integer" }
+            }
+          }
+        }
+      },
+      "chart_config": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["bar", "line", "pie", "scatter", "area", "combo"]
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "labels": { "type": "array" },
+              "series": { "type": "array" }
+            }
+          },
+          "title": { "type": "string" },
+          "position": { "type": "object" }
+        }
+      },
+      "options": {
+        "type": "object",
+        "properties": {
+          "include_speaker_notes": {
+            "type": "boolean",
+            "default": true
+          },
+          "add_animations": {
+            "type": "boolean",
+            "default": false
+          },
+          "output_format": {
+            "type": "string",
+            "enum": ["pptx", "pdf", "images"],
+            "default": "pptx"
+          }
+        }
+      }
+    },
+    "required": ["action"]
+  },
+  "outputs": {
+    "type": "object",
+    "properties": {
+      "success": {
+        "type": "boolean"
+      },
+      "result": {
+        "type": "object",
+        "properties": {
+          "output_path": { "type": "string" },
+          "slide_count": { "type": "integer" },
+          "slides": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "slide_number": { "type": "integer" },
+                "title": { "type": "string" },
+                "type": { "type": "string" },
+                "has_notes": { "type": "boolean" }
+              }
+            }
+          },
+          "analysis": {
+            "type": "object",
+            "properties": {
+              "word_count": { "type": "integer" },
+              "image_count": { "type": "integer" },
+              "chart_count": { "type": "integer" },
+              "readability_score": { "type": "number" }
+            }
+          }
+        }
+      },
+      "errors": {
+        "type": "array"
+      }
+    }
+  },
+  "capabilities": [
+    "Create professional presentations from topics or outlines",
+    "Design slides with consistent themes and branding",
+    "Generate charts and visualizations from data",
+    "Add and format text, images, shapes, and tables",
+    "Create speaker notes for presentation guidance",
+    "Apply animations and transitions",
+    "Convert presentations to PDF or images",
+    "Extract content from existing presentations",
+    "Optimize presentations for accessibility"
+  ],
+  "limitations": [
+    "Maximum file size of 50MB",
+    "Maximum 200 slides per presentation",
+    "Complex animations may have limited support",
+    "Some advanced SmartArt types may not render identically",
+    "Embedded video/audio requires source files"
+  ],
+  "examples": [
+    {
+      "input": {
+        "action": "create",
+        "creation_params": {
+          "title": "Q4 Sales Review",
+          "topic": "Quarterly sales performance and outlook",
+          "audience": "Executive leadership team",
+          "slide_count": 12,
+          "template": "corporate-blue"
+        }
+      },
+      "output": {
+        "success": true,
+        "result": {
+          "output_path": "/output/Q4_Sales_Review.pptx",
+          "slide_count": 12,
+          "slides": [
+            {"slide_number": 1, "title": "Q4 Sales Review", "type": "title"},
+            {"slide_number": 2, "title": "Agenda", "type": "content"},
+            {"slide_number": 3, "title": "Executive Summary", "type": "content"}
+          ]
+        }
+      }
+    },
+    {
+      "input": {
+        "action": "enhance",
+        "source": "/presentations/draft.pptx",
+        "options": {
+          "include_speaker_notes": true,
+          "add_animations": true
+        }
+      },
+      "output": {
+        "success": true,
+        "result": {
+          "output_path": "/output/enhanced_presentation.pptx",
+          "slide_count": 8
+        }
+      }
+    }
+  ]
+}

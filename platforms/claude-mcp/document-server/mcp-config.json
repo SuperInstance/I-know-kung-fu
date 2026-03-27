@@ -1,0 +1,163 @@
+{
+  "name": "document-server",
+  "version": "1.0.0",
+  "description": "Comprehensive document operations MCP server supporting DOCX, PDF, TXT, Markdown, and HTML formats",
+  "tools": [
+    {
+      "name": "read_document",
+      "description": "Read content from a document file",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": { "type": "string", "description": "Path to document file" },
+          "options": {
+            "type": "object",
+            "properties": {
+              "extractImages": { "type": "boolean", "default": false },
+              "extractMetadata": { "type": "boolean", "default": true },
+              "preserveFormatting": { "type": "boolean", "default": false }
+            }
+          }
+        },
+        "required": ["path"]
+      }
+    },
+    {
+      "name": "create_document",
+      "description": "Create a new document",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": { "type": "string" },
+          "format": { "type": "string", "enum": ["docx", "pdf", "txt", "md", "html"] },
+          "content": { "type": "string" },
+          "metadata": { "type": "object" }
+        },
+        "required": ["path", "format", "content"]
+      }
+    },
+    {
+      "name": "convert_document",
+      "description": "Convert document from one format to another",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "inputPath": { "type": "string" },
+          "outputPath": { "type": "string" },
+          "outputFormat": { "type": "string", "enum": ["docx", "pdf", "txt", "md", "html"] }
+        },
+        "required": ["inputPath", "outputPath", "outputFormat"]
+      }
+    },
+    {
+      "name": "merge_documents",
+      "description": "Merge multiple documents into one",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "inputPaths": { "type": "array", "items": { "type": "string" } },
+          "outputPath": { "type": "string" },
+          "options": {
+            "type": "object",
+            "properties": {
+              "addPageBreaks": { "type": "boolean", "default": true }
+            }
+          }
+        },
+        "required": ["inputPaths", "outputPath"]
+      }
+    },
+    {
+      "name": "split_document",
+      "description": "Split a document into multiple parts",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "inputPath": { "type": "string" },
+          "outputDir": { "type": "string" },
+          "strategy": { "type": "string", "enum": ["page", "section", "chapter"] },
+          "options": {
+            "type": "object",
+            "properties": {
+              "ranges": { "type": "array", "items": { "type": "string" } }
+            }
+          }
+        },
+        "required": ["inputPath", "outputDir", "strategy"]
+      }
+    },
+    {
+      "name": "apply_template",
+      "description": "Apply data to a document template",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "templatePath": { "type": "string" },
+          "outputPath": { "type": "string" },
+          "data": { "type": "object" }
+        },
+        "required": ["templatePath", "outputPath", "data"]
+      }
+    },
+    {
+      "name": "extract_text",
+      "description": "Extract plain text from a document",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": { "type": "string" },
+          "pages": { "type": "string", "description": "Page range (e.g., '1-5, 8, 10-12')" }
+        },
+        "required": ["path"]
+      }
+    },
+    {
+      "name": "get_metadata",
+      "description": "Get document metadata",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": { "type": "string" }
+        },
+        "required": ["path"]
+      }
+    },
+    {
+      "name": "set_metadata",
+      "description": "Set document metadata",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": { "type": "string" },
+          "metadata": {
+            "type": "object",
+            "properties": {
+              "title": { "type": "string" },
+              "author": { "type": "string" },
+              "subject": { "type": "string" },
+              "keywords": { "type": "array", "items": { "type": "string" } }
+            }
+          }
+        },
+        "required": ["path", "metadata"]
+      }
+    }
+  ],
+  "resources": [
+    {
+      "uri": "document-server://templates",
+      "name": "Available Templates",
+      "mimeType": "application/json"
+    },
+    {
+      "uri": "document-server://formats",
+      "name": "Supported Formats",
+      "mimeType": "application/json"
+    }
+  ],
+  "config": {
+    "supportedFormats": ["docx", "pdf", "txt", "md", "html", "rtf"],
+    "maxFileSize": 100000000,
+    "tempDir": "/tmp/document-server"
+  }
+}

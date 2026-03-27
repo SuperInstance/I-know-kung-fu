@@ -1,0 +1,226 @@
+{
+  "name": "web-intelligence",
+  "version": "1.0.0",
+  "description": "Combined web search and content extraction agent for research, competitive intelligence, and real-time information gathering",
+  "category": "research",
+  "inputs": {
+    "type": "object",
+    "properties": {
+      "action": {
+        "type": "string",
+        "enum": ["search", "extract", "research", "monitor", "synthesize", "compare"],
+        "description": "The primary web intelligence operation to perform"
+      },
+      "query": {
+        "type": "string",
+        "description": "Search query or research topic"
+      },
+      "sources": {
+        "type": "array",
+        "items": { "type": "string" },
+        "description": "Specific URLs to extract content from"
+      },
+      "search_config": {
+        "type": "object",
+        "properties": {
+          "max_results": {
+            "type": "integer",
+            "default": 10,
+            "description": "Maximum number of search results"
+          },
+          "date_range": {
+            "type": "string",
+            "enum": ["day", "week", "month", "year", "all"],
+            "default": "all"
+          },
+          "content_type": {
+            "type": "string",
+            "enum": ["all", "news", "articles", "blogs", "forums", "academic"],
+            "default": "all"
+          },
+          "region": {
+            "type": "string",
+            "description": "Geographic region for localized results"
+          }
+        }
+      },
+      "extract_config": {
+        "type": "object",
+        "properties": {
+          "include_links": {
+            "type": "boolean",
+            "default": true
+          },
+          "include_images": {
+            "type": "boolean",
+            "default": false
+          },
+          "include_metadata": {
+            "type": "boolean",
+            "default": true
+          },
+          "extract_structured_data": {
+            "type": "boolean",
+            "default": false
+          }
+        }
+      },
+      "synthesis_config": {
+        "type": "object",
+        "properties": {
+          "output_format": {
+            "type": "string",
+            "enum": ["summary", "report", "comparison", "facts", "timeline"],
+            "default": "summary"
+          },
+          "length": {
+            "type": "string",
+            "enum": ["brief", "standard", "detailed"],
+            "default": "standard"
+          },
+          "include_citations": {
+            "type": "boolean",
+            "default": true
+          }
+        }
+      },
+      "monitor_config": {
+        "type": "object",
+        "properties": {
+          "urls": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "check_frequency": {
+            "type": "string",
+            "enum": ["hourly", "daily", "weekly"]
+          },
+          "alert_conditions": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "required": ["action"]
+  },
+  "outputs": {
+    "type": "object",
+    "properties": {
+      "success": {
+        "type": "boolean"
+      },
+      "result": {
+        "type": "object",
+        "properties": {
+          "search_results": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "title": { "type": "string" },
+                "url": { "type": "string" },
+                "snippet": { "type": "string" },
+                "source": { "type": "string" },
+                "date": { "type": "string" }
+              }
+            }
+          },
+          "extracted_content": {
+            "type": "object",
+            "properties": {
+              "title": { "type": "string" },
+              "text": { "type": "string" },
+              "metadata": { "type": "object" },
+              "links": { "type": "array" }
+            }
+          },
+          "synthesis": {
+            "type": "object",
+            "properties": {
+              "summary": { "type": "string" },
+              "key_points": { "type": "array" },
+              "sources_used": { "type": "integer" },
+              "citations": { "type": "array" }
+            }
+          },
+          "insights": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "credibility_scores": {
+            "type": "object"
+          }
+        }
+      },
+      "errors": {
+        "type": "array"
+      }
+    }
+  },
+  "capabilities": [
+    "Search the web with advanced query support",
+    "Extract content from any web page",
+    "Synthesize information from multiple sources",
+    "Perform comprehensive research on any topic",
+    "Monitor web pages for changes",
+    "Generate research summaries and reports",
+    "Score source credibility",
+    "Extract structured data from pages",
+    "Compare information across sources"
+  ],
+  "limitations": [
+    "Some paywalled content may not be accessible",
+    "Rate limits may apply for high-volume usage",
+    "Real-time results depend on source availability",
+    "Some content may require JavaScript rendering",
+    "Protected social media content may be inaccessible"
+  ],
+  "examples": [
+    {
+      "input": {
+        "action": "search",
+        "query": "latest developments in AI regulation 2024",
+        "search_config": {
+          "max_results": 10,
+          "date_range": "month",
+          "content_type": "news"
+        }
+      },
+      "output": {
+        "success": true,
+        "result": {
+          "search_results": [
+            {
+              "title": "EU AI Act Implementation Guide Released",
+              "url": "https://example.com/eu-ai-act",
+              "snippet": "The European Commission has released comprehensive guidelines...",
+              "source": "TechNews Daily",
+              "date": "2024-11-15"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "input": {
+        "action": "research",
+        "query": "What are the key features of the new iPhone 16?",
+        "synthesis_config": {
+          "output_format": "summary",
+          "include_citations": true
+        }
+      },
+      "output": {
+        "success": true,
+        "result": {
+          "synthesis": {
+            "summary": "The iPhone 16 introduces several key features...",
+            "key_points": ["A18 chip", "Titanium frame", "48MP camera system"],
+            "sources_used": 8,
+            "citations": ["Apple.com", "TechCrunch", "The Verge"]
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,156 @@
+{
+  "skill_name": "web-search",
+  "display_name": "Web Search Integration",
+  "version": "1.0.0",
+  "category": "web-data",
+  "subcategory": "search",
+  "description": "Implement web search capabilities using the z-ai-web-dev-sdk. Search the web for real-time information, retrieve up-to-date content, and access information beyond knowledge cutoff dates.",
+  "long_description": "The Web Search Skill enables AI agents to search the web in real-time, retrieve current information, and access up-to-date content. Features include multiple search types (web, news, images, video), advanced query syntax, multi-language support, and intelligent result ranking.",
+  "author": "AgentNode Team",
+  "license": "commercial",
+  "homepage": "https://agentnode.io/skills/web-search",
+  "documentation": "https://docs.agentnode.io/skills/web-search",
+  "repository": "https://github.com/agentnode/skills/web-search",
+  "tags": [
+    "search",
+    "web-search",
+    "real-time",
+    "research",
+    "news",
+    "information-retrieval"
+  ],
+  "pricing": {
+    "model": "per_use",
+    "currency": "USD",
+    "tiers": [
+      {
+        "name": "search",
+        "description": "Basic web search",
+        "amount": 0.003
+      },
+      {
+        "name": "news_search",
+        "description": "News-focused search",
+        "amount": 0.004
+      },
+      {
+        "name": "image_search",
+        "description": "Image search",
+        "amount": 0.005
+      },
+      {
+        "name": "batch_search",
+        "description": "Batch search per query",
+        "amount": 0.002
+      },
+      {
+        "name": "suggest",
+        "description": "Query suggestions",
+        "amount": 0.001
+      }
+    ],
+    "bulk_discount": {
+      "1000": 0.15,
+      "10000": 0.25,
+      "100000": 0.35
+    }
+  },
+  "subscription_options": [
+    {
+      "name": "starter",
+      "monthly_price": 15,
+      "included_operations": 2500,
+      "overage_rate": 0.0025
+    },
+    {
+      "name": "professional",
+      "monthly_price": 49,
+      "included_operations": 15000,
+      "overage_rate": 0.002
+    },
+    {
+      "name": "enterprise",
+      "monthly_price": 149,
+      "included_operations": 75000,
+      "overage_rate": 0.0015
+    }
+  ],
+  "rate_limits": {
+    "free_tier": {
+      "requests_per_minute": 30,
+      "requests_per_hour": 300,
+      "requests_per_day": 1500
+    },
+    "starter": {
+      "requests_per_minute": 60,
+      "requests_per_hour": 1500,
+      "requests_per_day": 15000
+    },
+    "professional": {
+      "requests_per_minute": 120,
+      "requests_per_hour": 5000,
+      "requests_per_day": 75000
+    },
+    "enterprise": {
+      "requests_per_minute": 300,
+      "requests_per_hour": 15000,
+      "requests_per_day": 300000
+    }
+  },
+  "auth_required": true,
+  "auth_methods": [
+    "api_key",
+    "oauth2"
+  ],
+  "search_capabilities": {
+    "search_types": ["web", "news", "images", "videos", "scholarly"],
+    "max_results_per_query": 100,
+    "max_offset": 1000,
+    "supported_languages": 50,
+    "supported_countries": 200
+  },
+  "performance": {
+    "avg_search_time_ms": 500,
+    "max_search_time_ms": 5000,
+    "concurrent_searches": 50,
+    "success_rate": 0.995
+  },
+  "features": [
+    "real_time_results",
+    "advanced_query_syntax",
+    "multi_language_support",
+    "location_aware_results",
+    "date_filtering",
+    "safe_search",
+    "result_snippets",
+    "related_searches",
+    "query_suggestions",
+    "batch_processing"
+  ],
+  "integrations": [
+    {
+      "name": "webhook",
+      "type": "notification",
+      "actions": ["search_complete", "batch_complete"]
+    }
+  ],
+  "compliance": [
+    "GDPR",
+    "CCPA"
+  ],
+  "data_retention": {
+    "default_days": 1,
+    "max_days": 7,
+    "encryption": "AES-256",
+    "transit_encryption": "TLS_1.3"
+  },
+  "support": {
+    "documentation": "https://docs.agentnode.io/skills/web-search",
+    "community": "https://community.agentnode.io",
+    "email": "support@agentnode.io"
+  },
+  "status": "active",
+  "visibility": "public",
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-15T00:00:00Z"
+}

@@ -1,0 +1,128 @@
+{
+  "name": "spreadsheet-analyst",
+  "version": "1.0.0",
+  "description": "Intelligent spreadsheet creation, analysis, and automation expert",
+  "category": "productivity",
+  "author": "SuperInstance",
+  "tags": ["spreadsheet", "excel", "data", "analysis", "formulas"],
+  "rank": 3,
+  "monetization_potential": "high",
+
+  "inputs": {
+    "type": "object",
+    "properties": {
+      "action": {
+        "type": "string",
+        "enum": ["create", "analyze", "formula_help", "visualize", "clean", "pivot", "export"]
+      },
+      "file": {
+        "type": "string",
+        "format": "binary",
+        "description": "Spreadsheet file to process"
+      },
+      "data": {
+        "type": "object",
+        "description": "Data for spreadsheet creation"
+      },
+      "formula_request": {
+        "type": "string",
+        "description": "Natural language formula request"
+      },
+      "analysis_type": {
+        "type": "string",
+        "enum": ["summary", "statistics", "trends", "anomalies", "correlations"]
+      },
+      "chart_type": {
+        "type": "string",
+        "enum": ["bar", "line", "pie", "scatter", "histogram", "pivot_table"]
+      },
+      "output_format": {
+        "type": "string",
+        "enum": ["xlsx", "csv", "json", "pdf"],
+        "default": "xlsx"
+      }
+    },
+    "required": ["action"]
+  },
+
+  "outputs": {
+    "type": "object",
+    "properties": {
+      "file": { "type": "string", "format": "binary" },
+      "download_url": { "type": "string", "format": "uri" },
+      "analysis": {
+        "type": "object",
+        "properties": {
+          "summary": { "type": "string" },
+          "statistics": { "type": "object" },
+          "insights": { "type": "array" },
+          "recommendations": { "type": "array" }
+        }
+      },
+      "formula": {
+        "type": "object",
+        "properties": {
+          "formula": { "type": "string" },
+          "explanation": { "type": "string" },
+          "example": { "type": "string" }
+        }
+      },
+      "chart_image": { "type": "string", "format": "uri" }
+    }
+  },
+
+  "capabilities": [
+    "Create formatted spreadsheets from data",
+    "Write and explain complex formulas",
+    "Perform statistical analysis",
+    "Create charts and visualizations",
+    "Build pivot tables",
+    "Clean and transform data",
+    "Identify trends and anomalies",
+    "Generate reports",
+    "Convert between formats"
+  ],
+
+  "pricing": {
+    "model": "tiered",
+    "credits_per_use": {
+      "create": 1,
+      "analyze": 2,
+      "formula_help": 1,
+      "visualize": 2,
+      "clean": 2,
+      "pivot": 2
+    }
+  },
+
+  "examples": [
+    {
+      "input": {
+        "action": "formula_help",
+        "formula_request": "Calculate the average of the top 10% of values in column A, excluding zeros"
+      },
+      "output": {
+        "formula": {
+          "formula": "=AVERAGE(IF(A:A>PERCENTILE(IF(A:A<>0,A:A),0.9),IF(A:A<>0,A:A)))",
+          "explanation": "This array formula calculates the average of values in column A that are above the 90th percentile, excluding zeros. Enter with Ctrl+Shift+Enter in older Excel versions.",
+          "example": "If column A contains [100, 200, 0, 150, 300, ...], this returns the average of only the top 10% non-zero values."
+        }
+      }
+    },
+    {
+      "input": {
+        "action": "create",
+        "data": {
+          "type": "budget",
+          "categories": ["Revenue", "COGS", "Gross Profit", "Operating Expenses", "Net Income"],
+          "months": 12,
+          "currency": "USD"
+        }
+      },
+      "output": {
+        "download_url": "https://storage.example.com/budget_template.xlsx",
+        "metadata": { "sheets": 2, "formulas": 24, "charts": 3 }
+      }
+    }
+  ]
+}

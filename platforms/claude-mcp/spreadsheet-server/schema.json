@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Spreadsheet Server MCP",
+  "type": "object",
+  "properties": {
+    "server": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "const": "spreadsheet-server" },
+        "version": { "type": "string" }
+      }
+    },
+    "tools": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": ["read_spreadsheet", "create_spreadsheet", "write_cells", "analyze_data", "convert_spreadsheet", "get_sheet_names", "add_sheet", "apply_formula"]
+          }
+        }
+      }
+    }
+  }
+}

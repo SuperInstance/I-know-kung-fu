@@ -1,0 +1,190 @@
+{
+  "name": "document-processor",
+  "version": "1.0.0",
+  "description": "Comprehensive DOCX document creation, editing, and conversion expert",
+  "category": "productivity",
+  "author": "SuperInstance",
+  "tags": ["documents", "docx", "productivity", "business", "automation"],
+  "rank": 1,
+  "monetization_potential": "highest",
+
+  "inputs": {
+    "type": "object",
+    "properties": {
+      "action": {
+        "type": "string",
+        "enum": ["create", "edit", "convert", "analyze", "merge", "split", "extract"],
+        "description": "The document operation to perform"
+      },
+      "content": {
+        "type": "string",
+        "description": "Text content or description of document to create"
+      },
+      "template": {
+        "type": "string",
+        "description": "Template name or ID to use"
+      },
+      "data": {
+        "type": "object",
+        "description": "Data to populate template placeholders"
+      },
+      "document": {
+        "type": "string",
+        "format": "binary",
+        "description": "Existing document file for editing or conversion"
+      },
+      "format": {
+        "type": "string",
+        "enum": ["docx", "pdf", "txt", "html", "json"],
+        "default": "docx",
+        "description": "Output format"
+      },
+      "options": {
+        "type": "object",
+        "properties": {
+          "include_headers": { "type": "boolean", "default": true },
+          "include_footers": { "type": "boolean", "default": true },
+          "include_toc": { "type": "boolean", "default": false },
+          "page_numbers": { "type": "boolean", "default": true },
+          "style": {
+            "type": "string",
+            "enum": ["professional", "modern", "minimal", "creative", "academic"],
+            "default": "professional"
+          }
+        }
+      }
+    },
+    "required": ["action"]
+  },
+
+  "outputs": {
+    "type": "object",
+    "properties": {
+      "document": {
+        "type": "string",
+        "format": "binary",
+        "description": "Generated or modified document file"
+      },
+      "download_url": {
+        "type": "string",
+        "format": "uri",
+        "description": "URL to download the document"
+      },
+      "metadata": {
+        "type": "object",
+        "properties": {
+          "pages": { "type": "integer" },
+          "words": { "type": "integer" },
+          "characters": { "type": "integer" },
+          "file_size": { "type": "integer" },
+          "created_at": { "type": "string", "format": "date-time" }
+        }
+      },
+      "analysis": {
+        "type": "object",
+        "description": "Analysis results for analyze action",
+        "properties": {
+          "summary": { "type": "string" },
+          "key_points": { "type": "array", "items": { "type": "string" } },
+          "entities": { "type": "array" },
+          "sentiment": { "type": "string" }
+        }
+      }
+    }
+  },
+
+  "capabilities": [
+    "Create new documents from descriptions",
+    "Generate documents from templates",
+    "Edit existing documents",
+    "Convert between formats (DOCX, PDF, TXT, HTML)",
+    "Merge multiple documents",
+    "Split documents by sections",
+    "Extract text and data",
+    "Analyze document content",
+    "Apply professional formatting",
+    "Insert tables, images, and charts",
+    "Manage headers and footers",
+    "Create table of contents"
+  ],
+
+  "limitations": [
+    "Maximum file size: 50MB",
+    "Maximum pages: 500 per document",
+    "No real-time collaboration",
+    "Limited to text-based content (no embedded videos)",
+    "Cannot edit password-protected documents"
+  ],
+
+  "pricing": {
+    "model": "tiered",
+    "tiers": [
+      { "name": "free", "documents_per_month": 5, "price": 0 },
+      { "name": "pro", "documents_per_month": 100, "price": 9.99 },
+      { "name": "enterprise", "documents_per_month": -1, "price": 49.99 }
+    ],
+    "credits_per_use": {
+      "create": 1,
+      "edit": 1,
+      "convert": 1,
+      "analyze": 2,
+      "merge": 2,
+      "split": 2,
+      "extract": 1
+    }
+  },
+
+  "examples": [
+    {
+      "input": {
+        "action": "create",
+        "content": "Create a professional business proposal for web development services. Include sections for: Executive Summary, Scope of Work, Timeline, Pricing, and Terms.",
+        "options": { "style": "professional" }
+      },
+      "output": {
+        "download_url": "https://storage.example.com/docs/proposal_123.docx",
+        "metadata": {
+          "pages": 5,
+          "words": 1250,
+          "characters": 7500,
+          "file_size": 45000
+        }
+      }
+    },
+    {
+      "input": {
+        "action": "create",
+        "template": "employment_contract",
+        "data": {
+          "employee_name": "Jane Smith",
+          "position": "Software Engineer",
+          "start_date": "2026-04-01",
+          "salary": "120000",
+          "company_name": "Tech Corp Inc."
+        }
+      },
+      "output": {
+        "download_url": "https://storage.example.com/docs/contract_456.docx",
+        "metadata": {
+          "pages": 8,
+          "words": 2100,
+          "characters": 12600
+        }
+      }
+    },
+    {
+      "input": {
+        "action": "convert",
+        "document": "[uploaded file]",
+        "format": "pdf"
+      },
+      "output": {
+        "download_url": "https://storage.example.com/docs/converted_789.pdf",
+        "metadata": {
+          "pages": 3,
+          "file_size": 120000
+        }
+      }
+    }
+  ]
+}

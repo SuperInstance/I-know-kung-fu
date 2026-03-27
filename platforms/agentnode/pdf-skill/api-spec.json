@@ -1,0 +1,690 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "PDF Skill API",
+    "description": "Comprehensive PDF manipulation API for creation, editing, form filling, and extraction",
+    "version": "1.0.0",
+    "contact": {
+      "name": "AgentNode Support",
+      "email": "support@agentnode.io",
+      "url": "https://agentnode.io"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://api.agentnode.io/v1/skills/pdf",
+      "description": "Production server"
+    }
+  ],
+  "security": [
+    {
+      "ApiKeyAuth": []
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key"
+      }
+    },
+    "schemas": {
+      "Error": {
+        "type": "object",
+        "properties": {
+          "code": {"type": "string"},
+          "message": {"type": "string"},
+          "details": {"type": "object"}
+        }
+      },
+      "DocumentMetadata": {
+        "type": "object",
+        "properties": {
+          "document_id": {"type": "string"},
+          "page_count": {"type": "integer"},
+          "file_size_kb": {"type": "integer"},
+          "is_encrypted": {"type": "boolean"},
+          "has_forms": {"type": "boolean"}
+        }
+      }
+    }
+  },
+  "endpoints": [
+    {
+      "path": "/create",
+      "method": "POST",
+      "summary": "Create a new PDF",
+      "description": "Create a new PDF document from text, images, or HTML",
+      "tags": ["Document Operations"],
+      "pricing": 0.05,
+      "parameters": [
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "options": {
+                "type": "object",
+                "properties": {
+                  "title": {"type": "string"},
+                  "author": {"type": "string"},
+                  "page_size": {"type": "string", "enum": ["A4", "Letter", "Legal"]},
+                  "orientation": {"type": "string", "enum": ["portrait", "landscape"]}
+                }
+              },
+              "content": {
+                "type": "array",
+                "items": {
+                  "type": "object"
+                }
+              },
+              "html": {
+                "type": "string",
+                "description": "HTML content to convert to PDF"
+              }
+            }
+          }
+        }
+      ],
+      "response": {
+        "success": {
+          "document_id": "pdf_abc123",
+          "download_url": "https://storage.agentnode.io/pdfs/pdf_abc123.pdf",
+          "metadata": {
+            "page_count": 5,
+            "file_size_kb": 120
+          }
+        }
+      }
+    },
+    {
+      "path": "/fill-form",
+      "method": "POST",
+      "summary": "Fill PDF form fields",
+      "description": "Fill form fields in a PDF document with specified values",
+      "tags": ["Form Operations"],
+      "pricing": 0.04,
+      "parameters": [
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "document_id": {"type": "string"},
+              "document_url": {"type": "string", "format": "uri"},
+              "fields": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "field_name": {"type": "string"},
+                    "value": {"type": ["string", "boolean"]}
+                  }
+                }
+              },
+              "flatten": {
+                "type": "boolean",
+                "default": false
+              }
+            }
+          }
+        }
+      ],
+      "response": {
+        "success": {
+          "document_id": "pdf_filled_123",
+          "download_url": "https://storage.agentnode.io/pdfs/pdf_filled_123.pdf",
+          "fields_filled": 12,
+          "flattened": false
+        }
+      }
+    },
+    {
+      "path": "/get-form-fields",
+      "method": "POST",
+      "summary": "Get form field information",
+      "description": "Retrieve information about all form fields in a PDF",
+      "tags": ["Form Operations"],
+      "pricing": 0.01,
+      "parameters": [
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "document_id": {"type": "string"},
+              "document_url": {"type": "string", "format": "uri"}
+            }
+          }
+        }
+      ],
+      "response": {
+        "success": {
+          "fields": [
+            {
+              "field_name": "first_name",
+              "field_type": "text",
+              "page": 1,
+              "required": false,
+              "current_value": ""
+            },
+            {
+              "field_name": "agree_terms",
+              "field_type": "checkbox",
+              "page": 2,
+              "required": true,
+              "current_value": false
+            }
+          ],
+          "total_fields": 15
+        }
+      }
+    },
+    {
+      "path": "/extract-text",
+      "method": "POST",
+      "summary": "Extract text from PDF",
+      "description": "Extract text content from a PDF document with optional OCR",
+      "tags": ["Extraction"],
+      "pricing": 0.01,
+      "parameters": [
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "document_id": {"type": "string"},
+              "document_url": {"type": "string", "format": "uri"},
+              "pages": {
+                "type": "array",
+                "items": {"type": "integer"}
+              },
+              "preserve_layout": {"type": "boolean"},
+              "ocr_options": {
+                "type": "object",
+                "properties": {
+                  "language": {"type": "string"},
+                  "detect_language": {"type": "boolean"}
+                }
+              }
+            }
+          }
+        }
+      ],
+      "response": {
+        "success": {
+          "text": "Extracted document text...",
+          "pages": [
+            {"page_number": 1, "text": "Page 1 content..."}
+          ],
+          "ocr_used": false,
+          "metadata": {
+            "page_count": 10,
+            "word_count": 2500
+          }
+        }
+      }
+    },
+    {
+      "path": "/extract-tables",
+      "method": "POST",
+      "summary": "Extract tables from PDF",
+      "description": "Extract tabular data from a PDF document",
+      "tags": ["Extraction"],
+      "pricing": 0.03,
+      "parameters": [
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "document_id": {"type": "string"},
+              "document_url": {"type": "string", "format": "uri"},
+              "pages": {
+                "type": "array",
+                "items": {"type": "integer"}
+              },
+              "output_format": {
+                "type": "string",
+                "enum": ["json", "csv", "xlsx"]
+              }
+            }
+          }
+        }
+      ],
+      "response": {
+        "success": {
+          "tables": [
+            {
+              "table_id": 1,
+              "page": 3,
+              "rows": 10,
+              "columns": 4,
+              "data": [
+                ["Header1", "Header2", "Header3", "Header4"],
+                ["Value1", "Value2", "Value3", "Value4"]
+              ],
+              "download_url": "https://storage.agentnode.io/tables/table_1.csv"
+            }
+          ],
+          "total_tables": 2
+        }
+      }
+    },
+    {
+      "path": "/ocr",
+      "method": "POST",
+      "summary": "OCR processing",
+      "description": "Perform OCR on a scanned PDF or image",
+      "tags": ["OCR"],
+      "pricing": 0.02,
+      "parameters": [
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "document_id": {"type": "string"},
+              "document_url": {"type": "string", "format": "uri"},
+              "language": {"type": "string", "default": "eng"},
+              "detect_language": {"type": "boolean", "default": true},
+              "extract_tables": {"type": "boolean", "default": false},
+              "output_format": {
+                "type": "string",
+                "enum": ["text", "pdf", "structured"]
+              }
+            }
+          }
+        }
+      ],
+      "response": {
+        "success": {
+          "document_id": "pdf_ocr_123",
+          "text": "Extracted text from scanned document...",
+          "pages_processed": 5,
+          "language_detected": "eng",
+          "download_url": "https://storage.agentnode.io/pdfs/pdf_ocr_123.pdf"
+        }
+      }
+    },
+    {
+      "path": "/merge",
+      "method": "POST",
+      "summary": "Merge PDFs",
+      "description": "Combine multiple PDF documents into one",
+      "tags": ["Document Operations"],
+      "pricing": 0.06,
+      "parameters": [
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "documents": {
+                "type": "array",
+                "minItems": 2,
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "document_id": {"type": "string"},
+                    "document_url": {"type": "string", "format": "uri"},
+                    "pages": {
+                      "type": "array",
+                      "items": {"type": "integer"}
+                    }
+                  }
+                }
+              },
+              "add_bookmarks": {"type": "boolean", "default": true}
+            },
+            "required": ["documents"]
+          }
+        }
+      ],
+      "response": {
+        "success": {
+          "document_id": "pdf_merged_123",
+          "download_url": "https://storage.agentnode.io/pdfs/pdf_merged_123.pdf",
+          "source_count": 3,
+          "total_pages": 45
+        }
+      }
+    },
+    {
+      "path": "/split",
+      "method": "POST",
+      "summary": "Split PDF",
+      "description": "Split a PDF into multiple documents",
+      "tags": ["Document Operations"],
+      "pricing": 0.04,
+      "parameters": [
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "document_id": {"type": "string"},
+              "document_url": {"type": "string", "format": "uri"},
+              "split_by": {
+                "type": "string",
+                "enum": ["pages", "ranges", "size"]
+              },
+              "ranges": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "start": {"type": "integer"},
+                    "end": {"type": "integer"}
+                  }
+                }
+              },
+              "pages_per_split": {"type": "integer"}
+            }
+          }
+        }
+      ],
+      "response": {
+        "success": {
+          "split_documents": [
+            {
+              "document_id": "pdf_split_1",
+              "download_url": "https://storage.agentnode.io/pdfs/pdf_split_1.pdf",
+              "pages": "1-10"
+            },
+            {
+              "document_id": "pdf_split_2",
+              "download_url": "https://storage.agentnode.io/pdfs/pdf_split_2.pdf",
+              "pages": "11-20"
+            }
+          ],
+          "total_documents": 2
+        }
+      }
+    },
+    {
+      "path": "/convert",
+      "method": "POST",
+      "summary": "Convert PDF",
+      "description": "Convert PDF to other formats or other formats to PDF",
+      "tags": ["Document Operations"],
+      "pricing": 0.03,
+      "parameters": [
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "document_id": {"type": "string"},
+              "document_url": {"type": "string", "format": "uri"},
+              "output_format": {
+                "type": "string",
+                "enum": ["pdf", "png", "jpg", "txt", "html"]
+              },
+              "pages": {
+                "type": "array",
+                "items": {"type": "integer"}
+              },
+              "options": {
+                "type": "object",
+                "properties": {
+                  "dpi": {"type": "integer", "default": 150},
+                  "quality": {"type": "integer", "default": 85}
+                }
+              }
+            },
+            "required": ["output_format"]
+          }
+        }
+      ],
+      "response": {
+        "success": {
+          "document_id": "pdf_converted_123",
+          "download_url": "https://storage.agentnode.io/images/pdf_converted_123.png",
+          "format": "png",
+          "pages_converted": 5
+        }
+      }
+    },
+    {
+      "path": "/sign",
+      "method": "POST",
+      "summary": "Digital signature",
+      "description": "Apply a digital signature to a PDF",
+      "tags": ["Security"],
+      "pricing": 0.10,
+      "parameters": [
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "document_id": {"type": "string"},
+              "document_url": {"type": "string", "format": "uri"},
+              "certificate": {"type": "string"},
+              "password": {"type": "string"},
+              "reason": {"type": "string"},
+              "location": {"type": "string"},
+              "signature_appearance": {
+                "type": "object",
+                "properties": {
+                  "page": {"type": "integer"},
+                  "x": {"type": "number"},
+                  "y": {"type": "number"},
+                  "width": {"type": "number"},
+                  "height": {"type": "number"}
+                }
+              }
+            },
+            "required": ["certificate", "password"]
+          }
+        }
+      ],
+      "response": {
+        "success": {
+          "document_id": "pdf_signed_123",
+          "download_url": "https://storage.agentnode.io/pdfs/pdf_signed_123.pdf",
+          "signed_at": "2024-12-15T10:30:00Z",
+          "signature_valid": true
+        }
+      }
+    },
+    {
+      "path": "/watermark",
+      "method": "POST",
+      "summary": "Add watermark",
+      "description": "Add text or image watermark to PDF",
+      "tags": ["Document Operations"],
+      "pricing": 0.02,
+      "parameters": [
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "document_id": {"type": "string"},
+              "document_url": {"type": "string", "format": "uri"},
+              "watermark": {
+                "type": "object",
+                "properties": {
+                  "type": {"type": "string", "enum": ["text", "image"]},
+                  "content": {"type": "string"},
+                  "opacity": {"type": "number"},
+                  "rotation": {"type": "number"},
+                  "position": {"type": "string"}
+                }
+              },
+              "pages": {
+                "type": "array",
+                "items": {"type": "integer"}
+              }
+            },
+            "required": ["watermark"]
+          }
+        }
+      ],
+      "response": {
+        "success": {
+          "document_id": "pdf_watermarked_123",
+          "download_url": "https://storage.agentnode.io/pdfs/pdf_watermarked_123.pdf",
+          "watermark_applied": true
+        }
+      }
+    },
+    {
+      "path": "/encrypt",
+      "method": "POST",
+      "summary": "Encrypt PDF",
+      "description": "Add password protection and permissions to PDF",
+      "tags": ["Security"],
+      "pricing": 0.03,
+      "parameters": [
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "document_id": {"type": "string"},
+              "document_url": {"type": "string", "format": "uri"},
+              "user_password": {"type": "string"},
+              "owner_password": {"type": "string"},
+              "permissions": {
+                "type": "object",
+                "properties": {
+                  "print": {"type": "boolean"},
+                  "copy": {"type": "boolean"},
+                  "modify": {"type": "boolean"}
+                }
+              },
+              "encryption_level": {
+                "type": "string",
+                "enum": ["128bit", "256bit"]
+              }
+            },
+            "required": ["user_password"]
+          }
+        }
+      ],
+      "response": {
+        "success": {
+          "document_id": "pdf_encrypted_123",
+          "download_url": "https://storage.agentnode.io/pdfs/pdf_encrypted_123.pdf",
+          "encrypted": true
+        }
+      }
+    },
+    {
+      "path": "/analyze",
+      "method": "POST",
+      "summary": "Analyze PDF",
+      "description": "Get metadata and structure information about a PDF",
+      "tags": ["Analysis"],
+      "pricing": 0.01,
+      "parameters": [
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "document_id": {"type": "string"},
+              "document_url": {"type": "string", "format": "uri"}
+            }
+          }
+        }
+      ],
+      "response": {
+        "success": {
+          "metadata": {
+            "title": "Document Title",
+            "author": "Author Name",
+            "page_count": 25,
+            "file_size_kb": 450,
+            "is_encrypted": false,
+            "has_forms": true,
+            "pdf_version": "1.7"
+          },
+          "structure": {
+            "has_bookmarks": true,
+            "has_links": true,
+            "images": 15,
+            "fonts": ["Helvetica", "Times-Roman"]
+          }
+        }
+      }
+    }
+  ],
+  "webhooks": {
+    "events": [
+      {
+        "name": "pdf.created",
+        "description": "Fired when a PDF is successfully created"
+      },
+      {
+        "name": "pdf.ocr_completed",
+        "description": "Fired when OCR processing completes"
+      },
+      {
+        "name": "pdf.form_filled",
+        "description": "Fired when form filling completes"
+      },
+      {
+        "name": "pdf.error",
+        "description": "Fired when an operation fails"
+      }
+    ]
+  },
+  "errors": [
+    {
+      "code": "PDF_NOT_FOUND",
+      "http_status": 404,
+      "message": "The specified PDF could not be found"
+    },
+    {
+      "code": "INVALID_PASSWORD",
+      "http_status": 403,
+      "message": "The PDF password is incorrect"
+    },
+    {
+      "code": "ENCRYPTED_PDF",
+      "http_status": 403,
+      "message": "Cannot process encrypted PDF without password"
+    },
+    {
+      "code": "NO_FORM_FIELDS",
+      "http_status": 400,
+      "message": "The PDF does not contain form fields"
+    },
+    {
+      "code": "FILE_TOO_LARGE",
+      "http_status": 413,
+      "message": "The file exceeds the maximum allowed size"
+    }
+  ]
+}

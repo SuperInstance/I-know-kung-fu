@@ -1,0 +1,579 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "XLSX Skill API",
+    "description": "Comprehensive spreadsheet manipulation API for Excel workbooks",
+    "version": "1.0.0",
+    "contact": {
+      "name": "AgentNode Support",
+      "email": "support@agentnode.io",
+      "url": "https://agentnode.io"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://api.agentnode.io/v1/skills/xlsx",
+      "description": "Production server"
+    }
+  ],
+  "security": [
+    {
+      "ApiKeyAuth": []
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key"
+      }
+    },
+    "schemas": {
+      "Error": {
+        "type": "object",
+        "properties": {
+          "code": {"type": "string"},
+          "message": {"type": "string"},
+          "details": {"type": "object"}
+        }
+      }
+    }
+  },
+  "endpoints": [
+    {
+      "path": "/create",
+      "method": "POST",
+      "summary": "Create a new workbook",
+      "description": "Create a new Excel workbook with worksheets and data",
+      "tags": ["Workbook Operations"],
+      "pricing": 0.04,
+      "parameters": [
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "options": {
+                "type": "object",
+                "properties": {
+                  "title": {"type": "string"},
+                  "author": {"type": "string"}
+                }
+              },
+              "worksheets": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": {"type": "string"},
+                    "data": {
+                      "type": "array",
+                      "items": {"type": "array"}
+                    },
+                    "cells": {"type": "array"},
+                    "formulas": {"type": "object"}
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "response": {
+        "success": {
+          "document_id": "xlsx_abc123",
+          "download_url": "https://storage.agentnode.io/xlsx/xlsx_abc123.xlsx",
+          "worksheets": ["Sheet1", "Sheet2"],
+          "metadata": {
+            "sheet_count": 2,
+            "total_cells": 500
+          }
+        }
+      }
+    },
+    {
+      "path": "/read",
+      "method": "POST",
+      "summary": "Read cell data",
+      "description": "Read data from cells in a worksheet",
+      "tags": ["Data Operations"],
+      "pricing": 0.01,
+      "parameters": [
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "document_id": {"type": "string"},
+              "document_url": {"type": "string", "format": "uri"},
+              "sheet_name": {"type": "string"},
+              "range": {"type": "string"},
+              "include_formulas": {"type": "boolean", "default": false},
+              "include_styles": {"type": "boolean", "default": false}
+            }
+          }
+        }
+      ],
+      "response": {
+        "success": {
+          "data": [
+            ["Product", "Q1", "Q2", "Q3", "Q4"],
+            ["Widget A", 1500, 1700, 1600, 1800],
+            ["Widget B", 1200, 1300, 1400, 1500]
+          ],
+          "formulas": {
+            "B6": "SUM(B2:B5)",
+            "C6": "SUM(C2:C5)"
+          },
+          "metadata": {
+            "sheet_name": "Sales",
+            "range": "A1:F6",
+            "rows": 6,
+            "columns": 6
+          }
+        }
+      }
+    },
+    {
+      "path": "/write",
+      "method": "POST",
+      "summary": "Write to cells",
+      "description": "Write data to cells in a worksheet",
+      "tags": ["Data Operations"],
+      "pricing": 0.02,
+      "parameters": [
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "document_id": {"type": "string"},
+              "sheet_name": {"type": "string"},
+              "cells": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "reference": {"type": "string"},
+                    "value": {"type": ["string", "number", "boolean"]},
+                    "formula": {"type": "string"},
+                    "style": {"type": "object"}
+                  }
+                }
+              },
+              "data": {
+                "type": "array",
+                "items": {"type": "array"}
+              },
+              "start_cell": {"type": "string", "default": "A1"}
+            }
+          }
+        }
+      ],
+      "response": {
+        "success": {
+          "document_id": "xlsx_abc123_v2",
+          "download_url": "https://storage.agentnode.io/xlsx/xlsx_abc123_v2.xlsx",
+          "cells_updated": 25,
+          "metadata": {
+            "modified_at": "2024-12-15T10:30:00Z"
+          }
+        }
+      }
+    },
+    {
+      "path": "/calculate",
+      "method": "POST",
+      "summary": "Calculate formulas",
+      "description": "Calculate all formulas in a workbook or specific range",
+      "tags": ["Formula Operations"],
+      "pricing": 0.03,
+      "parameters": [
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "document_id": {"type": "string"},
+              "sheet_name": {"type": "string"},
+              "range": {"type": "string"},
+              "full_calculation": {"type": "boolean", "default": true}
+            }
+          }
+        }
+      ],
+      "response": {
+        "success": {
+          "document_id": "xlsx_abc123",
+          "calculation_complete": true,
+          "cells_calculated": 150,
+          "calculation_time_ms": 450,
+          "results": {
+            "B10": 45000,
+            "C10": 52000,
+            "D10": "=SUM(B10:C10)"
+          }
+        }
+      }
+    },
+    {
+      "path": "/pivot-table",
+      "method": "POST",
+      "summary": "Create pivot table",
+      "description": "Create a pivot table from source data",
+      "tags": ["Analysis"],
+      "pricing": 0.05,
+      "parameters": [
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "document_id": {"type": "string"},
+              "sheet_name": {"type": "string"},
+              "source_range": {"type": "string"},
+              "destination": {"type": "string"},
+              "rows": {
+                "type": "array",
+                "items": {"type": "string"}
+              },
+              "columns": {
+                "type": "array",
+                "items": {"type": "string"}
+              },
+              "values": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "field": {"type": "string"},
+                    "function": {"type": "string"},
+                    "name": {"type": "string"}
+                  }
+                }
+              }
+            },
+            "required": ["source_range", "rows", "values"]
+          }
+        }
+      ],
+      "response": {
+        "success": {
+          "document_id": "xlsx_pivot_123",
+          "download_url": "https://storage.agentnode.io/xlsx/xlsx_pivot_123.xlsx",
+          "pivot_table": {
+            "name": "PivotTable1",
+            "location": "Sheet2!A1",
+            "row_count": 15,
+            "column_count": 5
+          }
+        }
+      }
+    },
+    {
+      "path": "/chart",
+      "method": "POST",
+      "summary": "Create chart",
+      "description": "Create a chart from worksheet data",
+      "tags": ["Visualization"],
+      "pricing": 0.03,
+      "parameters": [
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "document_id": {"type": "string"},
+              "sheet_name": {"type": "string"},
+              "chart": {
+                "type": "object",
+                "properties": {
+                  "type": {"type": "string"},
+                  "title": {"type": "string"},
+                  "data_range": {"type": "string"},
+                  "categories": {"type": "object"},
+                  "series": {"type": "array"},
+                  "position": {"type": "object"}
+                }
+              }
+            },
+            "required": ["chart"]
+          }
+        }
+      ],
+      "response": {
+        "success": {
+          "document_id": "xlsx_chart_123",
+          "download_url": "https://storage.agentnode.io/xlsx/xlsx_chart_123.xlsx",
+          "chart": {
+            "id": "chart_001",
+            "type": "column",
+            "title": "Quarterly Sales",
+            "position": "Sheet1!H2"
+          }
+        }
+      }
+    },
+    {
+      "path": "/analyze",
+      "method": "POST",
+      "summary": "Analyze data",
+      "description": "Perform statistical analysis on worksheet data",
+      "tags": ["Analysis"],
+      "pricing": 0.04,
+      "parameters": [
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "document_id": {"type": "string"},
+              "sheet_name": {"type": "string"},
+              "range": {"type": "string"},
+              "analysis_type": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": ["summary", "correlation", "regression", "distribution", "outliers"]
+                }
+              }
+            }
+          }
+        }
+      ],
+      "response": {
+        "success": {
+          "summary": {
+            "count": 100,
+            "sum": 45000,
+            "mean": 450,
+            "median": 425,
+            "std_dev": 125.5,
+            "min": 200,
+            "max": 800
+          },
+          "distribution": {
+            "quartiles": [300, 425, 550],
+            "skewness": 0.35,
+            "kurtosis": -0.2
+          }
+        }
+      }
+    },
+    {
+      "path": "/conditional-format",
+      "method": "POST",
+      "summary": "Add conditional formatting",
+      "description": "Apply conditional formatting rules to cells",
+      "tags": ["Formatting"],
+      "pricing": 0.02,
+      "parameters": [
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "document_id": {"type": "string"},
+              "sheet_name": {"type": "string"},
+              "rules": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "range": {"type": "string"},
+                    "type": {"type": "string"},
+                    "criteria": {"type": "object"},
+                    "format": {"type": "object"}
+                  }
+                }
+              }
+            },
+            "required": ["rules"]
+          }
+        }
+      ],
+      "response": {
+        "success": {
+          "document_id": "xlsx_conditional_123",
+          "rules_applied": 3,
+          "ranges_affected": ["B2:B100", "C2:C100"]
+        }
+      }
+    },
+    {
+      "path": "/data-validation",
+      "method": "POST",
+      "summary": "Add data validation",
+      "description": "Apply data validation rules to cells",
+      "tags": ["Data Operations"],
+      "pricing": 0.02,
+      "parameters": [
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "document_id": {"type": "string"},
+              "sheet_name": {"type": "string"},
+              "validations": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "range": {"type": "string"},
+                    "type": {"type": "string"},
+                    "formula1": {"type": "string"},
+                    "show_error": {"type": "boolean"}
+                  }
+                }
+              }
+            },
+            "required": ["validations"]
+          }
+        }
+      ],
+      "response": {
+        "success": {
+          "document_id": "xlsx_validation_123",
+          "validations_applied": 5
+        }
+      }
+    },
+    {
+      "path": "/convert",
+      "method": "POST",
+      "summary": "Convert spreadsheet",
+      "description": "Convert spreadsheet to another format",
+      "tags": ["Conversion"],
+      "pricing": 0.02,
+      "parameters": [
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "document_id": {"type": "string"},
+              "document_url": {"type": "string", "format": "uri"},
+              "output_format": {
+                "type": "string",
+                "enum": ["xlsx", "csv", "pdf", "html", "json"]
+              },
+              "sheet_name": {"type": "string"},
+              "options": {"type": "object"}
+            },
+            "required": ["output_format"]
+          }
+        }
+      ],
+      "response": {
+        "success": {
+          "document_id": "xlsx_converted_123",
+          "download_url": "https://storage.agentnode.io/xlsx/xlsx_converted_123.csv",
+          "format": "csv",
+          "rows_exported": 1000
+        }
+      }
+    },
+    {
+      "path": "/import-data",
+      "method": "POST",
+      "summary": "Import data",
+      "description": "Import data from external source into worksheet",
+      "tags": ["Data Operations"],
+      "pricing": 0.03,
+      "parameters": [
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "document_id": {"type": "string"},
+              "sheet_name": {"type": "string"},
+              "source": {
+                "type": "object",
+                "properties": {
+                  "type": {"type": "string", "enum": ["csv", "json", "url", "database"]},
+                  "url": {"type": "string"},
+                  "data": {"type": "string"},
+                  "connection_string": {"type": "string"},
+                  "query": {"type": "string"}
+                }
+              },
+              "start_cell": {"type": "string", "default": "A1"}
+            },
+            "required": ["source"]
+          }
+        }
+      ],
+      "response": {
+        "success": {
+          "document_id": "xlsx_import_123",
+          "rows_imported": 500,
+          "columns_imported": 8,
+          "download_url": "https://storage.agentnode.io/xlsx/xlsx_import_123.xlsx"
+        }
+      }
+    }
+  ],
+  "webhooks": {
+    "events": [
+      {
+        "name": "workbook.created",
+        "description": "Fired when a workbook is created"
+      },
+      {
+        "name": "calculation.complete",
+        "description": "Fired when formula calculation completes"
+      },
+      {
+        "name": "import.complete",
+        "description": "Fired when data import completes"
+      }
+    ]
+  },
+  "errors": [
+    {
+      "code": "WORKBOOK_NOT_FOUND",
+      "http_status": 404,
+      "message": "The specified workbook could not be found"
+    },
+    {
+      "code": "INVALID_RANGE",
+      "http_status": 400,
+      "message": "The specified range is invalid"
+    },
+    {
+      "code": "FORMULA_ERROR",
+      "http_status": 400,
+      "message": "Formula calculation error"
+    },
+    {
+      "code": "SHEET_NOT_FOUND",
+      "http_status": 404,
+      "message": "The specified worksheet was not found"
+    }
+  ]
+}

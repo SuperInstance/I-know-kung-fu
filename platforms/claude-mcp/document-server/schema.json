@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Document Server MCP",
+  "type": "object",
+  "properties": {
+    "server": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "const": "document-server" },
+        "version": { "type": "string" }
+      }
+    },
+    "tools": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": ["read_document", "create_document", "convert_document", "merge_documents", "split_document", "apply_template", "extract_text", "get_metadata", "set_metadata"]
+          }
+        }
+      }
+    }
+  }
+}

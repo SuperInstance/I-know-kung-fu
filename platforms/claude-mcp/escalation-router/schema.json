@@ -1,0 +1,289 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Escalation Router MCP Server",
+  "description": "JSON Schema for the Escalation Router MCP Server capabilities and configurations",
+  "type": "object",
+  "properties": {
+    "server": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "const": "escalation-router",
+          "description": "Server identifier"
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "Semantic version"
+        },
+        "description": {
+          "type": "string",
+          "description": "Human-readable server description"
+        }
+      },
+      "required": ["name", "version", "description"]
+    },
+    "tools": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": [
+              "route_query",
+              "classify_query",
+              "get_model_tiers",
+              "get_routing_stats",
+              "set_routing_strategy",
+              "add_custom_rule",
+              "cache_lookup",
+              "cache_invalidate",
+              "force_escalation",
+              "get_cost_estimate"
+            ]
+          },
+          "description": {
+            "type": "string"
+          },
+          "inputSchema": {
+            "type": "object"
+          }
+        },
+        "required": ["name", "description", "inputSchema"]
+      }
+    },
+    "toolSchemas": {
+      "route_query": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "The user query to route and execute"
+          },
+          "context": {
+            "type": "object",
+            "description": "Additional context for the query",
+            "properties": {
+              "documents": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "conversationHistory": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "role": { "type": "string" },
+                    "content": { "type": "string" }
+                  }
+                }
+              },
+              "metadata": { "type": "object" }
+            }
+          },
+          "constraints": {
+            "type": "object",
+            "properties": {
+              "maxCost": {
+                "type": "number",
+                "description": "Maximum cost in dollars"
+              },
+              "maxLatency": {
+                "type": "integer",
+                "description": "Maximum latency in milliseconds"
+              },
+              "minQuality": {
+                "type": "string",
+                "enum": ["low", "medium", "high", "maximum"],
+                "description": "Minimum quality threshold"
+              },
+              "preferredProvider": {
+                "type": "string",
+                "enum": ["openai", "anthropic", "local", "auto"]
+              }
+            }
+          },
+          "forceTier": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 4,
+            "description": "Force routing to specific tier (1=simple, 4=expert)"
+          },
+          "cacheKey": {
+            "type": "string",
+            "description": "Optional cache key for response caching"
+          }
+        },
+        "required": ["query"]
+      },
+      "classify_query": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "Query to classify without executing"
+          },
+          "includeConfidence": {
+            "type": "boolean",
+            "default": true,
+            "description": "Include confidence score in result"
+          },
+          "includeReasoning": {
+            "type": "boolean",
+            "default": false,
+            "description": "Include classification reasoning"
+          }
+        },
+        "required": ["query"]
+      },
+      "get_routing_stats": {
+        "type": "object",
+        "properties": {
+          "period": {
+            "type": "string",
+            "enum": ["1h", "24h", "7d", "30d", "all"],
+            "description": "Time period for statistics"
+          },
+          "groupBy": {
+            "type": "string",
+            "enum": ["tier", "model", "provider", "hour", "day"],
+            "description": "Group statistics by dimension"
+          }
+        }
+      },
+      "set_routing_strategy": {
+        "type": "object",
+        "properties": {
+          "strategy": {
+            "type": "string",
+            "enum": [
+              "cost-optimized",
+              "latency-optimized",
+              "quality-optimized",
+              "balanced",
+              "custom"
+            ],
+            "description": "Routing strategy to use"
+          },
+          "customWeights": {
+            "type": "object",
+            "properties": {
+              "cost": { "type": "number", "minimum": 0, "maximum": 1 },
+              "latency": { "type": "number", "minimum": 0, "maximum": 1 },
+              "quality": { "type": "number", "minimum": 0, "maximum": 1 }
+            },
+            "description": "Custom weights for balanced strategy"
+          }
+        },
+        "required": ["strategy"]
+      },
+      "add_custom_rule": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Rule name"
+          },
+          "pattern": {
+            "type": "string",
+            "description": "Regex pattern to match queries"
+          },
+          "targetTier": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 4,
+            "description": "Target tier for matching queries"
+          },
+          "targetModel": {
+            "type": "string",
+            "description": "Specific model to use"
+          },
+          "priority": {
+            "type": "integer",
+            "description": "Rule priority (higher = checked first)"
+          }
+        },
+        "required": ["name", "pattern", "targetTier"]
+      },
+      "get_cost_estimate": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "Query to estimate cost for"
+          },
+          "includeComparison": {
+            "type": "boolean",
+            "default": true,
+            "description": "Include cost comparison across tiers"
+          }
+        },
+        "required": ["query"]
+      }
+    },
+    "resources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "uri": {
+            "type": "string",
+            "format": "uri"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "mimeType": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "modelTiers": {
+      "type": "object",
+      "description": "Default model tier configuration",
+      "properties": {
+        "tier1": {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string" },
+            "models": { "type": "array", "items": { "type": "string" } },
+            "costPerToken": { "type": "number" },
+            "avgLatency": { "type": "integer" },
+            "useCases": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "tier2": { "type": "object" },
+        "tier3": { "type": "object" },
+        "tier4": { "type": "object" }
+      }
+    },
+    "events": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": [
+              "query_routed",
+              "escalation_triggered",
+              "cache_hit",
+              "cache_miss",
+              "fallback_activated",
+              "budget_exceeded",
+              "model_error"
+            ]
+          },
+          "payload": { "type": "object" }
+        }
+      }
+    }
+  },
+  "required": ["server", "tools", "resources"]
+}

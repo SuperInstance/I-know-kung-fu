@@ -1,0 +1,347 @@
+{
+  "workflow_id": "financial-analyst-v1",
+  "name": "Financial Analysis Workflow",
+  "description": "End-to-end financial analysis and reporting workflow",
+  "version": "1.0.0",
+  "nodes": [
+    {
+      "id": "node_1",
+      "type": "trigger",
+      "label": "Analysis Request",
+      "position": { "x": 100, "y": 300 },
+      "config": {
+        "trigger_type": "multi_source",
+        "sources": ["api", "schedule", "webhook", "manual"],
+        "request_types": ["full_analysis", "quick_analysis", "report_update"]
+      }
+    },
+    {
+      "id": "node_2",
+      "type": "data_fetch",
+      "label": "Data Collection",
+      "position": { "x": 300, "y": 300 },
+      "config": {
+        "sources": ["accounting_system", "market_data", "peer_data", "benchmarks"],
+        "parallel_fetch": true,
+        "output_variable": "raw_financial_data",
+        "timeout_seconds": 60
+      }
+    },
+    {
+      "id": "node_3",
+      "type": "validation",
+      "label": "Data Validation",
+      "position": { "x": 500, "y": 300 },
+      "config": {
+        "validation_rules": [
+          "completeness_check",
+          "balance_sheet_balance",
+          "cash_flow_reconciliation",
+          "period_continuity",
+          "material_threshold"
+        ],
+        "output_variable": "validation_result",
+        "auto_correct_minor_issues": true
+      }
+    },
+    {
+      "id": "node_4",
+      "type": "transform",
+      "label": "Data Normalization",
+      "position": { "x": 700, "y": 300 },
+      "config": {
+        "operations": [
+          "currency_conversion",
+          "period_alignment",
+          "classification_mapping",
+          "gaap_adjustments"
+        ],
+        "output_variable": "normalized_data"
+      }
+    },
+    {
+      "id": "node_5",
+      "type": "calculation",
+      "label": "Ratio Analysis",
+      "position": { "x": 900, "y": 200 },
+      "config": {
+        "ratio_categories": [
+          "liquidity",
+          "profitability",
+          "leverage",
+          "efficiency",
+          "valuation",
+          "growth"
+        ],
+        "output_variable": "financial_ratios",
+        "historical_periods": 12
+      }
+    },
+    {
+      "id": "node_6",
+      "type": "analysis",
+      "label": "Trend Analysis",
+      "position": { "x": 900, "y": 350 },
+      "config": {
+        "analysis_methods": [
+          "period_over_period",
+          "cagr_calculation",
+          "seasonality_adjustment",
+          "trend_significance"
+        ],
+        "output_variable": "trend_results",
+        "minimum_periods": 8
+      }
+    },
+    {
+      "id": "node_7",
+      "type": "comparison",
+      "label": "Peer Benchmarking",
+      "position": { "x": 1100, "y": 100 },
+      "config": {
+        "comparison_type": "industry_peers",
+        "metrics_to_compare": "all_ratios",
+        "percentile_calculation": true,
+        "output_variable": "benchmark_results"
+      }
+    },
+    {
+      "id": "node_8",
+      "type": "analysis",
+      "label": "Risk Assessment",
+      "position": { "x": 1100, "y": 250 },
+      "config": {
+        "risk_categories": [
+          "liquidity_risk",
+          "credit_risk",
+          "operational_risk",
+          "market_risk",
+          "financial_distress"
+        ],
+        "scoring_model": "weighted_factors",
+        "output_variable": "risk_assessment"
+      }
+    },
+    {
+      "id": "node_9",
+      "type": "ml_model",
+      "label": "Financial Forecasting",
+      "position": { "x": 1100, "y": 400 },
+      "config": {
+        "model_type": "time_series_forecast",
+        "forecast_horizon": "{{forecast_periods}}",
+        "confidence_intervals": [0.8, 0.95],
+        "output_variable": "forecasts"
+      }
+    },
+    {
+      "id": "node_10",
+      "type": "llm_generation",
+      "label": "Insight Generation",
+      "position": { "x": 1300, "y": 250 },
+      "config": {
+        "model": "gpt-4-turbo",
+        "prompt_template": "financial_insights",
+        "input_variables": [
+          "normalized_data",
+          "financial_ratios",
+          "trend_results",
+          "benchmark_results",
+          "risk_assessment",
+          "forecasts"
+        ],
+        "output_variable": "insights",
+        "max_insights": 10
+      }
+    },
+    {
+      "id": "node_11",
+      "type": "visualization",
+      "label": "Chart Generation",
+      "position": { "x": 1500, "y": 150 },
+      "config": {
+        "chart_types": [
+          "trend_line",
+          "peer_comparison_bar",
+          "waterfall",
+          "composition_pie",
+          "risk_heatmap",
+          "forecast_confidence"
+        ],
+        "output_variable": "visualizations",
+        "color_scheme": "professional"
+      }
+    },
+    {
+      "id": "node_12",
+      "type": "output",
+      "label": "Report Assembly",
+      "position": { "x": 1500, "y": 350 },
+      "config": {
+        "template": "{{report_template}}",
+        "sections": [
+          "executive_summary",
+          "key_findings",
+          "ratio_analysis",
+          "trend_analysis",
+          "peer_comparison",
+          "risk_assessment",
+          "forecasts",
+          "recommendations",
+          "appendix"
+        ],
+        "output_variable": "assembled_report"
+      }
+    },
+    {
+      "id": "node_13",
+      "type": "output",
+      "label": "Export & Distribution",
+      "position": { "x": 1700, "y": 300 },
+      "config": {
+        "formats": ["{{output_format}}"],
+        "delivery": ["download", "email", "cloud_storage"],
+        "audit_log": true
+      }
+    },
+    {
+      "id": "node_14",
+      "type": "notification",
+      "label": "Alert Check",
+      "position": { "x": 1300, "y": 450 },
+      "config": {
+        "alert_conditions": [
+          "risk_score_above_threshold",
+          "ratio_outside_range",
+          "trend_reversal",
+          "forecast_deviation"
+        ],
+        "notification_channels": ["email", "slack", "dashboard"]
+      }
+    }
+  ],
+  "connections": [
+    { "source": "node_1", "target": "node_2" },
+    { "source": "node_2", "target": "node_3" },
+    { "source": "node_3", "target": "node_4", "label": "passed" },
+    { "source": "node_3", "target": "node_2", "label": "retry_needed" },
+    { "source": "node_4", "target": "node_5" },
+    { "source": "node_4", "target": "node_6" },
+    { "source": "node_5", "target": "node_7" },
+    { "source": "node_5", "target": "node_8" },
+    { "source": "node_6", "target": "node_9" },
+    { "source": "node_7", "target": "node_10" },
+    { "source": "node_8", "target": "node_10" },
+    { "source": "node_8", "target": "node_14" },
+    { "source": "node_9", "target": "node_10" },
+    { "source": "node_10", "target": "node_11" },
+    { "source": "node_10", "target": "node_12" },
+    { "source": "node_11", "target": "node_12" },
+    { "source": "node_12", "target": "node_13" }
+  ],
+  "inputs": {
+    "analysis_type": {
+      "type": "string",
+      "required": true,
+      "enum": ["financial_statement", "valuation", "credit_analysis", "peer_comparison", "forecasting", "due_diligence"],
+      "description": "Type of analysis to perform"
+    },
+    "company_identifier": {
+      "type": "string",
+      "required": true,
+      "description": "Company ID, ticker, or name"
+    },
+    "time_period": {
+      "type": "object",
+      "required": false,
+      "default": {
+        "start_date": "{{one_year_ago}}",
+        "end_date": "{{today}}",
+        "period_type": "quarterly"
+      }
+    },
+    "output_format": {
+      "type": "string",
+      "required": false,
+      "default": "pdf",
+      "enum": ["pdf", "excel", "powerpoint", "json", "dashboard"]
+    },
+    "custom_parameters": {
+      "type": "object",
+      "required": false,
+      "description": "Additional analysis parameters"
+    }
+  },
+  "outputs": {
+    "report_url": {
+      "type": "string",
+      "description": "URL to download the generated report"
+    },
+    "executive_summary": {
+      "type": "string",
+      "description": "Brief summary of key findings"
+    },
+    "key_metrics": {
+      "type": "object",
+      "description": "Important financial metrics and ratios"
+    },
+    "risk_score": {
+      "type": "number",
+      "description": "Overall financial risk score (1-100)"
+    },
+    "recommendations": {
+      "type": "array",
+      "description": "AI-generated recommendations"
+    },
+    "alerts": {
+      "type": "array",
+      "description": "Any alerts or warnings generated"
+    }
+  },
+  "variables": {
+    "risk_thresholds": {
+      "type": "object",
+      "default": {
+        "current_ratio_min": 1.0,
+        "debt_to_equity_max": 3.0,
+        "interest_coverage_min": 2.0,
+        "gross_margin_min": 0.15
+      }
+    },
+    "industry_benchmarks": {
+      "type": "object",
+      "default": {
+        "data_source": "industry_standard",
+        "update_frequency": "quarterly"
+      }
+    },
+    "forecast_assumptions": {
+      "type": "object",
+      "default": {
+        "revenue_growth_method": "historical_average",
+        "margin_assumption": "maintain_trend",
+        "working_capital_days": "historical_average"
+      }
+    },
+    "report_branding": {
+      "type": "object",
+      "default": {
+        "logo_url": "{{company_logo}}",
+        "color_scheme": "professional_blue",
+        "include_disclaimer": true
+      }
+    }
+  },
+  "error_handling": {
+    "retry_count": 3,
+    "retry_delay_ms": 5000,
+    "fallback_node": "node_12",
+    "error_notifications": true,
+    "partial_output_on_failure": true
+  },
+  "performance": {
+    "target_response_time_ms": 30000,
+    "max_execution_time_ms": 300000,
+    "concurrent_analyses": 10
+  }
+}

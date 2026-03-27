@@ -1,0 +1,262 @@
+{
+  "skill_name": "xlsx",
+  "display_name": "Spreadsheet Analysis & Formulas",
+  "version": "1.0.0",
+  "category": "document-processing",
+  "subcategory": "spreadsheet-automation",
+  "description": "Comprehensive spreadsheet creation, editing, and analysis with support for formulas, formatting, data analysis, and visualization. Full Excel compatibility for financial analysis and reporting.",
+  "long_description": "The XLSX Skill provides enterprise-grade spreadsheet manipulation capabilities including full formula support (400+ functions), pivot tables, charts, conditional formatting, and data analysis tools. Perfect for financial modeling, reporting automation, and business intelligence workflows.",
+  "author": "AgentNode Team",
+  "license": "commercial",
+  "homepage": "https://agentnode.io/skills/xlsx",
+  "documentation": "https://docs.agentnode.io/skills/xlsx",
+  "repository": "https://github.com/agentnode/skills/xlsx",
+  "tags": [
+    "spreadsheet",
+    "excel",
+    "xlsx",
+    "formulas",
+    "pivot-table",
+    "charts",
+    "financial",
+    "analysis",
+    "reporting"
+  ],
+  "pricing": {
+    "model": "per_use",
+    "currency": "USD",
+    "tiers": [
+      {
+        "name": "create",
+        "description": "Create new workbook",
+        "amount": 0.04
+      },
+      {
+        "name": "read",
+        "description": "Read cell data",
+        "amount": 0.01
+      },
+      {
+        "name": "write",
+        "description": "Write to cells",
+        "amount": 0.02
+      },
+      {
+        "name": "calculate",
+        "description": "Calculate formulas",
+        "amount": 0.03
+      },
+      {
+        "name": "pivot_table",
+        "description": "Create pivot table",
+        "amount": 0.05
+      },
+      {
+        "name": "chart",
+        "description": "Create chart",
+        "amount": 0.03
+      },
+      {
+        "name": "analyze",
+        "description": "Data analysis",
+        "amount": 0.04
+      },
+      {
+        "name": "convert",
+        "description": "Format conversion",
+        "amount": 0.02
+      }
+    ],
+    "bulk_discount": {
+      "1000": 0.10,
+      "10000": 0.20,
+      "100000": 0.30
+    }
+  },
+  "subscription_options": [
+    {
+      "name": "starter",
+      "monthly_price": 25,
+      "included_operations": 500,
+      "overage_rate": 0.03
+    },
+    {
+      "name": "professional",
+      "monthly_price": 89,
+      "included_operations": 2500,
+      "overage_rate": 0.02
+    },
+    {
+      "name": "enterprise",
+      "monthly_price": 249,
+      "included_operations": 10000,
+      "overage_rate": 0.015
+    }
+  ],
+  "rate_limits": {
+    "free_tier": {
+      "requests_per_minute": 10,
+      "requests_per_hour": 100,
+      "requests_per_day": 500
+    },
+    "starter": {
+      "requests_per_minute": 30,
+      "requests_per_hour": 500,
+      "requests_per_day": 2500
+    },
+    "professional": {
+      "requests_per_minute": 60,
+      "requests_per_hour": 1500,
+      "requests_per_day": 10000
+    },
+    "enterprise": {
+      "requests_per_minute": 120,
+      "requests_per_hour": 5000,
+      "requests_per_day": 50000
+    }
+  },
+  "auth_required": true,
+  "auth_methods": [
+    "api_key",
+    "oauth2",
+    "jwt"
+  ],
+  "input_formats": [
+    ".xlsx",
+    ".xlsm",
+    ".xls",
+    ".csv",
+    ".tsv",
+    ".ods"
+  ],
+  "output_formats": [
+    ".xlsx",
+    ".xlsm",
+    ".csv",
+    ".pdf",
+    ".html",
+    ".json"
+  ],
+  "file_limits": {
+    "max_file_size_mb": 100,
+    "max_worksheets": 256,
+    "max_rows": 1048576,
+    "max_columns": 16384,
+    "max_cell_styles": 64000,
+    "max_batch_size": 50
+  },
+  "performance": {
+    "avg_create_time_ms": 3000,
+    "avg_read_time_ms": 1500,
+    "avg_write_time_ms": 2000,
+    "avg_calculation_time_ms": 5000,
+    "max_cells_per_request": 100000,
+    "concurrent_requests": 75
+  },
+  "formula_support": {
+    "built_in_functions": 400,
+    "categories": [
+      "Math & Trig",
+      "Statistical",
+      "Lookup & Reference",
+      "Database",
+      "Text",
+      "Logical",
+      "Information",
+      "Date & Time",
+      "Financial",
+      "Engineering",
+      "Cube",
+      "Compatibility",
+      "Web"
+    ],
+    "array_formulas": true,
+    "dynamic_arrays": true,
+    "lambda_functions": true,
+    "custom_functions": true
+  },
+  "chart_types": [
+    "column",
+    "bar",
+    "line",
+    "area",
+    "pie",
+    "doughnut",
+    "scatter",
+    "bubble",
+    "combo",
+    "histogram",
+    "box_whisker",
+    "waterfall",
+    "funnel",
+    "treemap",
+    "sunburst"
+  ],
+  "integrations": [
+    {
+      "name": "google_sheets",
+      "type": "storage",
+      "actions": ["import", "export", "sync"]
+    },
+    {
+      "name": "microsoft_onedrive",
+      "type": "storage",
+      "actions": ["import", "export"]
+    },
+    {
+      "name": "aws_s3",
+      "type": "storage",
+      "actions": ["import", "export"]
+    },
+    {
+      "name": "azure_blob",
+      "type": "storage",
+      "actions": ["import", "export"]
+    },
+    {
+      "name": "mysql",
+      "type": "database",
+      "actions": ["import", "export"]
+    },
+    {
+      "name": "postgresql",
+      "type": "database",
+      "actions": ["import", "export"]
+    },
+    {
+      "name": "sql_server",
+      "type": "database",
+      "actions": ["import", "export"]
+    },
+    {
+      "name": "webhook",
+      "type": "notification",
+      "actions": ["completion", "error"]
+    }
+  ],
+  "compliance": [
+    "SOC2_TYPE_II",
+    "GDPR",
+    "CCPA"
+  ],
+  "data_retention": {
+    "default_days": 7,
+    "max_days": 90,
+    "encryption": "AES-256",
+    "transit_encryption": "TLS_1.3"
+  },
+  "support": {
+    "documentation": "https://docs.agentnode.io/skills/xlsx",
+    "community": "https://community.agentnode.io",
+    "email": "support@agentnode.io",
+    "enterprise_support": "enterprise@agentnode.io",
+    "sla": {
+      "professional": "24h_response",
+      "enterprise": "4h_response"
+    }
+  },
+  "status": "active",
+  "visibility": "public",
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-15T00:00:00Z"
+}

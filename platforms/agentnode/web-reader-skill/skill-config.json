@@ -1,0 +1,178 @@
+{
+  "skill_name": "web-reader",
+  "display_name": "Web Content Extraction",
+  "version": "1.0.0",
+  "category": "web-data",
+  "subcategory": "content-extraction",
+  "description": "Specialized web page content extraction capabilities using the z-ai-web-dev-sdk. Extract article content, metadata, and structured data from web pages automatically.",
+  "long_description": "The Web Reader Skill enables AI agents to programmatically retrieve, parse, and extract structured content from web pages. Features include smart content detection, JavaScript rendering, metadata extraction, and clean text output. Essential for research automation, content aggregation, and data collection workflows.",
+  "author": "AgentNode Team",
+  "license": "commercial",
+  "homepage": "https://agentnode.io/skills/web-reader",
+  "documentation": "https://docs.agentnode.io/skills/web-reader",
+  "repository": "https://github.com/agentnode/skills/web-reader",
+  "tags": [
+    "web-scraping",
+    "content-extraction",
+    "web-data",
+    "research",
+    "automation",
+    "news",
+    "articles"
+  ],
+  "pricing": {
+    "model": "per_use",
+    "currency": "USD",
+    "tiers": [
+      {
+        "name": "extract",
+        "description": "Extract content from single URL",
+        "amount": 0.005
+      },
+      {
+        "name": "extract_js",
+        "description": "Extract with JavaScript rendering",
+        "amount": 0.02
+      },
+      {
+        "name": "batch_extract",
+        "description": "Batch extraction per URL",
+        "amount": 0.003
+      },
+      {
+        "name": "sitemap",
+        "description": "Sitemap parsing",
+        "amount": 0.02
+      },
+      {
+        "name": "rss",
+        "description": "RSS feed parsing",
+        "amount": 0.01
+      }
+    ],
+    "bulk_discount": {
+      "1000": 0.15,
+      "10000": 0.25,
+      "100000": 0.40
+    }
+  },
+  "subscription_options": [
+    {
+      "name": "starter",
+      "monthly_price": 19,
+      "included_operations": 2000,
+      "overage_rate": 0.004
+    },
+    {
+      "name": "professional",
+      "monthly_price": 59,
+      "included_operations": 10000,
+      "overage_rate": 0.003
+    },
+    {
+      "name": "enterprise",
+      "monthly_price": 179,
+      "included_operations": 50000,
+      "overage_rate": 0.002
+    }
+  ],
+  "rate_limits": {
+    "free_tier": {
+      "requests_per_minute": 20,
+      "requests_per_hour": 200,
+      "requests_per_day": 1000
+    },
+    "starter": {
+      "requests_per_minute": 60,
+      "requests_per_hour": 1000,
+      "requests_per_day": 10000
+    },
+    "professional": {
+      "requests_per_minute": 120,
+      "requests_per_hour": 3000,
+      "requests_per_day": 50000
+    },
+    "enterprise": {
+      "requests_per_minute": 300,
+      "requests_per_hour": 10000,
+      "requests_per_day": 200000
+    }
+  },
+  "auth_required": true,
+  "auth_methods": [
+    "api_key",
+    "oauth2"
+  ],
+  "supported_content_types": [
+    "text/html",
+    "application/xhtml+xml",
+    "application/rss+xml",
+    "application/atom+xml",
+    "application/xml",
+    "text/xml"
+  ],
+  "extraction_capabilities": {
+    "max_page_size_mb": 50,
+    "javascript_rendering_timeout_ms": 30000,
+    "max_redirects": 5,
+    "max_batch_size": 100,
+    "supported_output_formats": ["text", "markdown", "html", "json"]
+  },
+  "performance": {
+    "avg_extraction_time_ms": 2000,
+    "avg_js_rendering_time_ms": 8000,
+    "concurrent_requests": 100,
+    "success_rate": 0.98
+  },
+  "features": [
+    "smart_content_detection",
+    "javascript_rendering",
+    "metadata_extraction",
+    "image_extraction",
+    "link_extraction",
+    "language_detection",
+    "reading_time_calculation",
+    "quality_scoring",
+    "robots_txt_compliance",
+    "sitemap_parsing",
+    "rss_feed_parsing"
+  ],
+  "integrations": [
+    {
+      "name": "aws_s3",
+      "type": "storage",
+      "actions": ["export"]
+    },
+    {
+      "name": "google_cloud_storage",
+      "type": "storage",
+      "actions": ["export"]
+    },
+    {
+      "name": "webhook",
+      "type": "notification",
+      "actions": ["completion", "error", "batch_complete"]
+    }
+  ],
+  "compliance": [
+    "GDPR",
+    "CCPA",
+    "Robots_txt_compliance"
+  ],
+  "data_retention": {
+    "default_days": 3,
+    "max_days": 30,
+    "encryption": "AES-256",
+    "transit_encryption": "TLS_1.3"
+  },
+  "support": {
+    "documentation": "https://docs.agentnode.io/skills/web-reader",
+    "community": "https://community.agentnode.io",
+    "email": "support@agentnode.io",
+    "enterprise_support": "enterprise@agentnode.io"
+  },
+  "status": "active",
+  "visibility": "public",
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-15T00:00:00Z"
+}

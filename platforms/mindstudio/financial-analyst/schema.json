@@ -1,0 +1,357 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Financial Analyst Agent Workflow Schema",
+  "description": "Defines the workflow structure for the Financial Analyst Agent",
+  "type": "object",
+  "properties": {
+    "workflow_id": {
+      "type": "string",
+      "description": "Unique identifier for the workflow instance"
+    },
+    "version": {
+      "type": "string",
+      "default": "1.0.0"
+    },
+    "input": {
+      "type": "object",
+      "properties": {
+        "analysis_type": {
+          "type": "string",
+          "enum": [
+            "financial_statement",
+            "valuation",
+            "credit_analysis",
+            "peer_comparison",
+            "forecasting",
+            "variance_analysis",
+            "due_diligence",
+            "custom"
+          ],
+          "description": "Type of financial analysis to perform"
+        },
+        "company_data": {
+          "type": "object",
+          "properties": {
+            "company_id": { "type": "string" },
+            "company_name": { "type": "string" },
+            "ticker": { "type": "string" },
+            "industry": { "type": "string" },
+            "fiscal_year_end": { "type": "string" },
+            "reporting_currency": { "type": "string", "default": "USD" }
+          }
+        },
+        "financial_statements": {
+          "type": "object",
+          "properties": {
+            "balance_sheet": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "period": { "type": "string" },
+                  "date": { "type": "string", "format": "date" },
+                  "line_items": { "type": "object" }
+                }
+              }
+            },
+            "income_statement": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "period": { "type": "string" },
+                  "date": { "type": "string", "format": "date" },
+                  "line_items": { "type": "object" }
+                }
+              }
+            },
+            "cash_flow_statement": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "period": { "type": "string" },
+                  "date": { "type": "string", "format": "date" },
+                  "line_items": { "type": "object" }
+                }
+              }
+            }
+          }
+        },
+        "data_source": {
+          "type": "string",
+          "enum": ["api", "file_upload", "database", "manual_entry"],
+          "description": "Source of financial data"
+        },
+        "analysis_parameters": {
+          "type": "object",
+          "properties": {
+            "time_period": {
+              "type": "object",
+              "properties": {
+                "start_date": { "type": "string", "format": "date" },
+                "end_date": { "type": "string", "format": "date" },
+                "period_type": { "type": "string", "enum": ["monthly", "quarterly", "annual"] }
+              }
+            },
+            "comparison_peers": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "List of peer company identifiers for comparison"
+            },
+            "benchmarks": {
+              "type": "object",
+              "description": "Industry benchmark data for comparison"
+            },
+            "forecast_periods": {
+              "type": "integer",
+              "description": "Number of periods to forecast"
+            },
+            "assumptions": {
+              "type": "object",
+              "description": "User-defined assumptions for analysis"
+            }
+          }
+        },
+        "output_preferences": {
+          "type": "object",
+          "properties": {
+            "report_format": {
+              "type": "string",
+              "enum": ["pdf", "excel", "powerpoint", "json", "dashboard"]
+            },
+            "detail_level": {
+              "type": "string",
+              "enum": ["summary", "standard", "detailed"]
+            },
+            "include_visualizations": { "type": "boolean", "default": true },
+            "include_executive_summary": { "type": "boolean", "default": true },
+            "language": { "type": "string", "default": "en" }
+          }
+        }
+      },
+      "required": ["analysis_type", "company_data"]
+    },
+    "processing_stages": {
+      "type": "object",
+      "properties": {
+        "data_validation": {
+          "type": "object",
+          "properties": {
+            "validation_status": { "type": "string", "enum": ["passed", "warnings", "failed"] },
+            "completeness_score": { "type": "number" },
+            "issues_found": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "severity": { "type": "string", "enum": ["error", "warning", "info"] },
+                  "field": { "type": "string" },
+                  "description": { "type": "string" },
+                  "recommendation": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "ratio_analysis": {
+          "type": "object",
+          "properties": {
+            "liquidity_ratios": {
+              "type": "object",
+              "properties": {
+                "current_ratio": { "type": "number" },
+                "quick_ratio": { "type": "number" },
+                "cash_ratio": { "type": "number" },
+                "working_capital": { "type": "number" }
+              }
+            },
+            "profitability_ratios": {
+              "type": "object",
+              "properties": {
+                "gross_margin": { "type": "number" },
+                "operating_margin": { "type": "number" },
+                "net_margin": { "type": "number" },
+                "roa": { "type": "number" },
+                "roe": { "type": "number" },
+                "roic": { "type": "number" }
+              }
+            },
+            "leverage_ratios": {
+              "type": "object",
+              "properties": {
+                "debt_to_equity": { "type": "number" },
+                "debt_to_assets": { "type": "number" },
+                "interest_coverage": { "type": "number" },
+                "debt_service_coverage": { "type": "number" }
+              }
+            },
+            "efficiency_ratios": {
+              "type": "object",
+              "properties": {
+                "asset_turnover": { "type": "number" },
+                "inventory_turnover": { "type": "number" },
+                "receivables_turnover": { "type": "number" },
+                "days_sales_outstanding": { "type": "number" }
+              }
+            },
+            "valuation_ratios": {
+              "type": "object",
+              "properties": {
+                "pe_ratio": { "type": "number" },
+                "pb_ratio": { "type": "number" },
+                "ev_ebitda": { "type": "number" },
+                "price_sales": { "type": "number" }
+              }
+            }
+          }
+        },
+        "trend_analysis": {
+          "type": "object",
+          "properties": {
+            "revenue_trend": {
+              "type": "object",
+              "properties": {
+                "direction": { "type": "string", "enum": ["increasing", "decreasing", "stable"] },
+                "cagr": { "type": "number" },
+                "volatility": { "type": "number" }
+              }
+            },
+            "profitability_trend": {
+              "type": "object",
+              "properties": {
+                "direction": { "type": "string", "enum": ["improving", "declining", "stable"] },
+                "margin_change": { "type": "number" }
+              }
+            },
+            "key_trends": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "metric": { "type": "string" },
+                  "trend": { "type": "string" },
+                  "significance": { "type": "string", "enum": ["high", "medium", "low"] }
+                }
+              }
+            }
+          }
+        },
+        "risk_assessment": {
+          "type": "object",
+          "properties": {
+            "overall_risk_score": {
+              "type": "number",
+              "minimum": 1,
+              "maximum": 100
+            },
+            "risk_category": {
+              "type": "string",
+              "enum": ["low", "moderate", "elevated", "high", "critical"]
+            },
+            "risk_factors": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "factor": { "type": "string" },
+                  "severity": { "type": "string", "enum": ["low", "medium", "high"] },
+                  "description": { "type": "string" }
+                }
+              }
+            },
+            "early_warning_indicators": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        },
+        "insights_generation": {
+          "type": "object",
+          "properties": {
+            "key_findings": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "finding": { "type": "string" },
+                  "impact": { "type": "string", "enum": ["positive", "negative", "neutral"] },
+                  "importance": { "type": "string", "enum": ["high", "medium", "low"] },
+                  "supporting_data": { "type": "object" }
+                }
+              }
+            },
+            "recommendations": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "recommendation": { "type": "string" },
+                  "rationale": { "type": "string" },
+                  "priority": { "type": "string", "enum": ["immediate", "near_term", "ongoing"] }
+                }
+              }
+            },
+            "executive_summary": { "type": "string" }
+          }
+        }
+      }
+    },
+    "output": {
+      "type": "object",
+      "properties": {
+        "report": {
+          "type": "object",
+          "properties": {
+            "report_id": { "type": "string" },
+            "generated_at": { "type": "string", "format": "date-time" },
+            "executive_summary": { "type": "string" },
+            "analysis_results": { "type": "object" },
+            "visualizations": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "chart_type": { "type": "string" },
+                  "title": { "type": "string" },
+                  "data": { "type": "object" },
+                  "insights": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "data_export": {
+          "type": "object",
+          "properties": {
+            "format": { "type": "string" },
+            "download_url": { "type": "string" },
+            "expires_at": { "type": "string", "format": "date-time" }
+          }
+        },
+        "alerts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "alert_type": { "type": "string" },
+              "severity": { "type": "string" },
+              "message": { "type": "string" },
+              "action_required": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "created_at": { "type": "string", "format": "date-time" },
+        "processing_time_ms": { "type": "integer" },
+        "model_version": { "type": "string" },
+        "data_sources_used": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  },
+  "required": ["workflow_id", "input", "output"]
+}

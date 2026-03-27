@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Token Vault MCP Server",
+  "type": "object",
+  "properties": {
+    "server": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "const": "token-vault" },
+        "version": { "type": "string" }
+      }
+    },
+    "tools": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": ["store_secret", "get_secret", "delete_secret", "rotate_secret", "list_secrets", "grant_access", "get_audit_log", "generate_token"]
+          }
+        }
+      }
+    }
+  }
+}

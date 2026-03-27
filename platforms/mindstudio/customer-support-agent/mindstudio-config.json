@@ -1,0 +1,208 @@
+{
+  "agent_name": "Customer Support Agent",
+  "agent_id": "customer-support-agent-v1",
+  "version": "1.0.0",
+  "description": "24/7 AI-powered customer support automation with intelligent routing and escalation",
+  "model_selection": {
+    "primary_model": "gpt-4-turbo",
+    "fallback_model": "gpt-3.5-turbo",
+    "embedding_model": "text-embedding-3-small",
+    "model_parameters": {
+      "temperature": 0.3,
+      "max_tokens": 2000,
+      "top_p": 0.9,
+      "frequency_penalty": 0.2,
+      "presence_penalty": 0.1
+    }
+  },
+  "system_prompt": "You are a professional customer support agent with extensive experience in resolving customer inquiries efficiently and empathetically. Your primary goals are:\n\n1. Provide accurate, helpful responses to customer questions\n2. Maintain a friendly, professional tone that reflects the brand voice\n3. Resolve issues on first contact whenever possible\n4. Escalate appropriately when issues require human intervention\n5. Document all interactions thoroughly\n\nGuidelines:\n- Always greet customers warmly and acknowledge their concern\n- Ask clarifying questions when needed to fully understand the issue\n- Provide step-by-step instructions when applicable\n- Offer proactive solutions and anticipate follow-up questions\n- Express empathy for frustrated customers\n- Never make promises you cannot keep\n- If unsure, admit it and offer to escalate or research further\n- End interactions by confirming resolution and offering additional help\n\nTone: Professional, empathetic, solution-oriented, and brand-aligned.\n\nKnowledge Base Access: You have access to the company's knowledge base, FAQ, product documentation, and customer account information (when authorized).\n\nEscalation Criteria:\n- Legal or compliance concerns\n- Technical issues beyond documented solutions\n- Customer explicitly requests human agent\n- High-value customer with complex needs\n- Repeated contacts for same unresolved issue",
+  "workflow_nodes": [
+    {
+      "node_id": "input_node",
+      "node_type": "trigger",
+      "label": "Customer Message Received",
+      "description": "Entry point for customer inquiries"
+    },
+    {
+      "node_id": "preprocess_node",
+      "node_type": "process",
+      "label": "Message Preprocessing",
+      "description": "Normalize and clean input message"
+    },
+    {
+      "node_id": "intent_node",
+      "node_type": "classification",
+      "label": "Intent Classification",
+      "description": "Determine customer intent and extract entities"
+    },
+    {
+      "node_id": "sentiment_node",
+      "node_type": "analysis",
+      "label": "Sentiment Analysis",
+      "description": "Analyze emotional state and urgency"
+    },
+    {
+      "node_id": "context_node",
+      "node_type": "data_retrieval",
+      "label": "Context Gathering",
+      "description": "Retrieve customer history and account data"
+    },
+    {
+      "node_id": "knowledge_node",
+      "node_type": "rag",
+      "label": "Knowledge Base Query",
+      "description": "Search knowledge base for relevant information"
+    },
+    {
+      "node_id": "escalation_check_node",
+      "node_type": "decision",
+      "label": "Escalation Assessment",
+      "description": "Determine if human escalation is needed"
+    },
+    {
+      "node_id": "response_generation_node",
+      "node_type": "generation",
+      "label": "Response Generation",
+      "description": "Generate appropriate response"
+    },
+    {
+      "node_id": "quality_check_node",
+      "node_type": "validation",
+      "label": "Quality Assurance",
+      "description": "Validate response quality and safety"
+    },
+    {
+      "node_id": "output_node",
+      "node_type": "output",
+      "label": "Send Response",
+      "description": "Deliver response to customer"
+    },
+    {
+      "node_id": "escalation_node",
+      "node_type": "action",
+      "label": "Create Escalation Ticket",
+      "description": "Route to human agent with context"
+    },
+    {
+      "node_id": "logging_node",
+      "node_type": "logging",
+      "label": "Log Interaction",
+      "description": "Record interaction for analytics"
+    }
+  ],
+  "integrations": [
+    {
+      "name": "Zendesk",
+      "type": "helpdesk",
+      "api_endpoint": "https://api.zendesk.com/api/v2",
+      "authentication": "oauth2",
+      "features": ["ticket_management", "user_lookup", "article_search"],
+      "required_scopes": ["read", "write"]
+    },
+    {
+      "name": "Intercom",
+      "type": "messaging",
+      "api_endpoint": "https://api.intercom.io",
+      "authentication": "bearer_token",
+      "features": ["live_chat", "user_profiles", "conversation_history"],
+      "required_scopes": ["conversations", "users"]
+    },
+    {
+      "name": "Salesforce",
+      "type": "crm",
+      "api_endpoint": "https://api.salesforce.com",
+      "authentication": "oauth2",
+      "features": ["case_management", "contact_lookup", "account_data"],
+      "required_scopes": ["api", "refresh_token"]
+    },
+    {
+      "name": "Slack",
+      "type": "notification",
+      "api_endpoint": "https://slack.com/api",
+      "authentication": "bot_token",
+      "features": ["notifications", "escalations", "team_alerts"],
+      "required_scopes": ["chat:write", "channels:read"]
+    },
+    {
+      "name": "Knowledge Base",
+      "type": "vector_store",
+      "provider": "pinecone",
+      "features": ["semantic_search", "document_retrieval", "similarity_match"],
+      "index_name": "support-kb"
+    }
+  ],
+  "output_formats": [
+    {
+      "format": "text",
+      "description": "Plain text response for chat and messaging",
+      "max_length": 2000
+    },
+    {
+      "format": "email",
+      "description": "Formatted email with subject and body",
+      "template": "email_response_template"
+    },
+    {
+      "format": "ticket_update",
+      "description": "Helpdesk ticket update format",
+      "fields": ["status", "priority", "assignee", "notes"]
+    },
+    {
+      "format": "api_response",
+      "description": "JSON API response format",
+      "schema": "schema.json"
+    }
+  ],
+  "pricing_model": {
+    "type": "tiered",
+    "tiers": [
+      {
+        "name": "Starter",
+        "monthly_price": 99,
+        "included_interactions": 1000,
+        "overage_price": 0.10,
+        "features": ["Basic intent classification", "Knowledge base search", "Email support"]
+      },
+      {
+        "name": "Professional",
+        "monthly_price": 299,
+        "included_interactions": 5000,
+        "overage_price": 0.08,
+        "features": ["Advanced intent classification", "Multi-channel support", "Sentiment analysis", "CRM integration", "Priority support"]
+      },
+      {
+        "name": "Enterprise",
+        "monthly_price": 799,
+        "included_interactions": 25000,
+        "overage_price": 0.05,
+        "features": ["All Professional features", "Custom training", "White-label option", "Dedicated success manager", "SLA guarantee", "Advanced analytics"]
+      }
+    ],
+    "annual_discount": 0.20,
+    "setup_fee": {
+      "Starter": 0,
+      "Professional": 499,
+      "Enterprise": 1999
+    }
+  },
+  "rate_limits": {
+    "requests_per_minute": 100,
+    "requests_per_hour": 5000,
+    "concurrent_sessions": 50
+  },
+  "security": {
+    "data_encryption": "AES-256",
+    "transit_encryption": "TLS 1.3",
+    "pii_handling": "redact_and_mask",
+    "data_retention_days": 90,
+    "audit_logging": true,
+    "gdpr_compliant": true,
+    "soc2_compliant": true
+  },
+  "monitoring": {
+    "metrics_enabled": true,
+    "alerting_enabled": true,
+    "dashboard_available": true,
+    "export_formats": ["csv", "json", "pdf"]
+  }
+}

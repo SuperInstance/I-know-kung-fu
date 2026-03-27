@@ -1,0 +1,197 @@
+{
+  "name": "escalation-router",
+  "version": "1.0.0",
+  "description": "Intelligent LLM routing with 40x cost reduction through Bot/Brain/Human tiering",
+  "vendor": "SuperInstance",
+  "repository": "https://github.com/SuperInstance/escalation-router-mcp",
+
+  "tools": [
+    {
+      "name": "classify_and_route",
+      "description": "Classify query complexity and route to the appropriate model tier (bot/brain/human) for optimal cost/performance",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "The user query or prompt to route"
+          },
+          "context": {
+            "type": "object",
+            "description": "Additional context for classification",
+            "properties": {
+              "user_tier": { "type": "string" },
+              "previous_interactions": { "type": "integer" },
+              "session_data": { "type": "object" }
+            }
+          },
+          "force_tier": {
+            "type": "string",
+            "enum": ["bot", "brain", "human"],
+            "description": "Force routing to a specific tier (optional)"
+          },
+          "return_classification": {
+            "type": "boolean",
+            "default": false,
+            "description": "Return classification details without executing"
+          }
+        },
+        "required": ["query"]
+      }
+    },
+    {
+      "name": "get_cost_report",
+      "description": "Get detailed cost analysis and savings report for LLM usage",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "period": {
+            "type": "string",
+            "enum": ["today", "week", "month", "all"],
+            "default": "month"
+          },
+          "breakdown_by_tier": {
+            "type": "boolean",
+            "default": true
+          }
+        }
+      }
+    },
+    {
+      "name": "add_routing_rule",
+      "description": "Add a custom routing rule for specific query patterns",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Rule name"
+          },
+          "pattern": {
+            "type": "string",
+            "description": "Regex pattern to match"
+          },
+          "target_tier": {
+            "type": "string",
+            "enum": ["bot", "brain", "human"]
+          },
+          "priority": {
+            "type": "integer",
+            "default": 100
+          }
+        },
+        "required": ["name", "pattern", "target_tier"]
+      }
+    },
+    {
+      "name": "configure_models",
+      "description": "Configure model endpoints and pricing",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "tier": {
+            "type": "string",
+            "enum": ["bot", "brain"]
+          },
+          "models": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": { "type": "string" },
+                "provider": { "type": "string" },
+                "endpoint": { "type": "string" },
+                "cost_per_1k_tokens": { "type": "number" }
+              }
+            }
+          }
+        },
+        "required": ["tier", "models"]
+      }
+    },
+    {
+      "name": "set_budget",
+      "description": "Set budget limits for LLM spending",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "daily_limit": {
+            "type": "number",
+            "description": "Maximum daily spend in USD"
+          },
+          "monthly_limit": {
+            "type": "number",
+            "description": "Maximum monthly spend in USD"
+          },
+          "alert_threshold": {
+            "type": "number",
+            "description": "Percentage of budget to trigger alert"
+          }
+        }
+      }
+    }
+  ],
+
+  "resources": [
+    {
+      "uri": "escalation-router://config",
+      "name": "Current Configuration",
+      "description": "View current routing configuration and model settings",
+      "mimeType": "application/json"
+    },
+    {
+      "uri": "escalation-router://stats",
+      "name": "Usage Statistics",
+      "description": "Real-time usage statistics and cost metrics",
+      "mimeType": "application/json"
+    },
+    {
+      "uri": "escalation-router://rules",
+      "name": "Routing Rules",
+      "description": "List all active routing rules",
+      "mimeType": "application/json"
+    }
+  ],
+
+  "prompts": [
+    {
+      "name": "analyze_costs",
+      "description": "Analyze LLM costs and suggest optimizations",
+      "arguments": []
+    },
+    {
+      "name": "setup_routing",
+      "description": "Interactive setup for routing configuration",
+      "arguments": [
+        {
+          "name": "use_case",
+          "description": "Primary use case (customer_support, coding, analysis, general)",
+          "required": true
+        }
+      ]
+    }
+  ],
+
+  "defaultConfiguration": {
+    "classificationModel": "gpt-3.5-turbo",
+    "tiers": {
+      "bot": {
+        "models": [
+          { "name": "gpt-3.5-turbo", "provider": "openai", "cost": 0.001 },
+          { "name": "claude-instant", "provider": "anthropic", "cost": 0.0016 }
+        ],
+        "threshold": 0.3
+      },
+      "brain": {
+        "models": [
+          { "name": "gpt-4-turbo", "provider": "openai", "cost": 0.01 },
+          { "name": "claude-3-opus", "provider": "anthropic", "cost": 0.015 }
+        ],
+        "threshold": 0.7
+      },
+      "human": {
+        "threshold": 1.0
+      }
+    }
+  }
+}

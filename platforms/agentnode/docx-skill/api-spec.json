@@ -1,0 +1,641 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "DOCX Skill API",
+    "description": "Professional-grade document creation, editing, and analysis API for Microsoft Word documents",
+    "version": "1.0.0",
+    "contact": {
+      "name": "AgentNode Support",
+      "email": "support@agentnode.io",
+      "url": "https://agentnode.io"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://api.agentnode.io/v1/skills/docx",
+      "description": "Production server"
+    },
+    {
+      "url": "https://api-staging.agentnode.io/v1/skills/docx",
+      "description": "Staging server"
+    }
+  ],
+  "security": [
+    {
+      "ApiKeyAuth": []
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key"
+      },
+      "OAuth2": {
+        "type": "oauth2",
+        "flows": {
+          "clientCredentials": {
+            "tokenUrl": "https://auth.agentnode.io/oauth/token",
+            "scopes": {
+              "docx:read": "Read document content",
+              "docx:write": "Create and modify documents",
+              "docx:delete": "Delete documents"
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "Error": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "example": "DOCUMENT_NOT_FOUND"
+          },
+          "message": {
+            "type": "string",
+            "example": "The specified document could not be found"
+          },
+          "details": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        }
+      },
+      "DocumentMetadata": {
+        "type": "object",
+        "properties": {
+          "document_id": {
+            "type": "string",
+            "example": "doc_abc123xyz"
+          },
+          "filename": {
+            "type": "string",
+            "example": "contract.docx"
+          },
+          "page_count": {
+            "type": "integer",
+            "example": 15
+          },
+          "word_count": {
+            "type": "integer",
+            "example": 3420
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    }
+  },
+  "endpoints": [
+    {
+      "path": "/create",
+      "method": "POST",
+      "summary": "Create a new document",
+      "description": "Create a new DOCX document from scratch with specified content and formatting",
+      "tags": ["Document Operations"],
+      "pricing": 0.05,
+      "parameters": [
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "options": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "description": "Document title"
+                  },
+                  "author": {
+                    "type": "string",
+                    "description": "Document author"
+                  },
+                  "template_id": {
+                    "type": "string",
+                    "description": "Template ID to use"
+                  }
+                }
+              },
+              "content": {
+                "type": "array",
+                "description": "Document content elements",
+                "items": {
+                  "type": "object"
+                }
+              }
+            },
+            "required": ["content"]
+          }
+        }
+      ],
+      "response": {
+        "success": {
+          "document_id": "doc_abc123xyz",
+          "download_url": "https://storage.agentnode.io/docs/doc_abc123xyz.docx",
+          "metadata": {
+            "page_count": 5,
+            "word_count": 1250
+          }
+        }
+      }
+    },
+    {
+      "path": "/edit",
+      "method": "POST",
+      "summary": "Edit an existing document",
+      "description": "Apply modifications to an existing document with optional tracked changes",
+      "tags": ["Document Operations"],
+      "pricing": 0.03,
+      "parameters": [
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "document_id": {
+                "type": "string",
+                "description": "ID of document to edit"
+              },
+              "document_url": {
+                "type": "string",
+                "format": "uri",
+                "description": "URL of document to edit"
+              },
+              "operations": {
+                "type": "array",
+                "description": "Edit operations to apply",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "action": {
+                      "type": "string",
+                      "enum": ["insert", "replace", "delete", "format"]
+                    },
+                    "position": {
+                      "type": "object"
+                    },
+                    "content": {
+                      "type": "object"
+                    }
+                  }
+                }
+              },
+              "track_changes": {
+                "type": "boolean",
+                "default": false,
+                "description": "Enable tracked changes mode"
+              }
+            }
+          }
+        }
+      ],
+      "response": {
+        "success": {
+          "document_id": "doc_abc123xyz",
+          "download_url": "https://storage.agentnode.io/docs/doc_abc123xyz_edited.docx",
+          "changes_applied": 5,
+          "tracked_changes": true
+        }
+      }
+    },
+    {
+      "path": "/extract-text",
+      "method": "POST",
+      "summary": "Extract text from document",
+      "description": "Extract plain text or formatted text content from a document",
+      "tags": ["Analysis"],
+      "pricing": 0.01,
+      "parameters": [
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "document_id": {
+                "type": "string"
+              },
+              "document_url": {
+                "type": "string",
+                "format": "uri"
+              },
+              "include_formatting": {
+                "type": "boolean",
+                "default": false
+              },
+              "page_range": {
+                "type": "object",
+                "properties": {
+                  "start": {
+                    "type": "integer"
+                  },
+                  "end": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "response": {
+        "success": {
+          "text": "Extracted document text...",
+          "pages": [
+            {"page_number": 1, "text": "Page 1 content..."}
+          ],
+          "metadata": {
+            "page_count": 10,
+            "word_count": 2500
+          }
+        }
+      }
+    },
+    {
+      "path": "/merge",
+      "method": "POST",
+      "summary": "Merge multiple documents",
+      "description": "Combine multiple DOCX documents into a single document",
+      "tags": ["Document Operations"],
+      "pricing": 0.08,
+      "parameters": [
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "documents": {
+                "type": "array",
+                "minItems": 2,
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "document_id": {
+                      "type": "string"
+                    },
+                    "document_url": {
+                      "type": "string",
+                      "format": "uri"
+                    }
+                  }
+                }
+              },
+              "insert_page_break": {
+                "type": "boolean",
+                "default": true
+              },
+              "preserve_formatting": {
+                "type": "boolean",
+                "default": true
+              }
+            },
+            "required": ["documents"]
+          }
+        }
+      ],
+      "response": {
+        "success": {
+          "document_id": "doc_merged123",
+          "download_url": "https://storage.agentnode.io/docs/doc_merged123.docx",
+          "source_count": 3,
+          "total_pages": 25
+        }
+      }
+    },
+    {
+      "path": "/convert",
+      "method": "POST",
+      "summary": "Convert document format",
+      "description": "Convert a DOCX document to another format (PDF, HTML, TXT, ODT)",
+      "tags": ["Document Operations"],
+      "pricing": 0.03,
+      "parameters": [
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "document_id": {
+                "type": "string"
+              },
+              "document_url": {
+                "type": "string",
+                "format": "uri"
+              },
+              "output_format": {
+                "type": "string",
+                "enum": ["pdf", "html", "txt", "odt", "rtf"]
+              },
+              "options": {
+                "type": "object",
+                "description": "Format-specific options"
+              }
+            },
+            "required": ["output_format"]
+          }
+        }
+      ],
+      "response": {
+        "success": {
+          "document_id": "doc_converted123",
+          "download_url": "https://storage.agentnode.io/docs/doc_converted123.pdf",
+          "format": "pdf",
+          "file_size_kb": 245
+        }
+      }
+    },
+    {
+      "path": "/analyze",
+      "method": "POST",
+      "summary": "Analyze document structure",
+      "description": "Analyze document structure, headings, sections, and metadata",
+      "tags": ["Analysis"],
+      "pricing": 0.02,
+      "parameters": [
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "document_id": {
+                "type": "string"
+              },
+              "document_url": {
+                "type": "string",
+                "format": "uri"
+              },
+              "analysis_type": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": ["structure", "headings", "links", "images", "tables", "comments", "metadata"]
+                }
+              }
+            }
+          }
+        }
+      ],
+      "response": {
+        "success": {
+          "structure": {
+            "headings": [
+              {"level": 1, "text": "Introduction", "page": 1},
+              {"level": 2, "text": "Background", "page": 2}
+            ],
+            "sections": 5,
+            "tables": 3,
+            "images": 2,
+            "links": 15
+          },
+          "metadata": {
+            "title": "Document Title",
+            "author": "Author Name",
+            "word_count": 5000,
+            "page_count": 20
+          }
+        }
+      }
+    },
+    {
+      "path": "/tracked-changes",
+      "method": "POST",
+      "summary": "Process tracked changes",
+      "description": "Accept, reject, or retrieve tracked changes from a document",
+      "tags": ["Collaboration"],
+      "pricing": 0.04,
+      "parameters": [
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "document_id": {
+                "type": "string"
+              },
+              "action": {
+                "type": "string",
+                "enum": ["list", "accept_all", "reject_all", "accept_selected", "reject_selected"]
+              },
+              "change_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "IDs of changes for accept/reject selected"
+              }
+            },
+            "required": ["document_id", "action"]
+          }
+        }
+      ],
+      "response": {
+        "success": {
+          "document_id": "doc_abc123xyz",
+          "changes": [
+            {
+              "change_id": "tc_001",
+              "type": "insert",
+              "author": "John Doe",
+              "date": "2024-01-15T10:30:00Z",
+              "text": "New paragraph content"
+            }
+          ],
+          "total_changes": 5,
+          "processed": 5
+        }
+      }
+    },
+    {
+      "path": "/comments",
+      "method": "POST",
+      "summary": "Manage document comments",
+      "description": "Add, retrieve, or remove comments from a document",
+      "tags": ["Collaboration"],
+      "pricing": 0.02,
+      "parameters": [
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "document_id": {
+                "type": "string"
+              },
+              "action": {
+                "type": "string",
+                "enum": ["list", "add", "delete", "resolve"]
+              },
+              "comment": {
+                "type": "object",
+                "properties": {
+                  "text": {
+                    "type": "string"
+                  },
+                  "author": {
+                    "type": "string"
+                  },
+                  "position": {
+                    "type": "object"
+                  }
+                }
+              }
+            },
+            "required": ["document_id", "action"]
+          }
+        }
+      ],
+      "response": {
+        "success": {
+          "document_id": "doc_abc123xyz",
+          "comments": [
+            {
+              "comment_id": "cmt_001",
+              "author": "Jane Smith",
+              "text": "Please review this section",
+              "resolved": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "path": "/templates",
+      "method": "GET",
+      "summary": "List available templates",
+      "description": "Retrieve list of available document templates",
+      "tags": ["Templates"],
+      "pricing": 0.00,
+      "response": {
+        "success": {
+          "templates": [
+            {
+              "template_id": "tpl_contract",
+              "name": "Legal Contract",
+              "category": "legal",
+              "preview_url": "https://storage.agentnode.io/templates/contract_preview.png"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "path": "/batch",
+      "method": "POST",
+      "summary": "Batch document processing",
+      "description": "Process multiple documents in a single request",
+      "tags": ["Batch Operations"],
+      "pricing": "varies",
+      "parameters": [
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "operations": {
+                "type": "array",
+                "maxItems": 100,
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "operation_id": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string",
+                      "enum": ["create", "edit", "extract", "merge", "convert"]
+                    },
+                    "params": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            },
+            "required": ["operations"]
+          }
+        }
+      ],
+      "response": {
+        "success": {
+          "batch_id": "batch_xyz789",
+          "status": "processing",
+          "webhook_url": "https://your-app.com/webhook"
+        }
+      }
+    }
+  ],
+  "webhooks": {
+    "events": [
+      {
+        "name": "document.created",
+        "description": "Fired when a document is successfully created"
+      },
+      {
+        "name": "document.edited",
+        "description": "Fired when a document is successfully edited"
+      },
+      {
+        "name": "batch.completed",
+        "description": "Fired when a batch operation completes"
+      },
+      {
+        "name": "document.error",
+        "description": "Fired when an operation fails"
+      }
+    ]
+  },
+  "errors": [
+    {
+      "code": "DOCUMENT_NOT_FOUND",
+      "http_status": 404,
+      "message": "The specified document could not be found"
+    },
+    {
+      "code": "INVALID_FORMAT",
+      "http_status": 400,
+      "message": "The document format is not supported"
+    },
+    {
+      "code": "FILE_TOO_LARGE",
+      "http_status": 413,
+      "message": "The file exceeds the maximum allowed size"
+    },
+    {
+      "code": "RATE_LIMIT_EXCEEDED",
+      "http_status": 429,
+      "message": "Rate limit exceeded. Please retry after the specified time"
+    },
+    {
+      "code": "INSUFFICIENT_CREDITS",
+      "http_status": 402,
+      "message": "Insufficient credits to complete this operation"
+    }
+  ]
+}

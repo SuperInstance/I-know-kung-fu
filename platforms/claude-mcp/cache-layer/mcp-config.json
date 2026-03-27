@@ -1,0 +1,132 @@
+{
+  "name": "cache-layer",
+  "version": "1.0.0",
+  "description": "Multi-tier caching MCP server for AI agents with semantic matching and intelligent invalidation",
+  "tools": [
+    {
+      "name": "get",
+      "description": "Retrieve a cached value by key",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "key": { "type": "string" },
+          "semanticMatch": { "type": "boolean", "default": false },
+          "similarityThreshold": { "type": "number", "default": 0.95 }
+        },
+        "required": ["key"]
+      }
+    },
+    {
+      "name": "set",
+      "description": "Store a value in cache",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "key": { "type": "string" },
+          "value": { "type": "string" },
+          "ttl": { "type": "integer", "description": "Time to live in seconds" },
+          "tier": { "type": "string", "enum": ["L1", "L2", "L3", "auto"] },
+          "tags": { "type": "array", "items": { "type": "string" } },
+          "metadata": { "type": "object" }
+        },
+        "required": ["key", "value"]
+      }
+    },
+    {
+      "name": "delete",
+      "description": "Delete a cached value",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "key": { "type": "string" }
+        },
+        "required": ["key"]
+      }
+    },
+    {
+      "name": "invalidate_by_tag",
+      "description": "Invalidate all cache entries with a specific tag",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "tag": { "type": "string" }
+        },
+        "required": ["tag"]
+      }
+    },
+    {
+      "name": "clear",
+      "description": "Clear all cache entries",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "tier": { "type": "string", "enum": ["L1", "L2", "L3", "all"] }
+        }
+      }
+    },
+    {
+      "name": "get_stats",
+      "description": "Get cache statistics",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      }
+    },
+    {
+      "name": "warm_cache",
+      "description": "Pre-populate cache with known patterns",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "patterns": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "key": { "type": "string" },
+                "value": { "type": "string" }
+              }
+            }
+          }
+        },
+        "required": ["patterns"]
+      }
+    },
+    {
+      "name": "configure_ttl",
+      "description": "Configure TTL rules for specific key patterns",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "pattern": { "type": "string" },
+          "ttl": { "type": "integer" },
+          "tier": { "type": "string" }
+        },
+        "required": ["pattern", "ttl"]
+      }
+    }
+  ],
+  "resources": [
+    {
+      "uri": "cache-layer://stats",
+      "name": "Cache Statistics",
+      "mimeType": "application/json"
+    },
+    {
+      "uri": "cache-layer://config",
+      "name": "Cache Configuration",
+      "mimeType": "application/json"
+    }
+  ],
+  "config": {
+    "tiers": {
+      "L1": { "maxSize": "100MB", "defaultTTL": 300 },
+      "L2": { "maxSize": "1GB", "defaultTTL": 3600 },
+      "L3": { "maxSize": "10GB", "defaultTTL": 86400 }
+    },
+    "semanticMatching": {
+      "enabled": true,
+      "threshold": 0.95
+    }
+  }
+}

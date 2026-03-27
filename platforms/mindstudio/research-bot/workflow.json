@@ -1,0 +1,239 @@
+{
+  "workflow_id": "research-bot-v1",
+  "name": "Research Bot Workflow",
+  "description": "End-to-end automated research and synthesis workflow",
+  "version": "1.0.0",
+  "nodes": [
+    {
+      "id": "node_1",
+      "type": "trigger",
+      "label": "Research Request",
+      "position": { "x": 100, "y": 300 },
+      "config": {
+        "trigger_type": "multi_source",
+        "sources": ["api", "webhook", "schedule", "manual"]
+      }
+    },
+    {
+      "id": "node_2",
+      "type": "llm_generation",
+      "label": "Query Analysis",
+      "position": { "x": 300, "y": 300 },
+      "config": {
+        "model": "gpt-4-turbo",
+        "prompt_template": "query_expansion",
+        "output_variable": "expanded_query",
+        "temperature": 0.2
+      }
+    },
+    {
+      "id": "node_3",
+      "type": "decision",
+      "label": "Source Selection",
+      "position": { "x": 500, "y": 300 },
+      "config": {
+        "decision_type": "source_routing",
+        "criteria": ["research_type", "source_preferences", "credibility_requirements"],
+        "output_variable": "selected_sources"
+      }
+    },
+    {
+      "id": "node_4",
+      "type": "parallel",
+      "label": "Multi-Source Search",
+      "position": { "x": 700, "y": 300 },
+      "config": {
+        "parallel_tasks": [
+          { "task_id": "academic_search", "source": "google_scholar" },
+          { "task_id": "news_search", "source": "news_api" },
+          { "task_id": "web_search", "source": "serp_api" },
+          { "task_id": "database_search", "source": "pubmed" }
+        ],
+        "output_variable": "search_results",
+        "timeout_seconds": 60
+      }
+    },
+    {
+      "id": "node_5",
+      "type": "extraction",
+      "label": "Content Extraction",
+      "position": { "x": 900, "y": 300 },
+      "config": {
+        "extraction_methods": ["html_parsing", "pdf_extraction", "api_response"],
+        "fields_to_extract": ["title", "content", "author", "date", "url"],
+        "output_variable": "extracted_content"
+      }
+    },
+    {
+      "id": "node_6",
+      "type": "validation",
+      "label": "Credibility Assessment",
+      "position": { "x": 1100, "y": 200 },
+      "config": {
+        "credibility_factors": ["source_reputation", "author_credentials", "citation_count", "recency"],
+        "output_variable": "credibility_scores",
+        "minimum_threshold": "{{credibility_threshold}}"
+      }
+    },
+    {
+      "id": "node_7",
+      "type": "nlp",
+      "label": "Entity Extraction",
+      "position": { "x": 1100, "y": 350 },
+      "config": {
+        "entity_types": ["person", "organization", "location", "date", "concept", "metric"],
+        "output_variable": "entities",
+        "relationship_extraction": true
+      }
+    },
+    {
+      "id": "node_8",
+      "type": "filter",
+      "label": "Content Filtering",
+      "position": { "x": 1300, "y": 300 },
+      "config": {
+        "filter_criteria": ["relevance_score", "credibility_score", "date_range"],
+        "output_variable": "filtered_content"
+      }
+    },
+    {
+      "id": "node_9",
+      "type": "llm_generation",
+      "label": "Research Synthesis",
+      "position": { "x": 1500, "y": 300 },
+      "config": {
+        "model": "gpt-4-turbo",
+        "prompt_template": "research_synthesis",
+        "input_variables": ["expanded_query", "filtered_content", "entities"],
+        "output_variable": "synthesized_findings",
+        "temperature": 0.3,
+        "max_tokens": 4000
+      }
+    },
+    {
+      "id": "node_10",
+      "type": "validation",
+      "label": "Fact Verification",
+      "position": { "x": 1700, "y": 200 },
+      "config": {
+        "verification_method": "cross_reference",
+        "output_variable": "verified_facts"
+      }
+    },
+    {
+      "id": "node_11",
+      "type": "formatting",
+      "label": "Citation Generation",
+      "position": { "x": 1700, "y": 350 },
+      "config": {
+        "citation_style": "{{citation_style}}",
+        "output_variable": "formatted_citations"
+      }
+    },
+    {
+      "id": "node_12",
+      "type": "output",
+      "label": "Report Assembly",
+      "position": { "x": 1900, "y": 300 },
+      "config": {
+        "format": "{{output_format}}",
+        "sections": ["executive_summary", "methodology", "findings", "analysis", "bibliography"],
+        "output_variable": "final_report"
+      }
+    }
+  ],
+  "connections": [
+    { "source": "node_1", "target": "node_2" },
+    { "source": "node_2", "target": "node_3" },
+    { "source": "node_3", "target": "node_4" },
+    { "source": "node_4", "target": "node_5" },
+    { "source": "node_5", "target": "node_6" },
+    { "source": "node_5", "target": "node_7" },
+    { "source": "node_6", "target": "node_8" },
+    { "source": "node_7", "target": "node_8" },
+    { "source": "node_8", "target": "node_9" },
+    { "source": "node_9", "target": "node_10" },
+    { "source": "node_9", "target": "node_11" },
+    { "source": "node_10", "target": "node_12" },
+    { "source": "node_11", "target": "node_12" }
+  ],
+  "inputs": {
+    "research_query": {
+      "type": "string",
+      "required": true,
+      "description": "The research question or topic"
+    },
+    "research_type": {
+      "type": "string",
+      "required": true,
+      "enum": ["literature_review", "market_research", "competitive_analysis", "trend_analysis", "fact_checking"]
+    },
+    "time_range": {
+      "type": "object",
+      "required": false,
+      "default": { "start_date": "{{one_year_ago}}", "end_date": "{{today}}" }
+    },
+    "source_types": {
+      "type": "array",
+      "required": false,
+      "default": ["academic", "news", "web"]
+    },
+    "output_format": {
+      "type": "string",
+      "required": false,
+      "default": "report"
+    },
+    "citation_style": {
+      "type": "string",
+      "required": false,
+      "default": "apa"
+    }
+  },
+  "outputs": {
+    "executive_summary": {
+      "type": "string",
+      "description": "Brief summary of key findings"
+    },
+    "findings": {
+      "type": "array",
+      "description": "Detailed research findings"
+    },
+    "bibliography": {
+      "type": "array",
+      "description": "Formatted citations"
+    },
+    "sources_analyzed": {
+      "type": "integer",
+      "description": "Number of sources analyzed"
+    },
+    "confidence_score": {
+      "type": "number",
+      "description": "Overall confidence in findings"
+    }
+  },
+  "variables": {
+    "default_credibility_threshold": {
+      "type": "number",
+      "default": 0.5
+    },
+    "max_sources_per_query": {
+      "type": "number",
+      "default": 100
+    },
+    "synthesis_depth": {
+      "type": "string",
+      "default": "standard",
+      "enum": ["brief", "standard", "comprehensive"]
+    }
+  },
+  "error_handling": {
+    "retry_count": 3,
+    "retry_delay_ms": 3000,
+    "partial_output_on_failure": true
+  },
+  "performance": {
+    "target_response_time_ms": 60000,
+    "max_execution_time_ms": 300000,
+    "concurrent_research_jobs": 5
+  }
+}

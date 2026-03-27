@@ -1,0 +1,206 @@
+{
+  "skill_name": "docx",
+  "display_name": "DOCX Document Processor",
+  "version": "1.0.0",
+  "category": "document-processing",
+  "subcategory": "office-automation",
+  "description": "Comprehensive document creation, editing, and analysis with support for tracked changes, comments, formatting preservation, and text extraction. Professional-grade Microsoft Word document processing for AI agents.",
+  "long_description": "The DOCX Skill enables AI agents to programmatically create, modify, and analyze .docx files with full support for complex formatting, tracked changes, comments, and document structure manipulation. This is AgentNode's highest-monetization-potential skill, trusted by enterprise customers for legal document generation, report automation, and content creation workflows.",
+  "author": "AgentNode Team",
+  "license": "commercial",
+  "homepage": "https://agentnode.io/skills/docx",
+  "documentation": "https://docs.agentnode.io/skills/docx",
+  "repository": "https://github.com/agentnode/skills/docx",
+  "tags": [
+    "document",
+    "word",
+    "docx",
+    "automation",
+    "office",
+    "microsoft",
+    "enterprise",
+    "legal",
+    "reporting"
+  ],
+  "pricing": {
+    "model": "per_use",
+    "currency": "USD",
+    "tiers": [
+      {
+        "name": "document_create",
+        "description": "Create new document from scratch",
+        "amount": 0.05
+      },
+      {
+        "name": "document_edit",
+        "description": "Edit existing document",
+        "amount": 0.03
+      },
+      {
+        "name": "text_extract",
+        "description": "Extract text from document",
+        "amount": 0.01
+      },
+      {
+        "name": "document_merge",
+        "description": "Merge multiple documents",
+        "amount": 0.08
+      },
+      {
+        "name": "template_apply",
+        "description": "Apply template to document",
+        "amount": 0.02
+      },
+      {
+        "name": "tracked_changes",
+        "description": "Process tracked changes",
+        "amount": 0.04
+      },
+      {
+        "name": "format_conversion",
+        "description": "Convert document format",
+        "amount": 0.03
+      }
+    ],
+    "bulk_discount": {
+      "1000": 0.10,
+      "10000": 0.20,
+      "100000": 0.30
+    }
+  },
+  "subscription_options": [
+    {
+      "name": "starter",
+      "monthly_price": 29,
+      "included_operations": 500,
+      "overage_rate": 0.04
+    },
+    {
+      "name": "professional",
+      "monthly_price": 99,
+      "included_operations": 2500,
+      "overage_rate": 0.03
+    },
+    {
+      "name": "enterprise",
+      "monthly_price": 299,
+      "included_operations": 10000,
+      "overage_rate": 0.02
+    }
+  ],
+  "rate_limits": {
+    "free_tier": {
+      "requests_per_minute": 10,
+      "requests_per_hour": 100,
+      "requests_per_day": 500
+    },
+    "starter": {
+      "requests_per_minute": 30,
+      "requests_per_hour": 500,
+      "requests_per_day": 2500
+    },
+    "professional": {
+      "requests_per_minute": 60,
+      "requests_per_hour": 1500,
+      "requests_per_day": 10000
+    },
+    "enterprise": {
+      "requests_per_minute": 120,
+      "requests_per_hour": 5000,
+      "requests_per_day": 50000
+    }
+  },
+  "auth_required": true,
+  "auth_methods": [
+    "api_key",
+    "oauth2",
+    "jwt"
+  ],
+  "input_formats": [
+    ".docx",
+    ".doc",
+    ".dotx",
+    ".dotm",
+    ".docm"
+  ],
+  "output_formats": [
+    ".docx",
+    ".pdf",
+    ".html",
+    ".txt",
+    ".odt",
+    ".rtf"
+  ],
+  "file_limits": {
+    "max_file_size_mb": 100,
+    "max_pages": 10000,
+    "max_paragraphs": 100000,
+    "max_images_per_document": 500,
+    "max_batch_size": 100
+  },
+  "performance": {
+    "avg_create_time_ms": 3000,
+    "avg_edit_time_ms": 1500,
+    "avg_extract_time_ms": 500,
+    "avg_merge_time_ms": 5000,
+    "concurrent_requests": 50
+  },
+  "integrations": [
+    {
+      "name": "google_drive",
+      "type": "storage",
+      "actions": ["import", "export", "auto_sync"]
+    },
+    {
+      "name": "microsoft_onedrive",
+      "type": "storage",
+      "actions": ["import", "export", "auto_sync"]
+    },
+    {
+      "name": "dropbox",
+      "type": "storage",
+      "actions": ["import", "export"]
+    },
+    {
+      "name": "aws_s3",
+      "type": "storage",
+      "actions": ["import", "export"]
+    },
+    {
+      "name": "azure_blob",
+      "type": "storage",
+      "actions": ["import", "export"]
+    },
+    {
+      "name": "webhook",
+      "type": "notification",
+      "actions": ["completion", "error", "progress"]
+    }
+  ],
+  "compliance": [
+    "SOC2_TYPE_II",
+    "GDPR",
+    "HIPAA_BAA",
+    "CCPA"
+  ],
+  "data_retention": {
+    "default_days": 7,
+    "max_days": 90,
+    "encryption": "AES-256",
+    "transit_encryption": "TLS_1.3"
+  },
+  "support": {
+    "documentation": "https://docs.agentnode.io/skills/docx",
+    "community": "https://community.agentnode.io",
+    "email": "support@agentnode.io",
+    "enterprise_support": "enterprise@agentnode.io",
+    "sla": {
+      "professional": "48h_response",
+      "enterprise": "4h_response"
+    }
+  },
+  "status": "active",
+  "visibility": "public",
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-15T00:00:00Z"
+}

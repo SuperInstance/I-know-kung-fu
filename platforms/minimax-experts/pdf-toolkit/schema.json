@@ -1,0 +1,121 @@
+{
+  "name": "pdf-toolkit",
+  "version": "1.0.0",
+  "description": "Comprehensive PDF manipulation toolkit for creation, editing, forms, and extraction",
+  "category": "productivity",
+  "author": "SuperInstance",
+  "tags": ["pdf", "documents", "forms", "extraction", "automation"],
+  "rank": 2,
+  "monetization_potential": "highest",
+
+  "inputs": {
+    "type": "object",
+    "properties": {
+      "action": {
+        "type": "string",
+        "enum": ["create", "merge", "split", "extract_text", "extract_tables", "fill_form", "add_watermark", "add_password", "remove_password", "rotate", "ocr", "compress", "convert_to_pdf", "convert_from_pdf"]
+      },
+      "files": {
+        "type": "array",
+        "items": { "type": "string", "format": "binary" },
+        "description": "PDF files to process"
+      },
+      "form_data": {
+        "type": "object",
+        "description": "Data to fill into PDF form fields"
+      },
+      "options": {
+        "type": "object",
+        "properties": {
+          "pages": { "type": "string", "description": "Page range for split/extract (e.g., '1-5, 8, 10-12')" },
+          "watermark_text": { "type": "string" },
+          "password": { "type": "string" },
+          "output_format": { "type": "string", "enum": ["pdf", "docx", "txt", "csv", "xlsx", "png", "jpg"] },
+          "quality": { "type": "string", "enum": ["low", "medium", "high"], "default": "high" }
+        }
+      }
+    },
+    "required": ["action"]
+  },
+
+  "outputs": {
+    "type": "object",
+    "properties": {
+      "file": { "type": "string", "format": "binary" },
+      "download_url": { "type": "string", "format": "uri" },
+      "extracted_text": { "type": "string" },
+      "extracted_tables": { "type": "array" },
+      "form_data": { "type": "object" },
+      "metadata": {
+        "type": "object",
+        "properties": {
+          "pages": { "type": "integer" },
+          "file_size": { "type": "integer" },
+          "title": { "type": "string" },
+          "author": { "type": "string" }
+        }
+      }
+    }
+  },
+
+  "capabilities": [
+    "Create PDFs from various sources",
+    "Merge multiple PDFs into one",
+    "Split PDFs by page ranges",
+    "Extract text from PDFs",
+    "Extract tables as structured data",
+    "Fill PDF forms automatically",
+    "Add watermarks",
+    "Password protect PDFs",
+    "OCR scanned documents",
+    "Compress PDF file size",
+    "Convert to/from PDF"
+  ],
+
+  "pricing": {
+    "model": "tiered",
+    "credits_per_use": {
+      "create": 1,
+      "merge": 1,
+      "split": 1,
+      "extract_text": 1,
+      "extract_tables": 2,
+      "fill_form": 1,
+      "ocr": 3,
+      "compress": 1
+    }
+  },
+
+  "examples": [
+    {
+      "input": {
+        "action": "fill_form",
+        "files": ["tax_form.pdf"],
+        "form_data": {
+          "name": "John Doe",
+          "ssn": "XXX-XX-1234",
+          "address": "123 Main St, City, ST 12345",
+          "income": "75000"
+        }
+      },
+      "output": {
+        "download_url": "https://storage.example.com/filled_form_123.pdf",
+        "metadata": { "pages": 2, "fields_filled": 12 }
+      }
+    },
+    {
+      "input": {
+        "action": "extract_tables",
+        "files": ["financial_report.pdf"],
+        "options": { "output_format": "xlsx" }
+      },
+      "output": {
+        "download_url": "https://storage.example.com/tables_456.xlsx",
+        "extracted_tables": [
+          { "name": "Revenue", "rows": 15, "columns": 5 },
+          { "name": "Expenses", "rows": 20, "columns": 4 }
+        ]
+      }
+    }
+  ]
+}

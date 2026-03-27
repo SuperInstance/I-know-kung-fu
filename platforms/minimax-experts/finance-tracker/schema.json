@@ -1,0 +1,257 @@
+{
+  "name": "finance-tracker",
+  "version": "1.0.0",
+  "description": "Financial analysis and market tracking agent for stocks, ETFs, crypto, and portfolio management",
+  "category": "finance",
+  "inputs": {
+    "type": "object",
+    "properties": {
+      "action": {
+        "type": "string",
+        "enum": ["quote", "analyze", "screen", "portfolio", "news", "compare", "calculate", "alert"],
+        "description": "The primary financial operation to perform"
+      },
+      "symbols": {
+        "type": "array",
+        "items": { "type": "string" },
+        "description": "Stock tickers or financial instrument symbols"
+      },
+      "quote_config": {
+        "type": "object",
+        "properties": {
+          "include_extended_hours": {
+            "type": "boolean",
+            "default": false
+          },
+          "include_fundamentals": {
+            "type": "boolean",
+            "default": true
+          }
+        }
+      },
+      "analysis_config": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["technical", "fundamental", "sentiment", "comprehensive"]
+          },
+          "indicators": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Technical indicators to include (RSI, MACD, etc.)"
+          },
+          "period": {
+            "type": "string",
+            "enum": ["1d", "1w", "1m", "3m", "6m", "1y", "5y"],
+            "default": "1m"
+          }
+        }
+      },
+      "screen_config": {
+        "type": "object",
+        "properties": {
+          "criteria": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "metric": { "type": "string" },
+                "operator": { "type": "string", "enum": [">", "<", "=", ">=", "<=", "between"] },
+                "value": { "type": "number" }
+              }
+            }
+          },
+          "universe": {
+            "type": "string",
+            "enum": ["sp500", "nasdaq100", "russell2000", "all_us", "sectors"],
+            "default": "all_us"
+          },
+          "limit": {
+            "type": "integer",
+            "default": 20
+          }
+        }
+      },
+      "portfolio_config": {
+        "type": "object",
+        "properties": {
+          "holdings": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "symbol": { "type": "string" },
+                "shares": { "type": "number" },
+                "purchase_price": { "type": "number" },
+                "purchase_date": { "type": "string" }
+              }
+            }
+          },
+          "analysis_type": {
+            "type": "string",
+            "enum": ["performance", "risk", "diversification", "attribution"]
+          }
+        }
+      },
+      "compare_config": {
+        "type": "object",
+        "properties": {
+          "metrics": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "benchmark": {
+            "type": "string",
+            "description": "Benchmark symbol for comparison (e.g., SPY)"
+          }
+        }
+      },
+      "calculation_config": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["returns", "compound_interest", "position_size", "risk_metrics", "retirement"]
+          },
+          "parameters": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "required": ["action"]
+  },
+  "outputs": {
+    "type": "object",
+    "properties": {
+      "success": {
+        "type": "boolean"
+      },
+      "result": {
+        "type": "object",
+        "properties": {
+          "quotes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "symbol": { "type": "string" },
+                "price": { "type": "number" },
+                "change": { "type": "number" },
+                "change_percent": { "type": "number" },
+                "volume": { "type": "number" }
+              }
+            }
+          },
+          "analysis": {
+            "type": "object",
+            "properties": {
+              "technical": { "type": "object" },
+              "fundamental": { "type": "object" },
+              "sentiment": { "type": "object" },
+              "recommendation": { "type": "string" }
+            }
+          },
+          "screen_results": {
+            "type": "array",
+            "items": { "type": "object" }
+          },
+          "portfolio_analysis": {
+            "type": "object",
+            "properties": {
+              "total_value": { "type": "number" },
+              "total_return": { "type": "number" },
+              "holdings_analysis": { "type": "array" }
+            }
+          },
+          "comparison": {
+            "type": "object"
+          },
+          "news": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "title": { "type": "string" },
+                "source": { "type": "string" },
+                "date": { "type": "string" },
+                "sentiment": { "type": "string" }
+              }
+            }
+          }
+        }
+      },
+      "errors": {
+        "type": "array"
+      }
+    }
+  },
+  "capabilities": [
+    "Get real-time stock quotes and prices",
+    "Perform technical analysis with indicators",
+    "Analyze fundamental company metrics",
+    "Screen stocks based on criteria",
+    "Track and analyze portfolio performance",
+    "Compare securities and benchmarks",
+    "Retrieve financial news and sentiment",
+    "Calculate investment metrics and projections",
+    "Set up price and alert notifications"
+  ],
+  "limitations": [
+    "Data may be delayed 15 minutes for some exchanges",
+    "Not intended as financial advice",
+    "Historical data limited to 20 years",
+    "Some international markets have limited coverage",
+    "Options and derivatives data limited"
+  ],
+  "examples": [
+    {
+      "input": {
+        "action": "quote",
+        "symbols": ["AAPL", "MSFT", "GOOGL"],
+        "quote_config": {
+          "include_fundamentals": true
+        }
+      },
+      "output": {
+        "success": true,
+        "result": {
+          "quotes": [
+            {
+              "symbol": "AAPL",
+              "price": 178.52,
+              "change": 2.34,
+              "change_percent": 1.33,
+              "volume": 45230000,
+              "pe_ratio": 28.5,
+              "market_cap": 2800000000000
+            }
+          ]
+        }
+      }
+    },
+    {
+      "input": {
+        "action": "screen",
+        "screen_config": {
+          "criteria": [
+            {"metric": "market_cap", "operator": ">", "value": 10000000000},
+            {"metric": "pe_ratio", "operator": "<", "value": 25},
+            {"metric": "dividend_yield", "operator": ">", "value": 2}
+          ],
+          "limit": 10
+        }
+      },
+      "output": {
+        "success": true,
+        "result": {
+          "screen_results": [
+            {"symbol": "JNJ", "name": "Johnson & Johnson", "pe_ratio": 15.2, "dividend_yield": 2.9},
+            {"symbol": "PG", "name": "Procter & Gamble", "pe_ratio": 24.1, "dividend_yield": 2.5}
+          ]
+        }
+      }
+    }
+  ]
+}

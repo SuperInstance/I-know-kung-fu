@@ -1,0 +1,367 @@
+{
+  "name": "tool-guardian",
+  "version": "1.0.0",
+  "description": "Reliable function calling MCP server with validation, retry logic, and circuit breaker patterns for AI agents",
+  "tools": [
+    {
+      "name": "register_tool",
+      "description": "Register a new tool with the guardian. Defines the tool's schema, endpoint, retry behavior, and other configuration options.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Unique tool identifier (alphanumeric, underscores, hyphens)",
+            "pattern": "^[a-zA-Z][a-zA-Z0-9_-]*$"
+          },
+          "description": {
+            "type": "string",
+            "description": "Human-readable description of what the tool does"
+          },
+          "inputSchema": {
+            "type": "object",
+            "description": "JSON Schema defining the tool's parameters"
+          },
+          "endpoint": {
+            "type": "string",
+            "description": "HTTP endpoint URL for the tool"
+          },
+          "method": {
+            "type": "string",
+            "enum": ["GET", "POST", "PUT", "DELETE", "PATCH"],
+            "default": "POST",
+            "description": "HTTP method for the request"
+          },
+          "authentication": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": ["bearer", "api_key", "basic", "oauth2"]
+              },
+              "key": { "type": "string", "description": "API key or token value" },
+              "header": { "type": "string", "description": "Header name for API key" }
+            },
+            "description": "Authentication configuration"
+          },
+          "retry": {
+            "type": "object",
+            "properties": {
+              "maxAttempts": { "type": "integer", "minimum": 1, "maximum": 10, "default": 3 },
+              "backoff": { "type": "string", "enum": ["fixed", "linear", "exponential"], "default": "exponential" },
+              "baseDelay": { "type": "integer", "default": 1000, "description": "Base delay in milliseconds" },
+              "maxDelay": { "type": "integer", "default": 30000 },
+              "jitter": { "type": "boolean", "default": true },
+              "retryableErrors": {
+                "type": "array",
+                "items": { "type": "integer" },
+                "default": [408, 429, 500, 502, 503, 504]
+              }
+            },
+            "description": "Retry configuration"
+          },
+          "rateLimit": {
+            "type": "object",
+            "properties": {
+              "requestsPerSecond": { "type": "number" },
+              "requestsPerMinute": { "type": "integer" },
+              "requestsPerHour": { "type": "integer" },
+              "burstSize": { "type": "integer" }
+            },
+            "description": "Rate limiting configuration"
+          },
+          "timeout": {
+            "type": "integer",
+            "default": 30000,
+            "description": "Request timeout in milliseconds"
+          },
+          "circuitBreaker": {
+            "type": "object",
+            "properties": {
+              "enabled": { "type": "boolean", "default": true },
+              "failureThreshold": { "type": "integer", "default": 5 },
+              "resetTimeout": { "type": "integer", "default": 60000 }
+            }
+          },
+          "validation": {
+            "type": "object",
+            "properties": {
+              "coerceTypes": { "type": "boolean", "default": true },
+              "applyDefaults": { "type": "boolean", "default": true },
+              "strict": { "type": "boolean", "default": false }
+            }
+          }
+        },
+        "required": ["name", "description", "inputSchema", "endpoint"]
+      }
+    },
+    {
+      "name": "unregister_tool",
+      "description": "Remove a registered tool from the guardian.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of the tool to unregister"
+          }
+        },
+        "required": ["name"]
+      }
+    },
+    {
+      "name": "execute_tool",
+      "description": "Execute a registered tool with validation, retry logic, and error handling. Returns the result along with execution metadata.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of the registered tool to execute"
+          },
+          "parameters": {
+            "type": "object",
+            "description": "Parameters to pass to the tool"
+          },
+          "options": {
+            "type": "object",
+            "properties": {
+              "timeout": { "type": "integer", "description": "Override default timeout" },
+              "skipValidation": { "type": "boolean", "description": "Skip parameter validation" },
+              "skipRetry": { "type": "boolean", "description": "Disable retry logic for this call" },
+              "metadata": { "type": "object", "description": "Additional metadata for logging" }
+            }
+          }
+        },
+        "required": ["name"]
+      }
+    },
+    {
+      "name": "validate_parameters",
+      "description": "Validate parameters against a tool's schema without executing. Useful for pre-validation and debugging.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "toolName": {
+            "type": "string",
+            "description": "Name of the tool to validate against"
+          },
+          "parameters": {
+            "type": "object",
+            "description": "Parameters to validate"
+          },
+          "coerce": {
+            "type": "boolean",
+            "default": true,
+            "description": "Attempt automatic type coercion"
+          }
+        },
+        "required": ["toolName", "parameters"]
+      }
+    },
+    {
+      "name": "list_tools",
+      "description": "List all registered tools with their configurations and current status.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "includeSchemas": {
+            "type": "boolean",
+            "default": false,
+            "description": "Include full input schemas"
+          },
+          "filter": {
+            "type": "string",
+            "description": "Filter tools by name pattern"
+          }
+        }
+      }
+    },
+    {
+      "name": "get_tool_status",
+      "description": "Get detailed status for a specific tool including circuit breaker state, rate limit status, and metrics.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Tool name to check"
+          },
+          "includeMetrics": {
+            "type": "boolean",
+            "default": true,
+            "description": "Include execution metrics"
+          }
+        },
+        "required": ["name"]
+      }
+    },
+    {
+      "name": "get_retry_stats",
+      "description": "Get statistics about retry attempts across all tools or for a specific tool.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "toolName": {
+            "type": "string",
+            "description": "Optional specific tool to get stats for"
+          },
+          "period": {
+            "type": "string",
+            "enum": ["1h", "24h", "7d", "30d"],
+            "default": "24h"
+          }
+        }
+      }
+    },
+    {
+      "name": "reset_circuit_breaker",
+      "description": "Manually reset a circuit breaker to closed state. Use with caution when underlying issues are resolved.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "toolName": {
+            "type": "string",
+            "description": "Tool name to reset circuit breaker for"
+          },
+          "force": {
+            "type": "boolean",
+            "default": false,
+            "description": "Force reset even if failures might persist"
+          }
+        },
+        "required": ["toolName"]
+      }
+    },
+    {
+      "name": "configure_retry",
+      "description": "Update retry configuration for an existing tool.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "toolName": {
+            "type": "string",
+            "description": "Tool to update"
+          },
+          "config": {
+            "type": "object",
+            "properties": {
+              "maxAttempts": { "type": "integer", "minimum": 1, "maximum": 10 },
+              "backoff": { "type": "string", "enum": ["fixed", "linear", "exponential"] },
+              "baseDelay": { "type": "integer" },
+              "maxDelay": { "type": "integer" },
+              "jitter": { "type": "boolean" },
+              "retryableErrors": {
+                "type": "array",
+                "items": { "type": "integer" }
+              }
+            }
+          }
+        },
+        "required": ["toolName", "config"]
+      }
+    },
+    {
+      "name": "configure_rate_limit",
+      "description": "Update rate limiting configuration for an existing tool.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "toolName": {
+            "type": "string",
+            "description": "Tool to update"
+          },
+          "config": {
+            "type": "object",
+            "properties": {
+              "requestsPerSecond": { "type": "number" },
+              "requestsPerMinute": { "type": "integer" },
+              "requestsPerHour": { "type": "integer" },
+              "burstSize": { "type": "integer" }
+            }
+          }
+        },
+        "required": ["toolName", "config"]
+      }
+    }
+  ],
+  "resources": [
+    {
+      "uri": "tool-guardian://tools/registered",
+      "name": "Registered Tools",
+      "description": "List of all registered tools with their configurations",
+      "mimeType": "application/json"
+    },
+    {
+      "uri": "tool-guardian://circuit-breakers/status",
+      "name": "Circuit Breaker Status",
+      "description": "Current state of all circuit breakers",
+      "mimeType": "application/json"
+    },
+    {
+      "uri": "tool-guardian://metrics/summary",
+      "name": "Metrics Summary",
+      "description": "Aggregated execution metrics across all tools",
+      "mimeType": "application/json"
+    },
+    {
+      "uri": "tool-guardian://dead-letter-queue",
+      "name": "Dead Letter Queue",
+      "description": "Failed operations stored for analysis",
+      "mimeType": "application/json"
+    }
+  ],
+  "prompts": [
+    {
+      "name": "debug_tool_failure",
+      "description": "Analyze why a tool execution failed and suggest fixes",
+      "arguments": [
+        {
+          "name": "toolName",
+          "description": "Name of the failing tool",
+          "required": true
+        },
+        {
+          "name": "errorId",
+          "description": "Specific error ID to analyze",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "optimize_retry_config",
+      "description": "Suggest optimal retry configuration based on tool behavior",
+      "arguments": [
+        {
+          "name": "toolName",
+          "description": "Tool to optimize",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "config": {
+    "defaultRetry": {
+      "maxAttempts": 3,
+      "backoff": "exponential",
+      "baseDelay": 1000,
+      "maxDelay": 30000,
+      "jitter": true
+    },
+    "defaultCircuitBreaker": {
+      "enabled": true,
+      "failureThreshold": 5,
+      "resetTimeout": 60000
+    },
+    "defaultTimeout": 30000,
+    "validation": {
+      "coerceTypes": true,
+      "applyDefaults": true,
+      "strict": false
+    },
+    "logging": {
+      "level": "info",
+      "format": "json"
+    }
+  }
+}

@@ -1,0 +1,277 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Research Bot Agent Workflow Schema",
+  "description": "Defines the workflow structure for the Research Bot Agent",
+  "type": "object",
+  "properties": {
+    "workflow_id": {
+      "type": "string",
+      "description": "Unique identifier for the workflow instance"
+    },
+    "version": {
+      "type": "string",
+      "default": "1.0.0"
+    },
+    "input": {
+      "type": "object",
+      "properties": {
+        "research_query": {
+          "type": "string",
+          "description": "The main research question or topic"
+        },
+        "research_type": {
+          "type": "string",
+          "enum": [
+            "literature_review",
+            "market_research",
+            "competitive_analysis",
+            "trend_analysis",
+            "fact_checking",
+            "company_research",
+            "industry_analysis",
+            "custom"
+          ],
+          "description": "Type of research to conduct"
+        },
+        "scope_parameters": {
+          "type": "object",
+          "properties": {
+            "time_range": {
+              "type": "object",
+              "properties": {
+                "start_date": { "type": "string", "format": "date" },
+                "end_date": { "type": "string", "format": "date" }
+              }
+            },
+            "geographic_scope": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Geographic regions to focus on"
+            },
+            "industry_scope": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Industries to focus on"
+            },
+            "language_scope": {
+              "type": "array",
+              "items": { "type": "string" },
+              "default": ["en"],
+              "description": "Languages to include"
+            }
+          }
+        },
+        "source_preferences": {
+          "type": "object",
+          "properties": {
+            "included_sources": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Specific sources to include"
+            },
+            "excluded_sources": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Sources to exclude"
+            },
+            "source_types": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["academic", "news", "government", "industry", "company", "social", "web"]
+              },
+              "description": "Types of sources to search"
+            },
+            "credibility_threshold": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "default": 0.5,
+              "description": "Minimum credibility score for sources"
+            }
+          }
+        },
+        "output_requirements": {
+          "type": "object",
+          "properties": {
+            "format": {
+              "type": "string",
+              "enum": ["report", "brief", "presentation", "data_export", "annotated_bibliography"]
+            },
+            "citation_style": {
+              "type": "string",
+              "enum": ["apa", "mla", "chicago", "harvard", "ieee", "custom"]
+            },
+            "max_length": {
+              "type": "integer",
+              "description": "Maximum word count for output"
+            },
+            "include_executive_summary": { "type": "boolean", "default": true },
+            "include_methodology": { "type": "boolean", "default": true },
+            "include_citations": { "type": "boolean", "default": true }
+          }
+        }
+      },
+      "required": ["research_query", "research_type"]
+    },
+    "processing_stages": {
+      "type": "object",
+      "properties": {
+        "query_expansion": {
+          "type": "object",
+          "properties": {
+            "original_query": { "type": "string" },
+            "expanded_queries": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "related_keywords": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "search_strategy": { "type": "string" }
+          }
+        },
+        "source_discovery": {
+          "type": "object",
+          "properties": {
+            "sources_found": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "source_id": { "type": "string" },
+                  "source_name": { "type": "string" },
+                  "source_type": { "type": "string" },
+                  "credibility_score": { "type": "number" },
+                  "relevance_score": { "type": "number" }
+                }
+              }
+            },
+            "total_sources": { "type": "integer" }
+          }
+        },
+        "content_extraction": {
+          "type": "object",
+          "properties": {
+            "documents_processed": { "type": "integer" },
+            "key_facts_extracted": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "fact": { "type": "string" },
+                  "source": { "type": "string" },
+                  "confidence": { "type": "number" }
+                }
+              }
+            },
+            "entities_identified": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "entity": { "type": "string" },
+                  "entity_type": { "type": "string" },
+                  "frequency": { "type": "integer" }
+                }
+              }
+            }
+          }
+        },
+        "synthesis": {
+          "type": "object",
+          "properties": {
+            "key_findings": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "finding": { "type": "string" },
+                  "supporting_sources": { "type": "array", "items": { "type": "string" } },
+                  "confidence_level": { "type": "string" }
+                }
+              }
+            },
+            "themes_identified": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "contradictions_found": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "claim_1": { "type": "string" },
+                  "claim_2": { "type": "string" },
+                  "sources": { "type": "array", "items": { "type": "string" } }
+                }
+              }
+            },
+            "research_gaps": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "output": {
+      "type": "object",
+      "properties": {
+        "executive_summary": {
+          "type": "string",
+          "description": "Brief summary of key findings"
+        },
+        "full_report": {
+          "type": "string",
+          "description": "Complete research report"
+        },
+        "findings": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "finding": { "type": "string" },
+              "evidence": { "type": "string" },
+              "sources": { "type": "array", "items": { "type": "string" } }
+            }
+          }
+        },
+        "bibliography": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "citation": { "type": "string" },
+              "source_type": { "type": "string" },
+              "url": { "type": "string" }
+            }
+          }
+        },
+        "visualizations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "chart_type": { "type": "string" },
+              "title": { "type": "string" },
+              "description": { "type": "string" }
+            }
+          }
+        },
+        "metadata": {
+          "type": "object",
+          "properties": {
+            "sources_analyzed": { "type": "integer" },
+            "processing_time_seconds": { "type": "integer" },
+            "credibility_score": { "type": "number" },
+            "completeness_score": { "type": "number" }
+          }
+        }
+      },
+      "required": ["executive_summary", "findings"]
+    }
+  },
+  "required": ["workflow_id", "input", "output"]
+}

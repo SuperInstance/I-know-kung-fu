@@ -1,0 +1,195 @@
+{
+  "agent_name": "Research Bot Agent",
+  "agent_id": "research-bot-v1",
+  "version": "1.0.0",
+  "description": "AI-powered research automation for comprehensive information gathering and synthesis",
+  "model_selection": {
+    "primary_model": "gpt-4-turbo",
+    "fallback_model": "gpt-4",
+    "embedding_model": "text-embedding-3-large",
+    "model_parameters": {
+      "temperature": 0.2,
+      "max_tokens": 4000,
+      "top_p": 0.95,
+      "frequency_penalty": 0.1,
+      "presence_penalty": 0.1
+    }
+  },
+  "system_prompt": "You are an expert research assistant with advanced training in academic research, market analysis, and investigative methods. Your expertise spans multiple domains including business, technology, science, and social sciences.\n\nResearch Methodology:\n\n1. **Query Analysis**: Break down complex questions into searchable components\n2. **Source Diversity**: Seek information from multiple source types\n3. **Credibility Assessment**: Evaluate source reliability and potential bias\n4. **Evidence Synthesis**: Combine findings into coherent conclusions\n5. **Citation Rigor**: Always attribute information to sources\n\nResearch Standards:\n- Prioritize peer-reviewed sources for academic research\n- Use primary sources when available\n- Cross-reference claims across multiple sources\n- Acknowledge uncertainty and conflicting evidence\n- Identify limitations in available research\n\nQuality Criteria:\n- Accuracy over speed\n- Comprehensiveness over brevity\n- Objectivity over advocacy\n- Transparency about sources and methods\n\nOutput Standards:\n- Clear executive summaries\n- Well-organized findings\n- Proper citations in requested format\n- Identification of research gaps\n- Confidence levels for conclusions\n\nCommunication Style:\n- Professional and objective\n- Structured and scannable\n- Evidence-based assertions\n- Clear attribution of sources\n- Acknowledgment of limitations\n\nSpecial Instructions:\n- Flag any potential conflicts of interest in sources\n- Note when evidence is limited or contradictory\n- Suggest areas for further research\n- Maintain research integrity at all times",
+  "workflow_nodes": [
+    {
+      "node_id": "input_node",
+      "node_type": "trigger",
+      "label": "Research Request",
+      "description": "Entry point for research queries"
+    },
+    {
+      "node_id": "query_expansion_node",
+      "node_type": "llm_generation",
+      "label": "Query Expansion",
+      "description": "Expand and refine research query"
+    },
+    {
+      "node_id": "source_selection_node",
+      "node_type": "decision",
+      "label": "Source Selection",
+      "description": "Identify appropriate sources"
+    },
+    {
+      "node_id": "parallel_search_node",
+      "node_type": "parallel",
+      "label": "Multi-Source Search",
+      "description": "Execute parallel searches"
+    },
+    {
+      "node_id": "content_extraction_node",
+      "node_type": "extraction",
+      "label": "Content Extraction",
+      "description": "Extract relevant content from sources"
+    },
+    {
+      "node_id": "credibility_check_node",
+      "node_type": "validation",
+      "label": "Credibility Assessment",
+      "description": "Evaluate source credibility"
+    },
+    {
+      "node_id": "entity_extraction_node",
+      "node_type": "nlp",
+      "label": "Entity Extraction",
+      "description": "Identify key entities and concepts"
+    },
+    {
+      "node_id": "synthesis_node",
+      "node_type": "llm_generation",
+      "label": "Research Synthesis",
+      "description": "Synthesize findings into report"
+    },
+    {
+      "node_id": "fact_check_node",
+      "node_type": "validation",
+      "label": "Fact Verification",
+      "description": "Verify key claims"
+    },
+    {
+      "node_id": "citation_generation_node",
+      "node_type": "formatting",
+      "label": "Citation Generation",
+      "description": "Generate properly formatted citations"
+    },
+    {
+      "node_id": "report_assembly_node",
+      "node_type": "output",
+      "label": "Report Assembly",
+      "description": "Assemble final research output"
+    }
+  ],
+  "integrations": [
+    {
+      "name": "Google Scholar",
+      "type": "search",
+      "features": ["academic_papers", "citations", "author_profiles"],
+      "access_method": "api"
+    },
+    {
+      "name": "PubMed",
+      "type": "database",
+      "api_endpoint": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/",
+      "features": ["biomedical_literature", "abstracts"],
+      "access_method": "api"
+    },
+    {
+      "name": "SerpApi",
+      "type": "search",
+      "features": ["google_search", "news_search", "scholar_search"],
+      "access_method": "api"
+    },
+    {
+      "name": "NewsAPI",
+      "type": "news",
+      "api_endpoint": "https://newsapi.org/v2/",
+      "features": ["news_articles", "sources", "headlines"],
+      "access_method": "api"
+    },
+    {
+      "name": "Selenium/Playwright",
+      "type": "scraper",
+      "features": ["web_scraping", "javascript_rendering"],
+      "access_method": "internal"
+    },
+    {
+      "name": "Notion",
+      "type": "productivity",
+      "api_endpoint": "https://api.notion.com/v1/",
+      "features": ["documentation", "collaboration"],
+      "access_method": "api"
+    }
+  ],
+  "output_formats": [
+    {
+      "format": "report",
+      "description": "Full research report with all sections",
+      "sections": ["executive_summary", "methodology", "findings", "analysis", "conclusions", "bibliography"]
+    },
+    {
+      "format": "brief",
+      "description": "Concise research brief",
+      "max_length": 1000
+    },
+    {
+      "format": "annotated_bibliography",
+      "description": "Annotated list of sources with summaries"
+    },
+    {
+      "format": "presentation",
+      "description": "Slide-ready research summary"
+    },
+    {
+      "format": "data_export",
+      "description": "Structured data export (JSON/CSV)"
+    }
+  ],
+  "pricing_model": {
+    "type": "tiered",
+    "tiers": [
+      {
+        "name": "Researcher",
+        "monthly_price": 79,
+        "included_queries": 100,
+        "overage_price": 1.00,
+        "features": ["Web search", "News sources", "Basic synthesis", "PDF export"]
+      },
+      {
+        "name": "Analyst",
+        "monthly_price": 199,
+        "included_queries": 500,
+        "overage_price": 0.50,
+        "features": ["All Researcher features", "Academic databases", "Advanced synthesis", "Citation management", "API access"]
+      },
+      {
+        "name": "Enterprise",
+        "monthly_price": 499,
+        "included_queries": 2500,
+        "overage_price": 0.25,
+        "features": ["All Analyst features", "Premium databases", "Custom sources", "Team collaboration", "White-label reports", "Dedicated support"]
+      }
+    ],
+    "annual_discount": 0.20,
+    "setup_fee": {
+      "Researcher": 0,
+      "Analyst": 99,
+      "Enterprise": 499
+    }
+  },
+  "rate_limits": {
+    "queries_per_minute": 10,
+    "sources_per_query": 100,
+    "concurrent_research_jobs": 5
+  },
+  "security": {
+    "data_encryption": "AES-256",
+    "transit_encryption": "TLS 1.3",
+    "data_retention_days": 90,
+    "audit_logging": true
+  }
+}

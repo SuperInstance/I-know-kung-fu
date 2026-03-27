@@ -1,0 +1,219 @@
+{
+  "name": "vector-search-server",
+  "version": "1.0.0",
+  "description": "WebGPU-accelerated semantic search MCP server for AI agents",
+  "tools": [
+    {
+      "name": "create_index",
+      "description": "Create a new vector index with specified configuration",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Unique index name"
+          },
+          "dimension": {
+            "type": "integer",
+            "minimum": 64,
+            "maximum": 4096,
+            "description": "Vector dimension"
+          },
+          "metric": {
+            "type": "string",
+            "enum": ["cosine", "euclidean", "dot"],
+            "default": "cosine"
+          },
+          "indexType": {
+            "type": "string",
+            "enum": ["hnsw", "ivf", "flat"],
+            "default": "hnsw"
+          },
+          "config": {
+            "type": "object",
+            "properties": {
+              "m": { "type": "integer", "default": 16 },
+              "efConstruction": { "type": "integer", "default": 200 },
+              "efSearch": { "type": "integer", "default": 50 }
+            }
+          }
+        },
+        "required": ["name", "dimension"]
+      }
+    },
+    {
+      "name": "delete_index",
+      "description": "Delete a vector index and all its data",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" }
+        },
+        "required": ["name"]
+      }
+    },
+    {
+      "name": "add_vectors",
+      "description": "Add documents with vectors to an index. Automatically generates embeddings from text.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "index": { "type": "string" },
+          "documents": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": { "type": "string" },
+                "text": { "type": "string" },
+                "vector": { "type": "array", "items": { "type": "number" } },
+                "metadata": { "type": "object" }
+              }
+            }
+          },
+          "generateEmbeddings": {
+            "type": "boolean",
+            "default": true
+          }
+        },
+        "required": ["index", "documents"]
+      }
+    },
+    {
+      "name": "search",
+      "description": "Search for similar vectors in an index",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "index": { "type": "string" },
+          "query": { "type": "string", "description": "Text query to search" },
+          "queryVector": { "type": "array", "items": { "type": "number" } },
+          "topK": { "type": "integer", "default": 10 },
+          "filter": { "type": "object" },
+          "includeMetadata": { "type": "boolean", "default": true },
+          "includeVectors": { "type": "boolean", "default": false }
+        },
+        "required": ["index"]
+      }
+    },
+    {
+      "name": "hybrid_search",
+      "description": "Combine vector search with keyword matching for better results",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "index": { "type": "string" },
+          "query": { "type": "string" },
+          "topK": { "type": "integer", "default": 10 },
+          "vectorWeight": { "type": "number", "default": 0.7 },
+          "keywordWeight": { "type": "number", "default": 0.3 },
+          "filter": { "type": "object" }
+        },
+        "required": ["index", "query"]
+      }
+    },
+    {
+      "name": "delete_vectors",
+      "description": "Remove vectors from an index by ID",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "index": { "type": "string" },
+          "ids": { "type": "array", "items": { "type": "string" } }
+        },
+        "required": ["index", "ids"]
+      }
+    },
+    {
+      "name": "get_index_stats",
+      "description": "Get statistics about an index",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" }
+        },
+        "required": ["name"]
+      }
+    },
+    {
+      "name": "list_indices",
+      "description": "List all vector indices",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      }
+    },
+    {
+      "name": "generate_embeddings",
+      "description": "Generate embeddings for text without storing",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "texts": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "model": { "type": "string" }
+        },
+        "required": ["texts"]
+      }
+    },
+    {
+      "name": "batch_search",
+      "description": "Perform multiple searches in a single request",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "index": { "type": "string" },
+          "queries": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "topK": { "type": "integer", "default": 10 }
+        },
+        "required": ["index", "queries"]
+      }
+    }
+  ],
+  "resources": [
+    {
+      "uri": "vector-search://indices",
+      "name": "Vector Indices",
+      "description": "List of all vector indices and their status",
+      "mimeType": "application/json"
+    },
+    {
+      "uri": "vector-search://stats/performance",
+      "name": "Performance Statistics",
+      "description": "Search performance metrics",
+      "mimeType": "application/json"
+    }
+  ],
+  "prompts": [
+    {
+      "name": "optimize_index",
+      "description": "Analyze index usage and suggest optimizations",
+      "arguments": [
+        {
+          "name": "indexName",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "config": {
+    "webgpu": {
+      "enabled": true,
+      "fallbackToCpu": true
+    },
+    "embedding": {
+      "defaultModel": "text-embedding-3-small",
+      "batchSize": 100
+    },
+    "index": {
+      "defaultMetric": "cosine",
+      "defaultType": "hnsw",
+      "autoSave": true
+    }
+  }
+}

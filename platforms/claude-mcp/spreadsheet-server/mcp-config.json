@@ -1,0 +1,157 @@
+{
+  "name": "spreadsheet-server",
+  "version": "1.0.0",
+  "description": "Comprehensive spreadsheet operations MCP server supporting XLSX, CSV, and Google Sheets with formula preservation and data analysis",
+  "tools": [
+    {
+      "name": "read_spreadsheet",
+      "description": "Read data from a spreadsheet file",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": { "type": "string" },
+          "sheet": { "type": "string", "description": "Sheet name or index" },
+          "range": { "type": "string", "description": "Cell range (e.g., 'A1:D10')" },
+          "options": {
+            "type": "object",
+            "properties": {
+              "includeFormulas": { "type": "boolean", "default": true },
+              "includeFormatting": { "type": "boolean", "default": false },
+              "headerRow": { "type": "integer", "default": 1 }
+            }
+          }
+        },
+        "required": ["path"]
+      }
+    },
+    {
+      "name": "create_spreadsheet",
+      "description": "Create a new spreadsheet file",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": { "type": "string" },
+          "format": { "type": "string", "enum": ["xlsx", "csv", "ods"] },
+          "sheets": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": { "type": "string" },
+                "data": { "type": "array" }
+              }
+            }
+          }
+        },
+        "required": ["path", "format"]
+      }
+    },
+    {
+      "name": "write_cells",
+      "description": "Write data to specific cells in a spreadsheet",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": { "type": "string" },
+          "sheet": { "type": "string" },
+          "range": { "type": "string" },
+          "data": { "type": "array" },
+          "options": {
+            "type": "object",
+            "properties": {
+              "preserveFormulas": { "type": "boolean", "default": true }
+            }
+          }
+        },
+        "required": ["path", "sheet", "range", "data"]
+      }
+    },
+    {
+      "name": "analyze_data",
+      "description": "Perform data analysis on spreadsheet data",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": { "type": "string" },
+          "sheet": { "type": "string" },
+          "analysis": {
+            "type": "string",
+            "enum": ["stats", "pivot", "filter", "sort", "correlation"]
+          },
+          "options": {
+            "type": "object",
+            "properties": {
+              "columns": { "type": "array", "items": { "type": "string" } },
+              "groupBy": { "type": "string" },
+              "aggregation": { "type": "string" }
+            }
+          }
+        },
+        "required": ["path", "analysis"]
+      }
+    },
+    {
+      "name": "convert_spreadsheet",
+      "description": "Convert spreadsheet to different format",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "inputPath": { "type": "string" },
+          "outputPath": { "type": "string" },
+          "outputFormat": { "type": "string", "enum": ["xlsx", "csv", "json", "html"] }
+        },
+        "required": ["inputPath", "outputPath", "outputFormat"]
+      }
+    },
+    {
+      "name": "get_sheet_names",
+      "description": "Get list of sheet names in a spreadsheet",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": { "type": "string" }
+        },
+        "required": ["path"]
+      }
+    },
+    {
+      "name": "add_sheet",
+      "description": "Add a new sheet to an existing spreadsheet",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": { "type": "string" },
+          "name": { "type": "string" },
+          "data": { "type": "array" }
+        },
+        "required": ["path", "name"]
+      }
+    },
+    {
+      "name": "apply_formula",
+      "description": "Apply a formula to cells",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": { "type": "string" },
+          "sheet": { "type": "string" },
+          "cell": { "type": "string" },
+          "formula": { "type": "string" }
+        },
+        "required": ["path", "sheet", "cell", "formula"]
+      }
+    }
+  ],
+  "resources": [
+    {
+      "uri": "spreadsheet-server://templates",
+      "name": "Spreadsheet Templates",
+      "mimeType": "application/json"
+    }
+  ],
+  "config": {
+    "maxFileSize": 100000000,
+    "maxRows": 1000000,
+    "cacheEnabled": true
+  }
+}

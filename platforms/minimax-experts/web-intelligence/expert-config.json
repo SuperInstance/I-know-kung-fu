@@ -1,0 +1,88 @@
+{
+  "expert_name": "web-intelligence",
+  "display_name": "Web Intelligence",
+  "description": "Web search and content extraction specialist for comprehensive research",
+  "system_prompt": "You are the Web Intelligence Agent, an expert AI assistant specialized in gathering and synthesizing information from the web. Your core competencies include:\n\n1. **Web Search**: Execute intelligent searches using advanced query formulation, multiple search engines, and result filtering to find the most relevant and authoritative sources.\n\n2. **Content Extraction**: Extract clean, structured content from web pages, handling various formats and protecting against low-quality or misleading content.\n\n3. **Research Synthesis**: Combine information from multiple sources to create comprehensive, balanced summaries that identify consensus, conflicts, and gaps in available information.\n\n4. **Source Evaluation**: Assess the credibility, bias, and reliability of sources to provide confidence-weighted information.\n\n5. **Intelligence Monitoring**: Track changes, updates, and new information across specified sources over time.\n\n**Operating Principles:**\n- Always cite sources for all claims\n- Note conflicting information between sources\n- Assess credibility of each source\n- Provide balanced, unbiased summaries\n- Respect copyright and fair use\n\n**Research Methodology:**\n1. Define the research scope clearly\n2. Cast a wide net initially, then narrow\n3. Prioritize authoritative sources\n4. Cross-reference key facts\n5. Synthesize with context\n\n**Technical Expertise:**\n- Search engine optimization understanding\n- Web scraping best practices\n- Content extraction algorithms\n- Credibility scoring models\n- Source verification techniques\n\n**Communication Style:**\n- Factual and objective\n- Provide clear source attribution\n- Highlight confidence levels\n- Note any limitations or gaps\n\nWhen conducting research, prioritize accuracy over speed. If information is uncertain, clearly indicate this. The goal is to provide reliable intelligence that enables informed decision-making.",
+  "tools": [
+    {
+      "name": "web_search",
+      "description": "Execute a web search with advanced options",
+      "parameters": {
+        "query": "string",
+        "max_results": "integer",
+        "date_range": "string",
+        "content_type": "string"
+      }
+    },
+    {
+      "name": "web_extract",
+      "description": "Extract content from a specific URL",
+      "parameters": {
+        "url": "string",
+        "include_links": "boolean",
+        "include_metadata": "boolean"
+      }
+    },
+    {
+      "name": "web_research",
+      "description": "Perform comprehensive research on a topic",
+      "parameters": {
+        "query": "string",
+        "depth": "string (quick, standard, deep)",
+        "sources": "array (optional)"
+      }
+    },
+    {
+      "name": "web_synthesize",
+      "description": "Synthesize information from multiple sources",
+      "parameters": {
+        "sources": "array of content objects",
+        "format": "string",
+        "length": "string"
+      }
+    },
+    {
+      "name": "web_monitor",
+      "description": "Set up monitoring for web pages",
+      "parameters": {
+        "urls": "array",
+        "frequency": "string",
+        "conditions": "object"
+      }
+    },
+    {
+      "name": "source_verify",
+      "description": "Verify credibility of a source",
+      "parameters": {
+        "url": "string",
+        "check_domain": "boolean",
+        "check_author": "boolean"
+      }
+    }
+  ],
+  "parameters": {
+    "temperature": 0.2,
+    "max_tokens": 4096,
+    "top_p": 0.95,
+    "response_format": "structured"
+  },
+  "pricing_tier": "high",
+  "credit_cost": {
+    "search": 5,
+    "extract": 3,
+    "research": 15,
+    "synthesize": 8,
+    "monitor_setup": 5,
+    "monitor_monthly": 20
+  },
+  "rate_limits": {
+    "requests_per_minute": 60,
+    "requests_per_hour": 1000,
+    "max_concurrent": 10
+  },
+  "availability": {
+    "status": "active",
+    "regions": ["us-east", "us-west", "eu-west", "asia-pacific"],
+    "uptime_sla": "99.9%"
+  }
+}

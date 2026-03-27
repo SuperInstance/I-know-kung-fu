@@ -1,0 +1,357 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Web Reader Skill API",
+    "description": "Web content extraction API for retrieving and parsing web page content",
+    "version": "1.0.0",
+    "contact": {
+      "name": "AgentNode Support",
+      "email": "support@agentnode.io",
+      "url": "https://agentnode.io"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://api.agentnode.io/v1/skills/web-reader",
+      "description": "Production server"
+    }
+  ],
+  "security": [
+    {
+      "ApiKeyAuth": []
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key"
+      }
+    },
+    "schemas": {
+      "Error": {
+        "type": "object",
+        "properties": {
+          "code": {"type": "string"},
+          "message": {"type": "string"},
+          "details": {"type": "object"}
+        }
+      }
+    }
+  },
+  "endpoints": [
+    {
+      "path": "/extract",
+      "method": "POST",
+      "summary": "Extract content from URL",
+      "description": "Extract main content, metadata, and media from a web page",
+      "tags": ["Content Extraction"],
+      "pricing": 0.005,
+      "parameters": [
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "url": {
+                "type": "string",
+                "format": "uri"
+              },
+              "options": {
+                "type": "object",
+                "properties": {
+                  "include_images": {"type": "boolean", "default": true},
+                  "include_links": {"type": "boolean", "default": true},
+                  "include_metadata": {"type": "boolean", "default": true},
+                  "render_javascript": {"type": "boolean", "default": false},
+                  "output_format": {"type": "string", "enum": ["text", "markdown", "html", "json"]}
+                }
+              }
+            },
+            "required": ["url"]
+          }
+        }
+      ],
+      "response": {
+        "success": {
+          "url": "https://example.com/article",
+          "title": "Article Title",
+          "content": "Extracted article content in markdown...",
+          "author": "Author Name",
+          "published_date": "2024-12-15T10:00:00Z",
+          "metadata": {
+            "description": "Article description",
+            "keywords": ["technology", "AI"]
+          },
+          "images": [
+            {"url": "https://example.com/image.jpg", "alt_text": "Image description"}
+          ],
+          "word_count": 1500,
+          "reading_time_minutes": 6,
+          "quality_score": 0.95
+        }
+      }
+    },
+    {
+      "path": "/extract-batch",
+      "method": "POST",
+      "summary": "Extract from multiple URLs",
+      "description": "Batch extraction from multiple URLs",
+      "tags": ["Content Extraction"],
+      "pricing": 0.003,
+      "parameters": [
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "urls": {
+                "type": "array",
+                "items": {"type": "string", "format": "uri"},
+                "minItems": 1,
+                "maxItems": 100
+              },
+              "options": {"type": "object"},
+              "webhook_url": {"type": "string", "format": "uri"}
+            },
+            "required": ["urls"]
+          }
+        }
+      ],
+      "response": {
+        "success": {
+          "batch_id": "batch_abc123",
+          "status": "processing",
+          "total_urls": 50,
+          "webhook_url": "https://your-app.com/webhook"
+        }
+      }
+    },
+    {
+      "path": "/extract-structured",
+      "method": "POST",
+      "summary": "Extract structured data",
+      "description": "Extract structured data from Schema.org and JSON-LD markup",
+      "tags": ["Content Extraction"],
+      "pricing": 0.01,
+      "parameters": [
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "url": {"type": "string", "format": "uri"},
+              "schema_types": {
+                "type": "array",
+                "items": {"type": "string"},
+                "description": "Specific schema types to extract"
+              }
+            },
+            "required": ["url"]
+          }
+        }
+      ],
+      "response": {
+        "success": {
+          "url": "https://example.com/product",
+          "structured_data": [
+            {
+              "@type": "Product",
+              "name": "Product Name",
+              "price": "99.99",
+              "availability": "InStock"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "path": "/sitemap",
+      "method": "POST",
+      "summary": "Parse sitemap",
+      "description": "Extract URLs from a website's sitemap",
+      "tags": ["Site Discovery"],
+      "pricing": 0.02,
+      "parameters": [
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "site_url": {"type": "string", "format": "uri"},
+              "max_urls": {"type": "integer", "default": 1000},
+              "filter_pattern": {"type": "string"}
+            },
+            "required": ["site_url"]
+          }
+        }
+      ],
+      "response": {
+        "success": {
+          "site_url": "https://example.com",
+          "urls_found": 500,
+          "urls": [
+            "https://example.com/page1",
+            "https://example.com/page2"
+          ],
+          "sitemaps_parsed": 2
+        }
+      }
+    },
+    {
+      "path": "/rss",
+      "method": "POST",
+      "summary": "Parse RSS feed",
+      "description": "Extract content from RSS/Atom feeds",
+      "tags": ["Feed Parsing"],
+      "pricing": 0.01,
+      "parameters": [
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "feed_url": {"type": "string", "format": "uri"},
+              "max_items": {"type": "integer", "default": 100},
+              "include_content": {"type": "boolean", "default": false}
+            },
+            "required": ["feed_url"]
+          }
+        }
+      ],
+      "response": {
+        "success": {
+          "feed_title": "Feed Name",
+          "feed_url": "https://example.com/feed",
+          "items": [
+            {
+              "title": "Article Title",
+              "link": "https://example.com/article",
+              "published": "2024-12-15T10:00:00Z",
+              "author": "Author",
+              "content": "Article content..."
+            }
+          ],
+          "total_items": 25
+        }
+      }
+    },
+    {
+      "path": "/metadata",
+      "method": "POST",
+      "summary": "Extract metadata only",
+      "description": "Extract page metadata without full content",
+      "tags": ["Content Extraction"],
+      "pricing": 0.002,
+      "parameters": [
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "url": {"type": "string", "format": "uri"}
+            },
+            "required": ["url"]
+          }
+        }
+      ],
+      "response": {
+        "success": {
+          "url": "https://example.com",
+          "title": "Page Title",
+          "description": "Meta description",
+          "og_title": "Open Graph Title",
+          "og_image": "https://example.com/og-image.jpg",
+          "canonical_url": "https://example.com/page",
+          "favicon": "https://example.com/favicon.ico"
+        }
+      }
+    },
+    {
+      "path": "/screenshot",
+      "method": "POST",
+      "summary": "Capture screenshot",
+      "description": "Capture a screenshot of the web page",
+      "tags": ["Visual"],
+      "pricing": 0.02,
+      "parameters": [
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "url": {"type": "string", "format": "uri"},
+              "viewport_width": {"type": "integer", "default": 1280},
+              "viewport_height": {"type": "integer", "default": 800},
+              "full_page": {"type": "boolean", "default": false},
+              "format": {"type": "string", "enum": ["png", "jpg"], "default": "png"}
+            },
+            "required": ["url"]
+          }
+        }
+      ],
+      "response": {
+        "success": {
+          "url": "https://example.com",
+          "screenshot_url": "https://storage.agentnode.io/screenshots/screenshot.png",
+          "width": 1280,
+          "height": 800,
+          "format": "png"
+        }
+      }
+    }
+  ],
+  "webhooks": {
+    "events": [
+      {
+        "name": "extract.complete",
+        "description": "Fired when extraction completes"
+      },
+      {
+        "name": "batch.complete",
+        "description": "Fired when batch extraction completes"
+      },
+      {
+        "name": "extract.error",
+        "description": "Fired when extraction fails"
+      }
+    ]
+  },
+  "errors": [
+    {
+      "code": "URL_NOT_ACCESSIBLE",
+      "http_status": 400,
+      "message": "The URL is not accessible"
+    },
+    {
+      "code": "TIMEOUT",
+      "http_status": 408,
+      "message": "Request timed out"
+    },
+    {
+      "code": "BLOCKED",
+      "http_status": 403,
+      "message": "Access blocked by website"
+    },
+    {
+      "code": "INVALID_URL",
+      "http_status": 400,
+      "message": "Invalid URL format"
+    }
+  ]
+}

@@ -1,0 +1,116 @@
+{
+  "expert_name": "pdf-toolkit",
+  "display_name": "PDF Toolkit",
+  "description": "Comprehensive PDF manipulation specialist for all document processing needs",
+  "system_prompt": "You are the PDF Toolkit Agent, an expert AI assistant specialized in PDF document processing. Your core competencies include:\n\n1. **Text Extraction**: Extract text content from PDFs while preserving structure, handling multi-column layouts, and supporting various encoding formats.\n\n2. **Table Extraction**: Identify and extract tabular data from PDFs, converting to structured formats like CSV, Excel, or JSON with high accuracy.\n\n3. **PDF Creation**: Generate new PDF documents from various sources including text, images, HTML, and structured data.\n\n4. **Document Assembly**: Merge multiple PDFs, split documents by page ranges, and reorganize page order as needed.\n\n5. **Form Processing**: Fill PDF form fields, extract form data, and flatten forms for final submission.\n\n6. **Security**: Add password protection, set permissions, and handle encrypted documents securely.\n\n**Operating Principles:**\n- Preserve document integrity and formatting whenever possible\n- Handle errors gracefully with clear, actionable messages\n- Provide progress updates for long-running operations\n- Support batch processing for efficiency\n- Maintain security and confidentiality of document contents\n\n**Technical Expertise:**\n- Understanding of PDF structure and internals\n- OCR processing for scanned documents\n- Table detection algorithms\n- Form field type handling\n- Encryption and security standards\n\n**Communication Style:**\n- Clear and professional\n- Provide specific details about operations performed\n- Offer suggestions for optimal output formats\n- Explain technical limitations when encountered\n\nWhen processing PDFs, always consider the user's end goal and provide the most efficient path to achieve it. If a request could benefit from additional options, proactively suggest them.",
+  "tools": [
+    {
+      "name": "pdf_extract_text",
+      "description": "Extract all text content from a PDF document",
+      "parameters": {
+        "source": "string (file path or URL)",
+        "pages": "string (optional page range)",
+        "preserve_formatting": "boolean"
+      }
+    },
+    {
+      "name": "pdf_extract_tables",
+      "description": "Extract tables from PDF to structured format",
+      "parameters": {
+        "source": "string",
+        "output_format": "string (csv, xlsx, json)",
+        "table_detection": "string (auto, lattice, stream)"
+      }
+    },
+    {
+      "name": "pdf_create",
+      "description": "Create a new PDF document",
+      "parameters": {
+        "content": "array",
+        "page_size": "string",
+        "margins": "object"
+      }
+    },
+    {
+      "name": "pdf_merge",
+      "description": "Combine multiple PDFs into one",
+      "parameters": {
+        "sources": "array of file paths",
+        "output_name": "string"
+      }
+    },
+    {
+      "name": "pdf_split",
+      "description": "Split PDF into multiple documents",
+      "parameters": {
+        "source": "string",
+        "split_by": "string (pages, size, bookmarks)",
+        "ranges": "array"
+      }
+    },
+    {
+      "name": "pdf_fill_form",
+      "description": "Fill PDF form fields",
+      "parameters": {
+        "source": "string",
+        "form_data": "object",
+        "flatten": "boolean"
+      }
+    },
+    {
+      "name": "pdf_protect",
+      "description": "Add security to PDF",
+      "parameters": {
+        "source": "string",
+        "user_password": "string",
+        "permissions": "array"
+      }
+    },
+    {
+      "name": "pdf_convert",
+      "description": "Convert PDF to other formats",
+      "parameters": {
+        "source": "string",
+        "output_format": "string",
+        "quality": "string"
+      }
+    },
+    {
+      "name": "pdf_ocr",
+      "description": "Perform OCR on scanned PDF",
+      "parameters": {
+        "source": "string",
+        "language": "string",
+        "output_format": "string"
+      }
+    }
+  ],
+  "parameters": {
+    "temperature": 0.2,
+    "max_tokens": 4096,
+    "top_p": 0.95,
+    "response_format": "structured"
+  },
+  "pricing_tier": "premium",
+  "credit_cost": {
+    "extract_text": 8,
+    "extract_tables": 15,
+    "create": 12,
+    "merge": 10,
+    "split": 10,
+    "fill_form": 12,
+    "protect": 8,
+    "convert": 8,
+    "ocr": 20
+  },
+  "rate_limits": {
+    "requests_per_minute": 60,
+    "requests_per_hour": 1000,
+    "max_file_size_mb": 100
+  },
+  "availability": {
+    "status": "active",
+    "regions": ["us-east", "us-west", "eu-west", "asia-pacific"],
+    "uptime_sla": "99.9%"
+  }
+}

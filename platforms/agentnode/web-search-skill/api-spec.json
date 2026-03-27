@@ -1,0 +1,282 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Web Search Skill API",
+    "description": "Real-time web search API for retrieving current information",
+    "version": "1.0.0",
+    "contact": {
+      "name": "AgentNode Support",
+      "email": "support@agentnode.io",
+      "url": "https://agentnode.io"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://api.agentnode.io/v1/skills/web-search",
+      "description": "Production server"
+    }
+  ],
+  "security": [
+    {
+      "ApiKeyAuth": []
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key"
+      }
+    },
+    "schemas": {
+      "Error": {
+        "type": "object",
+        "properties": {
+          "code": {"type": "string"},
+          "message": {"type": "string"},
+          "details": {"type": "object"}
+        }
+      }
+    }
+  },
+  "endpoints": [
+    {
+      "path": "/search",
+      "method": "POST",
+      "summary": "Perform web search",
+      "description": "Search the web and retrieve relevant results",
+      "tags": ["Search"],
+      "pricing": 0.003,
+      "parameters": [
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "query": {"type": "string"},
+              "options": {
+                "type": "object",
+                "properties": {
+                  "num_results": {"type": "integer", "default": 10},
+                  "language": {"type": "string", "default": "en"},
+                  "country": {"type": "string"},
+                  "safe_search": {"type": "string"},
+                  "freshness": {"type": "string"},
+                  "site_filter": {"type": "string"}
+                }
+              }
+            },
+            "required": ["query"]
+          }
+        }
+      ],
+      "response": {
+        "success": {
+          "query": "artificial intelligence news",
+          "results": [
+            {
+              "position": 1,
+              "title": "Latest AI Breakthroughs",
+              "url": "https://example.com/ai-news",
+              "snippet": "Discover the latest breakthroughs in artificial intelligence...",
+              "source": "example.com",
+              "published_date": "2024-12-15T08:00:00Z"
+            }
+          ],
+          "total_results": 1500000,
+          "search_time_ms": 450
+        }
+      }
+    },
+    {
+      "path": "/news",
+      "method": "POST",
+      "summary": "Search news",
+      "description": "Search for recent news articles",
+      "tags": ["Search"],
+      "pricing": 0.004,
+      "parameters": [
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "query": {"type": "string"},
+              "options": {
+                "type": "object",
+                "properties": {
+                  "num_results": {"type": "integer"},
+                  "freshness": {"type": "string", "enum": ["day", "week", "month"]},
+                  "source_filter": {"type": "string"}
+                }
+              }
+            },
+            "required": ["query"]
+          }
+        }
+      ],
+      "response": {
+        "success": {
+          "query": "stock market",
+          "results": [
+            {
+              "position": 1,
+              "title": "Markets Rally on Fed News",
+              "url": "https://news.com/markets",
+              "snippet": "Stock markets rallied today after...",
+              "source": "news.com",
+              "published_date": "2024-12-15T12:00:00Z",
+              "result_type": "news"
+            }
+          ],
+          "search_time_ms": 380
+        }
+      }
+    },
+    {
+      "path": "/images",
+      "method": "POST",
+      "summary": "Search images",
+      "description": "Search for images on the web",
+      "tags": ["Search"],
+      "pricing": 0.005,
+      "parameters": [
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "query": {"type": "string"},
+              "options": {
+                "type": "object",
+                "properties": {
+                  "num_results": {"type": "integer"},
+                  "size": {"type": "string", "enum": ["small", "medium", "large"]},
+                  "color": {"type": "string"},
+                  "type": {"type": "string", "enum": ["photo", "clipart", "lineart"]}
+                }
+              }
+            },
+            "required": ["query"]
+          }
+        }
+      ],
+      "response": {
+        "success": {
+          "query": "sunset beach",
+          "results": [
+            {
+              "position": 1,
+              "title": "Beautiful Sunset Beach",
+              "url": "https://example.com/sunset.jpg",
+              "thumbnail": "https://example.com/sunset-thumb.jpg",
+              "source": "example.com",
+              "width": 1920,
+              "height": 1080
+            }
+          ]
+        }
+      }
+    },
+    {
+      "path": "/batch",
+      "method": "POST",
+      "summary": "Batch search",
+      "description": "Perform multiple searches in one request",
+      "tags": ["Search"],
+      "pricing": 0.002,
+      "parameters": [
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "queries": {
+                "type": "array",
+                "items": {"type": "string"},
+                "maxItems": 25
+              },
+              "options": {"type": "object"}
+            },
+            "required": ["queries"]
+          }
+        }
+      ],
+      "response": {
+        "success": {
+          "results": [
+            {
+              "query": "query 1",
+              "results": []
+            },
+            {
+              "query": "query 2",
+              "results": []
+            }
+          ],
+          "total_queries": 2
+        }
+      }
+    },
+    {
+      "path": "/suggest",
+      "method": "POST",
+      "summary": "Query suggestions",
+      "description": "Get search query suggestions",
+      "tags": ["Suggestions"],
+      "pricing": 0.001,
+      "parameters": [
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "partial_query": {"type": "string"},
+              "max_suggestions": {"type": "integer", "default": 10}
+            },
+            "required": ["partial_query"]
+          }
+        }
+      ],
+      "response": {
+        "success": {
+          "partial_query": "artificial intel",
+          "suggestions": [
+            "artificial intelligence",
+            "artificial intelligence definition",
+            "artificial intelligence examples",
+            "artificial intelligence companies"
+          ]
+        }
+      }
+    }
+  ],
+  "errors": [
+    {
+      "code": "INVALID_QUERY",
+      "http_status": 400,
+      "message": "The search query is invalid"
+    },
+    {
+      "code": "RATE_LIMIT_EXCEEDED",
+      "http_status": 429,
+      "message": "Search rate limit exceeded"
+    },
+    {
+      "code": "NO_RESULTS",
+      "http_status": 200,
+      "message": "No results found for the query"
+    }
+  ]
+}

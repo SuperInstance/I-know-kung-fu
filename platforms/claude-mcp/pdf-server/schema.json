@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "PDF Server MCP",
+  "type": "object",
+  "properties": {
+    "server": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "const": "pdf-server" },
+        "version": { "type": "string" }
+      }
+    },
+    "tools": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": ["read_pdf", "create_pdf", "merge_pdfs", "split_pdf", "fill_form", "extract_form_data", "add_watermark", "ocr_pdf", "sign_pdf", "rotate_pages"]
+          }
+        }
+      }
+    }
+  }
+}
