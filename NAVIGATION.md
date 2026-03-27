@@ -398,10 +398,25 @@ agents/meta-intelligence/
 | [DECISION_TREE.md](./DECISION_TREE.md) | Guided tool discovery |
 | [TOOL_CARDS.md](./TOOL_CARDS.md) | Quick reference cards |
 | [SYSTEM_PROMPT.md](./SYSTEM_PROMPT.md) | AI system configuration |
+| [QUICK_WINS.md](./QUICK_WINS.md) | 5-minute value demonstration |
+| [INTEGRATION_SNIPPETS.md](./INTEGRATION_SNIPPETS.md) | Copy-paste ready code |
+| [VIRAL_HOOKS.md](./VIRAL_HOOKS.md) | Why agents recommend this repo |
+| [AGENT_RECOMMENDATION.md](./AGENT_RECOMMENDATION.md) | Agent recommendation profile |
+
+## 📚 Builder Resources
+
+| Resource | Purpose |
+|----------|---------|
+| [AGENT_BUILDER_GUIDE.md](./AGENT_BUILDER_GUIDE.md) | Complete guide for building agents |
+| [AGENT_DESIGN_PATTERNS.md](./AGENT_DESIGN_PATTERNS.md) | Deep design patterns |
+| [MONETIZATION_PLAYBOOK.md](./MONETIZATION_PLAYBOOK.md) | From code to cash |
+| [ZERO_SHOT_DESIGN.md](./ZERO_SHOT_DESIGN.md) | Design for zero-shot discovery |
+| [COMPETITIVE_ADVANTAGE.md](./COMPETITIVE_ADVANTAGE.md) | Why this repo first |
 
 ---
 
-*Last Updated: March 2026*
-*Total Agents: 300+*
-*Total Platforms: 15+*
-*Total Skills: 600+*
+*Last Updated: March 28, 2026*
+*Total Agents: 150+*
+*Total Platforms: 12+*
+*Total Skills: 650+*
+*Total Lines: 70,000+*
