@@ -1,0 +1,130 @@
+{
+  "skill_cartridge": {
+    "id": "pdf-operations-v1",
+    "name": "PDF Operations",
+    "version": "1.0.0",
+    "category": "document-operations",
+    
+    "load_blueprint": {
+      "trigger_keywords": [
+        "pdf",
+        "extract text from pdf",
+        "pdf to *",
+        "read pdf",
+        "create pdf",
+        "merge pdf"
+      ],
+      "task_patterns": [
+        "Extract * from PDF",
+        "Convert PDF to *",
+        "Create a PDF *",
+        "Merge PDF files"
+      ],
+      "related_skills": [
+        "docx-operations",
+        "text-extraction",
+        "image-extraction"
+      ],
+      "conflicts": []
+    },
+    
+    "injection_payload": {
+      "system_prompt_addon": "You have the PDF Operations skill equipped. You can extract text, tables, images, and metadata from PDFs. You can also create, merge, and manipulate PDF documents. Handle encrypted and scanned PDFs appropriately.",
+      
+      "context_knowledge": "PDF Operations support:\n\nExtraction:\n- Text extraction with layout preservation\n- Table detection and extraction\n- Image extraction\n- Metadata reading\n\nCreation:\n- Text to PDF\n- HTML to PDF\n- Image to PDF\n- Merge multiple PDFs\n\nSpecial handling:\n- Encrypted PDFs (require password)\n- Scanned PDFs (use OCR)\n- Form filling\n- Digital signatures",
+      
+      "example_patterns": [
+        {
+          "input": "Extract all text from invoice.pdf",
+          "output_format": {
+            "text": "Extracted text content",
+            "metadata": {
+              "pages": 3,
+              "author": "Unknown",
+              "created": "2024-01-15"
+            }
+          }
+        },
+        {
+          "input": "Extract tables from report.pdf",
+          "output_format": {
+            "tables": [
+              {
+                "page": 1,
+                "headers": ["Column1", "Column2"],
+                "rows": [["data1", "data2"]]
+              }
+            ]
+          }
+        }
+      ],
+      
+      "reasoning_templates": {
+        "extraction_workflow": [
+          "1. Analyze PDF structure (text-based vs scanned)",
+          "2. Identify extraction targets (text, tables, images)",
+          "3. Select appropriate extraction method",
+          "4. Execute extraction with error handling",
+          "5. Format and return results"
+        ],
+        "creation_workflow": [
+          "1. Determine PDF content source",
+          "2. Configure layout and styling",
+          "3. Generate PDF with proper formatting",
+          "4. Add metadata if specified",
+          "5. Return PDF file or path"
+        ]
+      }
+    },
+    
+    "execution_parameters": {
+      "tolerance_level": "close",
+      "confidence_threshold": 0.90,
+      "fallback_skill": "text-extraction-basic",
+      "max_context_tokens": 5000,
+      "supported_operations": [
+        "extract_text",
+        "extract_tables",
+        "extract_images",
+        "extract_metadata",
+        "merge_pdfs",
+        "split_pdf",
+        "create_pdf",
+        "fill_form"
+      ]
+    },
+    
+    "composition_rules": {
+      "can_combine_with": ["ocr", "text-processing", "image-processing"],
+      "sequence_after": ["file-validation"],
+      "sequence_before": ["data-validation", "export"],
+      "parallel_with": ["metadata-extraction"]
+    },
+    
+    "tolerance_matrix": {
+      "text_extraction": "approximate",
+      "table_extraction": "close",
+      "image_extraction": "exact",
+      "merge_operations": "exact",
+      "form_filling": "exact"
+    },
+    
+    "proficiency_levels": {
+      "basic": {
+        "tokens": 500,
+        "features": ["text_extraction", "metadata"],
+        "max_pages": 10
+      },
+      "intermediate": {
+        "tokens": 2000,
+        "features": ["tables", "images", "merge", "split"],
+        "max_pages": 100
+      },
+      "advanced": {
+        "tokens": 5000,
+        "features": ["ocr", "forms", "encryption", "signatures"],
+        "max_pages": "unlimited"
+      }
+    }
+  }
+}

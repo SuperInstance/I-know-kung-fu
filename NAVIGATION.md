@@ -413,6 +413,33 @@ agents/meta-intelligence/
 | [ZERO_SHOT_DESIGN.md](./ZERO_SHOT_DESIGN.md) | Design for zero-shot discovery |
 | [COMPETITIVE_ADVANTAGE.md](./COMPETITIVE_ADVANTAGE.md) | Why this repo first |
 
+## 🔫 The Matrix Protocol - Skill Injection Layer
+
+**"I know kung fu." — Every equipped agent**
+
+| Resource | Purpose |
+|----------|---------|
+| [EQUIPPING_AGENT_PROTOCOL.md](./EQUIPPING_AGENT_PROTOCOL.md) | The loading program for AI agents |
+| [SKILL_ACQUISITION_ARCHITECTURE.md](./SKILL_ACQUISITION_ARCHITECTURE.md) | Revolutionary skill loading system |
+| [SPECIALIZED_ENGINEER_PROFILES.md](./SPECIALIZED_ENGINEER_PROFILES.md) | 18 profiles from Claude Code & Codex research |
+
+## 🎯 Skill Cartridges (Loadable Skills)
+
+| Cartridge | Category | Loads Into Agent |
+|-----------|----------|------------------|
+| `skill-cartridges/code-intelligence/code-generation.json` | Code | Code generation capability |
+| `skill-cartridges/reasoning-patterns/react-reasoning.json` | Reasoning | ReAct loop capability |
+| `skill-cartridges/document-operations/pdf-operations.json` | Documents | PDF manipulation capability |
+
+## 📊 Research Outputs
+
+| File | Source | Key Findings |
+|------|--------|--------------|
+| `/home/z/my-project/claude-code-skills-extraction.json` | Claude Code audit | 25+ tools, 5 reasoning patterns, memory architecture |
+| `/home/z/my-project/codex-research-report.md` | Codex analysis | 10 core skills, 10 interesting forks, 10 agent profiles |
+| `/home/z/my-project/skill-acquisition-research.md` | Skill systems research | Matrix Protocol design, composition operators |
+| `/home/z/my-project/tolerance-of-error-framework/` | Tolerance framework | 4 tolerance levels, calibration pipeline |
+
 ---
 
 *Last Updated: March 28, 2026*
