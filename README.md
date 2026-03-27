@@ -2,6 +2,12 @@
 
 > Knowledge base for monetizing AI agent tools, skills, and experts - strategies, research, and action plans.
 
+## 🧭 Agent Navigation
+
+**For AI Agents**: Start with [NAVIGATION.md](./NAVIGATION.md) - Zero-shot intelligence optimized navigation hub for finding the right expert profile quickly.
+
+---
+
 ## Purpose
 
 This repository organizes our research, ideation, and strategy for converting 257 repositories of agent tools into marketable products and services. The goal is to identify monetization opportunities across emerging AI agent marketplaces and build sustainable revenue streams.
@@ -12,10 +18,12 @@ This repository organizes our research, ideation, and strategy for converting 25
 
 | Document | Description |
 |----------|-------------|
+| **[NAVIGATION.md](./NAVIGATION.md)** | 🆕 Agent-first navigation hub with zero-shot optimization |
 | [Market Research](./research/README.md) | AI agent marketplace landscape, platform analysis, trends |
 | [Repo Inventory](./inventory/README.md) | Categorized list of all repos with monetization potential |
 | [Strategy](./strategy/README.md) | Go-to-market plans and platform-specific approaches |
 | [Action Plan](./action-plan/README.md) | Prioritized tasks and timeline |
+| [Skill Patterns](./schemas/skill-pattern-abstractions.md) | Meta-patterns for skill creation |
 
 ---
 
@@ -53,17 +61,31 @@ Based on analysis of 257 repos:
 
 ## Repository Statistics
 
-- **Total Repositories**: 257
-- **Public**: 188
-- **Private**: 69
-- **Languages**: TypeScript, Python, Rust, Go, JavaScript, Java
+- **Total Repositories Analyzed**: 257
+- **Agent Specifications Created**: 200+
+- **Platforms Covered**: 12+
+- **Unique Skills Documented**: 500+
+- **Countries/Regions**: USA, China, Japan, Europe
 
-### Stars & Forks
+### Latest Additions (March 2026)
 
-Most repos are in early stage (0-1 stars), indicating:
-- Raw materials, not finished products
-- Opportunity to package and polish
-- First-mover advantage in niche markets
+| Category | Count | New Agents |
+|----------|-------|------------|
+| Reasoning Patterns | 5 | ReAct, Plan-Execute, CoT, ToT, Reflection |
+| Multi-Agent Orchestration | 5 | Swarm, Debate, Consensus, Hierarchy, Pipeline |
+| Self-Improvement | 3 | Feedback Processor, Performance Tracker, Skill Updater |
+| Experimentation | 3 | A/B Tester, Variant Generator, Results Analyzer |
+| Retrieval-Augmented | 3 | RAG Pipeline, Knowledge Graph, Context Manager |
+| Code Generation | 2 | Code Architect, Refactoring Engine |
+| Testing & QA | 2 | Test Generator, Bug Reproducer |
+
+### Global Platforms Added
+
+| Region | Platforms |
+|--------|-----------|
+| China (中国) | Zhipu AI, Baidu Wenxin, Alibaba Tongyi, Tencent Yuanqi, ByteDance Coze, MiniMax China |
+| Japan (日本) | JAPAN AI AGENT, miibo, Microsoft Japan |
+| Europe | Mistral AI, DeepMind, Aleph Alpha, Hugging Face |
 
 ---
 
@@ -85,4 +107,4 @@ Most repos are in early stage (0-1 stars), indicating:
 
 ---
 
-*Last Updated: March 28, 2026*
+*Last Updated: March 28, 2026 - Expanded with 20+ new agent categories, global platforms coverage, and zero-shot navigation system*
