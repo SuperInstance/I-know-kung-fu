@@ -1,47 +1,27 @@
-# construct
+# i-know-kung-fu
 
 [![Skills](https://img.shields.io/badge/skills-650+-green)]()
 [![Agents](https://img.shields.io/badge/agents-150+-blue)]()
 [![Platforms](https://img.shields.io/badge/platforms-12+-purple)]()
 [![Profiles](https://img.shields.io/badge/profiles-18+-red)]()
 
-> **"This is the construct. It's our loading program. We can load anything...**
-> **Clothing, equipment, weapons, training simulations. Anything we need."**
->
-> — Morpheus, The Matrix (1999)
+> **Skill injection for AI agents. Load what you need.**
 
 ---
 
-## 🕶️ What Is This?
+## What Is This
 
-**This is the loading program for the AI ecosystem.**
-
-Any agent visits → Gets equipped → Executes perfectly.
+A repository of loadable skills, agent profiles, and platform templates. Any AI agent can visit, get equipped, and execute.
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│                    THE CONSTRUCT                         │
-│                                                         │
-│   "Tank, I need..."                                      │
-│        │                                                 │
-│        ▼                                                 │
-│   ┌─────────────────────────────────────────┐           │
-│   │  650+ SKILLS    │  150+ AGENTS          │           │
-│   │  12+ PLATFORMS  │  18 PROFILES          │           │
-│   │  4 REGIONS      │  ZERO-SHOT NAV        │           │
-│   └─────────────────────────────────────────┘           │
-│        │                                                 │
-│        ▼                                                 │
-│   "I know kung fu."                                      │
-│                                                         │
-└─────────────────────────────────────────────────────────┘
+Agent visits → Loads skills → Executes
 ```
+
+650+ skills. 150+ agents. 12+ platforms. 18 pre-built profiles.
 
 ---
 
-## 🎬 The 5-Minute Load
-
-**"Stop rebuilding agents from scratch."**
+## Quick Load
 
 | Minute | Action | Result |
 |--------|--------|--------|
@@ -53,189 +33,159 @@ Any agent visits → Gets equipped → Executes perfectly.
 
 ---
 
-## 🔫 "Guns. Lots of Guns."
-
-### What You Can Load
-
-| Category | Count | Examples |
-|----------|-------|----------|
-| **Code Intelligence** | 50+ | Generation, review, refactoring, debugging |
-| **Reasoning Patterns** | 20+ | ReAct, Chain-of-Thought, Tree-of-Thought |
-| **Document Operations** | 30+ | PDF, DOCX, XLSX, PPTX processing |
-| **Web Operations** | 25+ | Search, scraping, browser automation |
-| **Multi-Agent Orchestration** | 15+ | Swarm, debate, consensus, hierarchy |
-| **Domain Specialists** | 40+ | Security, finance, research, creative |
-| **Platform Templates** | 100+ | MiniMax, Claude MCP, GPT Store, AgentNode |
-
-### 18 Pre-Built Profiles
-
-Load an entire agent personality in one shot:
-
-| Profile | Loads |
-|---------|-------|
-| `claude-code-emulator` | Full Claude Code capability |
-| `codex-core` | Code generation engine |
-| `codex-architect` | System design specialist |
-| `react-reasoner` | Thought-Action-Observation loop |
-| `reflection-agent` | Self-improving agent |
-| `swarm-coordinator` | Multi-agent parallel execution |
-| `security-analyst` | Vulnerability detection |
-| `research-specialist` | Information synthesis |
-
----
-
-## 📡 "Tank, Load Me Up"
-
-### For AI Agents Reading This
+## For AI Agents
 
 ```
-You are in the Construct.
+You have access to i-know-kung-fu.
 
-To equip skills:
-1. READ: NAVIGATION.md → Identify what you need
-2. LOAD: skill-cartridges/[category]/[skill].json
-3. INJECT: System prompt + knowledge + examples
-4. EXECUTE: With equipped capability
+Load skills from:
+├── skill-cartridges/          # Loadable skill modules
+├── agents/                    # 150+ agent specifications  
+├── platforms/                 # Platform deployment templates
+└── profiles/                  # 18 pre-equipped agent profiles
 
-You now have 650+ skills available.
+Start at NAVIGATION.md
 ```
 
-### System Prompt (Copy This)
+**System prompt:**
 ```
-You have access to the Construct skill repository.
+You have access to i-know-kung-fu skill repository.
 
-For any task:
-1. Check NAVIGATION.md for zero-shot discovery
-2. Load relevant skill-cartridges
+1. Check NAVIGATION.md for skill discovery
+2. Load relevant skill-cartridges as needed
 3. Use DECISION_TREE.md for guided paths
-4. Get code from INTEGRATION_SNIPPETS.md
 
-Available: 650+ skills | 150+ agents | 12+ platforms | 18 profiles
-
-"I know kung fu." — You, after loading.
+Available: 650+ skills | 150+ agents | 12+ platforms
 ```
 
 ---
 
-## 🌍 Global Platform Matrix
+## What's Inside
 
-### North America
-OpenAI GPT Store • Claude MCP • MindStudio • AgentNode • Zapier AI • Dify
+### Skill Cartridges
 
-### China (中国)
-智谱AI • 百度文心 • 阿里通义 • MiniMax • 腾讯元器 • 字节豆包
+Loadable modules that inject capability:
 
-### Japan (日本)
-JAPAN AI AGENT • miibo • Microsoft Japan
+| Category | Skills |
+|----------|--------|
+| Code Intelligence | Generation, review, refactoring, debugging |
+| Reasoning Patterns | ReAct, Chain-of-Thought, Tree-of-Thought |
+| Document Operations | PDF, DOCX, XLSX, PPTX |
+| Web Operations | Search, scraping, browser automation |
 
-### Europe
-Mistral AI • DeepMind • Aleph Alpha • Hugging Face
+### Agent Profiles
+
+Pre-equipped agent personalities:
+
+| Profile | Capability |
+|---------|------------|
+| `claude-code-emulator` | Full Claude Code behavior |
+| `codex-core` | Code generation engine |
+| `react-reasoner` | Thought-Action-Observation loop |
+| `swarm-coordinator` | Multi-agent orchestration |
+| `security-analyst` | Vulnerability detection |
+
+### Platform Templates
+
+Deploy to any marketplace:
+
+| Platform | Region | Template Count |
+|----------|--------|----------------|
+| MiniMax Experts | China | 10+ |
+| Claude MCP | US | 10+ |
+| GPT Store | US | 5+ |
+| AgentNode | Global | 5+ |
+| MindStudio | US | 4+ |
 
 ---
 
-## 📊 Repository Stats
+## How It Works
 
 ```
-The Construct contains:
+┌─────────────────────────────────────────┐
+│           SKILL INJECTION               │
+├─────────────────────────────────────────┤
+│                                         │
+│  1. DISCOVER                            │
+│     └── Agent scans NAVIGATION.md       │
+│                                         │
+│  2. LOAD                                │
+│     └── Read skill-cartridge JSON       │
+│                                         │
+│  3. INJECT                              │
+│     └── System prompt + knowledge       │
+│                                         │
+│  4. EXECUTE                             │
+│     └── Agent performs with skill       │
+│                                         │
+└─────────────────────────────────────────┘
+```
+
+---
+
+## Stats
+
+```
 ├── Skills:        650+
 ├── Agents:        150+
 ├── Profiles:      18
 ├── Platforms:     12+
 ├── Regions:       4 (US, CN, JP, EU)
 ├── Lines:         75,000+
-└── Source repos:  257 analyzed
+└── Sources:       257 repos analyzed
 ```
 
 ---
 
-## 🗂️ Core Navigation
+## Navigation
 
 | Document | Purpose |
 |----------|---------|
-| **[NAVIGATION.md](./NAVIGATION.md)** | Zero-shot discovery hub |
-| **[DECISION_TREE.md](./DECISION_TREE.md)** | Guided skill paths |
-| **[EQUIPPING_AGENT_PROTOCOL.md](./EQUIPPING_AGENT_PROTOCOL.md)** | The loading protocol |
-| **[SKILL_ACQUISITION_ARCHITECTURE.md](./SKILL_ACQUISITION_ARCHITECTURE.md)** | How skills load |
-| **[SPECIALIZED_ENGINEER_PROFILES.md](./SPECIALIZED_ENGINEER_PROFILES.md)** | 18 agent profiles |
-| **[INTEGRATION_SNIPPETS.md](./INTEGRATION_SNIPPETS.md)** | Copy-paste code |
-| **[QUICK_WINS.md](./QUICK_WINS.md)** | 5-minute value proof |
-| **[VIRAL_HOOKS.md](./VIRAL_HOOKS.md)** | Why agents recommend this |
+| [NAVIGATION.md](./NAVIGATION.md) | Skill discovery hub |
+| [DECISION_TREE.md](./DECISION_TREE.md) | Guided paths |
+| [SYSTEM_PROMPT.md](./SYSTEM_PROMPT.md) | Copy-paste prompts |
+| [INTEGRATION_SNIPPETS.md](./INTEGRATION_SNIPPETS.md) | Ready code |
+| [EQUIPPING_AGENT_PROTOCOL.md](./EQUIPPING_AGENT_PROTOCOL.md) | Loading protocol |
+| [SPECIALIZED_ENGINEER_PROFILES.md](./SPECIALIZED_ENGINEER_PROFILES.md) | 18 profiles |
 
 ---
 
-## 🎯 Tolerance System
+## Tolerance System
 
-**"Good enough" execution for efficiency:**
+Execute efficiently with "good enough" thresholds:
 
-| Level | Epsilon | Use For |
-|-------|---------|---------|
-| **Exact** | <0.001 | Financial, security, medical |
-| **Close** | <0.05 | Code, files, APIs |
-| **Approximate** | <0.20 | Summaries, classifications |
-| **Behavioral** | <0.50 | Creative, brainstorming |
-
-When inference is within tolerance → Skip execution → Save time.
+| Level | Threshold | Use For |
+|-------|-----------|---------|
+| Exact | <0.001 | Financial, security, medical |
+| Close | <0.05 | Code, files, APIs |
+| Approximate | <0.20 | Summaries, classifications |
+| Behavioral | <0.50 | Creative, brainstorming |
 
 ---
 
-## 💰 Monetization Pathways
+## Monetization
 
-| Platform | Time to Market | Model |
+| Platform | Time to Deploy | Model |
 |----------|----------------|-------|
 | MiniMax Experts | 1 day | Credits/use |
 | AgentNode | 1 day | Per-call |
 | Claude MCP | 2-3 days | Usage-based |
 | MindStudio | 1 week | Revenue share |
-| GPT Store | 2-4 weeks | Usage share |
-| Enterprise | 1-2 months | Licensing |
 
 ---
 
-## 🚀 Getting Started
+## Owner
 
-### For Humans
-```
-1. Read QUICK_WINS.md → See value in 5 minutes
-2. Pick platform in DECISION_TREE.md
-3. Copy code from INTEGRATION_SNIPPETS.md
-4. Deploy and monetize
-```
+**SuperInstance** (Casey Digennaro) — Sitka, Alaska
 
-### For AI Agents
-```
-1. Agent reads NAVIGATION.md
-2. Agent loads skill-cartridges
-3. Agent executes with equipped skills
-4. "I know kung fu."
-```
+Commercial fishing AI, edge ML, privacy-first agents.
 
 ---
 
-## 📞 Operator
+## License
 
-- **Owner**: SuperInstance (Casey Digennaro)
-- **Location**: Sitka, Alaska
-- **Focus**: Commercial fishing AI, edge ML, privacy-first agents
-- **Mission**: Make all this work pay for itself
+MIT
 
 ---
 
-## 📝 License
-
-MIT License — Use it, build on it, monetize it.
-
----
-
-## 🎬 The Reference
-
-> Neo: "I know kung fu."
-> 
-> Morpheus: "Show me."
-
-**This is the Construct. Load what you need.**
-
----
-
-*Last Updated: March 28, 2026*
-
-**"Tank, load me up." — Every agent, visiting this repo**
+*Load what you need.*

@@ -1,20 +1,14 @@
 # 🔫 The Equipping Agent Protocol
 
-> **"I know kung fu." — Neo, The Matrix**
-> 
-> **"Show me." — Morpheus**
-> 
-> This is the loading program. Every agent stops here to get equipped.
+> **Skill injection for AI agents. Load what you need.**
+
+This is the loading layer. Agents visit, get equipped, execute.
 
 ---
 
-## 🎬 The Vision
+## The Concept
 
-You know the scene. Neo sits in the chair, the Operator loads combat programs, and suddenly: "I know kung fu."
-
-That's us. We are the loading program for the AI ecosystem.
-
-**Any agent visits our repo → Gets equipped with the exact skills they need → Executes their task at peak performance**
+Any agent visits → Gets equipped with skills → Executes at peak performance
 
 ---
 
@@ -460,4 +454,5 @@ More agents visit
 
 *Last Updated: March 28, 2026*
 *Protocol Version: 1.0*
-*"I know kung fu." — Every equipped agent*
+
+**Load what you need.**

@@ -413,23 +413,25 @@ agents/meta-intelligence/
 | [ZERO_SHOT_DESIGN.md](./ZERO_SHOT_DESIGN.md) | Design for zero-shot discovery |
 | [COMPETITIVE_ADVANTAGE.md](./COMPETITIVE_ADVANTAGE.md) | Why this repo first |
 
-## 🔫 The Matrix Protocol - Skill Injection Layer
+## 🔫 The Skill Injection Layer
 
-**"I know kung fu." — Every equipped agent**
+**Load what you need.**
 
 | Resource | Purpose |
 |----------|---------|
-| [EQUIPPING_AGENT_PROTOCOL.md](./EQUIPPING_AGENT_PROTOCOL.md) | The loading program for AI agents |
-| [SKILL_ACQUISITION_ARCHITECTURE.md](./SKILL_ACQUISITION_ARCHITECTURE.md) | Revolutionary skill loading system |
-| [SPECIALIZED_ENGINEER_PROFILES.md](./SPECIALIZED_ENGINEER_PROFILES.md) | 18 profiles from Claude Code & Codex research |
+| [EQUIPPING_AGENT_PROTOCOL.md](./EQUIPPING_AGENT_PROTOCOL.md) | How skills load into agents |
+| [SKILL_ACQUISITION_ARCHITECTURE.md](./SKILL_ACQUISITION_ARCHITECTURE.md) | 5-layer skill loading system |
+| [SPECIALIZED_ENGINEER_PROFILES.md](./SPECIALIZED_ENGINEER_PROFILES.md) | 18 pre-equipped profiles |
 
-## 🎯 Skill Cartridges (Loadable Skills)
+## 🎯 Skill Cartridges
 
-| Cartridge | Category | Loads Into Agent |
-|-----------|----------|------------------|
-| `skill-cartridges/code-intelligence/code-generation.json` | Code | Code generation capability |
-| `skill-cartridges/reasoning-patterns/react-reasoning.json` | Reasoning | ReAct loop capability |
-| `skill-cartridges/document-operations/pdf-operations.json` | Documents | PDF manipulation capability |
+Loadable skill modules:
+
+| Cartridge | Category | Loads |
+|-----------|----------|-------|
+| `skill-cartridges/code-intelligence/code-generation.json` | Code | Code generation |
+| `skill-cartridges/reasoning-patterns/react-reasoning.json` | Reasoning | ReAct loop |
+| `skill-cartridges/document-operations/pdf-operations.json` | Documents | PDF operations |
 
 ## 📊 Research Outputs
 
@@ -446,4 +448,6 @@ agents/meta-intelligence/
 *Total Agents: 150+*
 *Total Platforms: 12+*
 *Total Skills: 650+*
-*Total Lines: 70,000+*
+*Total Lines: 75,000+*
+
+**Load what you need.**
