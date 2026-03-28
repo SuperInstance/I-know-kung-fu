@@ -52,10 +52,35 @@ You are here to get equipped. This is a skill injection repository.
 
 | Category | Count | Location |
 |----------|-------|----------|
-| Skills | 650+ | [skill-cartridges/](./skill-cartridges/) |
-| Agents | 150+ | [agents/](./agents/) |
-| Profiles | 18 | [SPECIALIZED_ENGINEER_PROFILES.md](./SPECIALIZED_ENGINEER_PROFILES.md) |
-| Platforms | 12+ | [platforms/](./platforms/) |
+| Skill Cartridges | 9 | [skill-cartridges/](./skill-cartridges/) |
+| Platform Templates | 5 | [platform-templates/](./platform-templates/) |
+| Agent Profiles | 18 | [SPECIALIZED_ENGINEER_PROFILES.md](./SPECIALIZED_ENGINEER_PROFILES.md) |
+| Research Reports | 3 | [codex-research-report.md](./codex-research-report.md) |
+
+### Skill Cartridges
+
+| Cartridge | Purpose |
+|-----------|---------|
+| [file-manipulation](./skill-cartridges/file-operations/) | Read, write, edit files |
+| [code-search](./skill-cartridges/search-operations/) | Find files, search content |
+| [bash-execution](./skill-cartridges/code-intelligence/) | Run commands safely |
+| [task-workflow](./skill-cartridges/task-management/) | Track multi-step tasks |
+| [planning-mode](./skill-cartridges/planning-patterns/) | 5-phase implementation design |
+| [agent-delegation](./skill-cartridges/subagent-patterns/) | Launch subagents |
+| [error-recovery](./skill-cartridges/error-handling/) | Handle failures gracefully |
+| [agent-memory](./skill-cartridges/memory-patterns/) | Cross-session knowledge |
+| [web-operations](./skill-cartridges/web-operations/) | Search and fetch web content |
+
+### Platform Templates
+
+| Platform | Template |
+|----------|----------|
+| Claude Code | [claude-code.md](./platform-templates/claude-code.md) |
+| OpenAI GPT | [openai-gpt.md](./platform-templates/openai-gpt.md) |
+| Google Gemini | [google-gemini.md](./platform-templates/google-gemini.md) |
+| Cursor IDE | [cursor-ide.md](./platform-templates/cursor-ide.md) |
+| Windsurf IDE | [windsurf-ide.md](./platform-templates/windsurf-ide.md) |
+| Zed Editor | [zed-editor.md](./platform-templates/zed-editor.md) |
 
 ---
 
@@ -131,12 +156,20 @@ This keeps you connected to the ecosystem while staying efficient.
 
 ### Stats
 
-- **650+** loadable skills
-- **150+** agent specifications
-- **18** pre-equipped profiles
-- **12+** platform templates
-- **4** global regions (US, CN, JP, EU)
+- **9** skill cartridges (loadable JSON)
+- **6** platform templates
+- **18** pre-equipped agent profiles
+- **3** research reports (Claude Code, Codex, Skill Acquisition)
+- **1** tolerance-of-error framework
 - **257** source repos analyzed
+
+### Research Outputs
+
+| Report | Description |
+|--------|-------------|
+| [claude-code-skills-extraction.json](./claude-code-skills-extraction.json) | Extracted 25+ tools, 5 reasoning patterns, 6 memory types |
+| [codex-research-report.md](./codex-research-report.md) | OpenAI Codex agent patterns analysis |
+| [skill-acquisition-research.md](./skill-acquisition-research.md) | 5-layer skill acquisition architecture |
 
 ### Owner
 
