@@ -35,6 +35,18 @@
       "can_combine_with": ["test-generation", "code-review"],
       "sequence_before": ["testing"],
       "enhances": ["debugging"]
-    }
+    },
+    
+    "completion_protocol": {
+      "status_values": ["DONE", "DONE_WITH_CONCERNS", "BLOCKED", "NEEDS_CONTEXT"],
+      "required_evidence": ["file_modified", "code_compiles", "tests_pass"],
+      "escalation_triggers": {
+        "failed_attempts": 3,
+        "security_sensitive": true,
+        "scope_exceeds_verification": true
+      }
+    },
+    
+    "skill_ref": "@code"
   }
 }
